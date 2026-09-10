@@ -19,14 +19,27 @@ import { prisma } from '@/lib/data/prisma';
 export type SignInField = 'email' | 'password';
 export type SignUpField = 'name' | SignInField;
 
-/** `form` holds what is wrong with the attempt as a whole rather than with one field. */
+/**
+ * `form` holds what is wrong with the attempt as a whole rather than with one field.
+ *
+ * `values` carries back what was typed, so a rejected attempt does not cost the visitor everything
+ * they had already filled in. The password is deliberately absent: it has no business travelling back.
+ */
 export type SignInState = {
   errors?: Partial<Record<SignInField | 'form', AuthErrorKey>>;
+  values?: { email?: string };
 };
 
 export type SignUpState = {
   errors?: Partial<Record<SignUpField | 'form', AuthErrorKey>>;
+  values?: { name?: string; email?: string };
 };
+
+function text(formData: FormData, field: string) {
+  const value = formData.get(field);
+
+  return typeof value === 'string' ? value : undefined;
+}
 
 function fieldErrors<T extends Record<string, unknown>>(error: z.ZodError<T>) {
   return Object.fromEntries(
@@ -41,13 +54,14 @@ export async function signInAction(
   _previous: SignInState,
   formData: FormData,
 ): Promise<SignInState> {
+  const values = { email: text(formData, 'email') };
   const parsed = signInSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
   });
 
   if (!parsed.success) {
-    return { errors: fieldErrors(parsed.error) };
+    return { errors: fieldErrors(parsed.error), values };
   }
 
   /*
@@ -63,7 +77,7 @@ export async function signInAction(
       throw error;
     }
 
-    return { errors: { form: 'invalidCredentials' } };
+    return { errors: { form: 'invalidCredentials' }, values };
   }
 
   const locale = await getLocale();
@@ -82,6 +96,10 @@ export async function signUpAction(
   _previous: SignUpState,
   formData: FormData,
 ): Promise<SignUpState> {
+  const values = {
+    name: text(formData, 'name'),
+    email: text(formData, 'email'),
+  };
   const parsed = signUpSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -89,7 +107,7 @@ export async function signUpAction(
   });
 
   if (!parsed.success) {
-    return { errors: fieldErrors(parsed.error) };
+    return { errors: fieldErrors(parsed.error), values };
   }
 
   const { name, email, password } = parsed.data;
@@ -107,7 +125,7 @@ export async function signUpAction(
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === 'P2002'
     ) {
-      return { errors: { email: 'emailTaken' } };
+      return { errors: { email: 'emailTaken' }, values };
     }
 
     throw error;

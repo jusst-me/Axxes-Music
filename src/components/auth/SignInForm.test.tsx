@@ -72,6 +72,28 @@ describe('SignInForm', () => {
     });
   });
 
+  it('keeps the email address on screen after a rejected attempt', async () => {
+    renderForm();
+
+    await userEvent.type(
+      screen.getByLabelText('Email address'),
+      'ada@example.com',
+    );
+    await userEvent.type(screen.getByLabelText('Password'), 'wrong');
+
+    await submit({
+      errors: { form: 'invalidCredentials' },
+      values: { email: 'ada@example.com' },
+    });
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Email address')).toHaveValue(
+        'ada@example.com',
+      ),
+    );
+    expect(screen.getByLabelText('Password')).toHaveValue('');
+  });
+
   it('describes an invalid field and moves focus to it', async () => {
     renderForm();
 

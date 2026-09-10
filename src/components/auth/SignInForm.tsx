@@ -50,7 +50,14 @@ export default function SignInForm({ callbackUrl }: { callbackUrl: string }) {
           </div>
         )}
 
+        {/*
+         * React empties an uncontrolled form once the action settles, so a rejected attempt would cost
+         * the visitor the address they had typed. Handing it back as a default restores it, and the
+         * key makes each attempt a freshly initialised field rather than one whose default changed
+         * underneath Base UI.
+         */}
         <AuthField
+          key={state.values?.email ?? ''}
           ref={emailRef}
           id="email"
           name="email"
@@ -59,6 +66,7 @@ export default function SignInForm({ callbackUrl }: { callbackUrl: string }) {
           required
           label={t('fields.email')}
           error={email && message(email)}
+          defaultValue={state.values?.email}
         />
 
         <AuthField
