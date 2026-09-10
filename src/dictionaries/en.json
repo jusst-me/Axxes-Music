@@ -124,6 +124,16 @@
       "title": "This playlist is empty",
       "description": "Add tracks from the catalog to get started."
     },
+    "search": {
+      "label": "Search this playlist",
+      "placeholder": "Title, artist or album",
+      "clear": "Clear search"
+    },
+    "noMatches": {
+      "title": "No tracks match",
+      "description": "Try a different title, artist or album."
+    },
+    "reorderDisabled": "The order cannot be changed while a search is active. Clear the search to rearrange the tracks.",
     "trackCount": "{count, plural, =0 {No tracks} one {# track} other {# tracks}}",
     "added": "Added {when}",
     "removeTrack": "Remove {title} from this playlist",

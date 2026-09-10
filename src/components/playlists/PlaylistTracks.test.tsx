@@ -179,6 +179,99 @@ describe('PlaylistTracks', () => {
     await waitFor(() => expect(screen.getByText('No tracks')).toHaveFocus());
   });
 
+  it('filters on the client by title, artist and album', async () => {
+    renderList([
+      entry(),
+      entry({ title: 'Digital Love', position: 1 }),
+      {
+        ...entry({ title: 'Get Lucky', position: 2 }),
+        track: {
+          ...entry().track,
+          id: 'track-get-lucky',
+          title: 'Get Lucky',
+          album: 'Random Access Memories',
+        },
+      },
+    ]);
+
+    await userEvent.type(
+      screen.getByRole('searchbox', { name: 'Search this playlist' }),
+      'digital',
+    );
+
+    expect(screen.getByText('Digital Love')).toBeInTheDocument();
+    expect(screen.queryByText('Around the World')).not.toBeInTheDocument();
+    expect(screen.queryByText('Get Lucky')).not.toBeInTheDocument();
+  });
+
+  it('announces how many tracks the filter left', async () => {
+    renderList([entry(), entry({ title: 'Digital Love', position: 1 })]);
+
+    await userEvent.type(
+      screen.getByRole('searchbox', { name: 'Search this playlist' }),
+      'digital',
+    );
+
+    expect(screen.getByText('1 track found')).toBeInTheDocument();
+  });
+
+  it('explains why the order cannot change while a filter is active', async () => {
+    renderList([entry(), entry({ title: 'Digital Love', position: 1 })]);
+
+    await userEvent.type(
+      screen.getByRole('searchbox', { name: 'Search this playlist' }),
+      'digital',
+    );
+
+    expect(
+      screen.getByText(
+        'The order cannot be changed while a search is active. Clear the search to rearrange the tracks.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('puts the full list back when the filter is cleared', async () => {
+    renderList([entry(), entry({ title: 'Digital Love', position: 1 })]);
+
+    await userEvent.type(
+      screen.getByRole('searchbox', { name: 'Search this playlist' }),
+      'digital',
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Clear search' }));
+
+    expect(screen.getByText('Around the World')).toBeInTheDocument();
+    expect(screen.getByText('Digital Love')).toBeInTheDocument();
+    expect(screen.getByText('2 tracks')).toBeInTheDocument();
+  });
+
+  it('offers a way out of a filter that found nothing', async () => {
+    renderList();
+
+    await userEvent.type(
+      screen.getByRole('searchbox', { name: 'Search this playlist' }),
+      'zzzzz',
+    );
+
+    expect(
+      screen.getByRole('heading', { name: 'No tracks match' }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('list')).not.toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getAllByRole('button', { name: 'Clear search' })[0],
+    );
+
+    expect(screen.getByText('Around the World')).toBeInTheDocument();
+  });
+
+  it('leaves the search field out of an empty playlist', () => {
+    renderList([]);
+
+    expect(
+      screen.queryByRole('searchbox', { name: 'Search this playlist' }),
+    ).not.toBeInTheDocument();
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = renderList([
       entry(),

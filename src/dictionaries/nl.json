@@ -124,6 +124,16 @@
       "title": "Deze afspeellijst is leeg",
       "description": "Voeg nummers uit de catalogus toe om te beginnen."
     },
+    "search": {
+      "label": "Zoek in deze afspeellijst",
+      "placeholder": "Titel, artiest of album",
+      "clear": "Zoekopdracht wissen"
+    },
+    "noMatches": {
+      "title": "Geen nummers gevonden",
+      "description": "Probeer een andere titel, artiest of album."
+    },
+    "reorderDisabled": "De volgorde kan niet worden gewijzigd zolang er een zoekopdracht actief is. Wis de zoekopdracht om de nummers te herschikken.",
     "trackCount": "{count, plural, =0 {Geen nummers} one {# nummer} other {# nummers}}",
     "added": "{when} toegevoegd",
     "removeTrack": "{title} uit deze afspeellijst verwijderen",

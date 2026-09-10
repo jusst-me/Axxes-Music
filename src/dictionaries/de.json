@@ -124,6 +124,16 @@
       "title": "Diese Playlist ist leer",
       "description": "Füge Titel aus dem Katalog hinzu, um zu beginnen."
     },
+    "search": {
+      "label": "Diese Playlist durchsuchen",
+      "placeholder": "Titel, Interpret oder Album",
+      "clear": "Suche zurücksetzen"
+    },
+    "noMatches": {
+      "title": "Keine Titel gefunden",
+      "description": "Versuche einen anderen Titel, Interpreten oder ein anderes Album."
+    },
+    "reorderDisabled": "Die Reihenfolge lässt sich nicht ändern, solange eine Suche aktiv ist. Setze die Suche zurück, um die Titel neu anzuordnen.",
     "trackCount": "{count, plural, =0 {Keine Titel} one {# Titel} other {# Titel}}",
     "added": "{when} hinzugefügt",
     "removeTrack": "{title} aus dieser Playlist entfernen",
