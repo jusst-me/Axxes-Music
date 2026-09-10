@@ -5,6 +5,9 @@ import { Montserrat } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 
+import Footer from '@/components/layout/Footer';
+import Header from '@/components/layout/Header';
+import SkipLink, { MAIN_CONTENT_ID } from '@/components/layout/SkipLink';
 import { LOCALES } from '@/constants/locales';
 import { routing } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
@@ -42,7 +45,18 @@ export default async function RootLayout({
       className={cn('h-full antialiased', montserrat.variable)}
     >
       <body className="flex min-h-full flex-col font-sans">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <SkipLink />
+          <Header />
+          <main
+            id={MAIN_CONTENT_ID}
+            tabIndex={-1}
+            className="flex flex-1 flex-col"
+          >
+            {children}
+          </main>
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );
