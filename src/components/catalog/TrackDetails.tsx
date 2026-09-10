@@ -4,11 +4,12 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Fragment } from 'react';
 
 import TrackArtwork from '@/components/catalog/TrackArtwork';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import type { Locale } from '@/constants/locales';
 import type { CatalogTrack } from '@/lib/data/tracks';
 import { formatDuration, splitDuration } from '@/lib/format/duration';
 import { useAppFormatter } from '@/lib/format/formatter';
+import { cn } from '@/lib/utils';
 
 /** `spoken` replaces the written value for a screen reader, where "3:52" reads as nonsense. */
 type Fact = { label: string; value: string; spoken?: string };
@@ -74,13 +75,13 @@ export default function TrackDetails({ track }: { track: CatalogTrack }) {
         </dl>
 
         {track.appleMusicUrl && (
-          <Button
-            variant="outline"
-            className="mt-6"
-            render={<a href={track.appleMusicUrl} rel="noreferrer" />}
+          <a
+            href={track.appleMusicUrl}
+            rel="noreferrer"
+            className={cn(buttonVariants({ variant: 'outline' }), 'mt-6')}
           >
             {t('openInAppleMusic')}
-          </Button>
+          </a>
         )}
       </div>
     </div>
