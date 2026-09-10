@@ -49,6 +49,10 @@ the difference between "functional" and "well built" becomes visible.
 The following was not requested. It is included because it materially improves the delivered product,
 and it is labeled `[proposed]` in the backlog so it can be dropped without touching the agreed scope.
 
+- **Multilingual interface** — English as the default, plus Dutch and German. Axxes operates across the
+  Netherlands and Belgium and works with international clients, so a single-language internal tool is a
+  short-lived one. Building this in from the start is also considerably cheaper than retrofitting it
+  once several hundred strings are hardcoded.
 - **Playlist visibility** — private or shared with the whole team, with the option to invite
   colleagues as collaborators. This matches the stated context of a single office deciding on the
   music together, and it forces a proper authorization model rather than an implicit one.
@@ -74,6 +78,10 @@ Deliberately not built, and documented as such in the root README:
 - Real-time collaboration over websockets. Collaborators see each other's changes on refetch rather
   than live. The reasoning is in [02-tech-stack.md](./02-tech-stack.md).
 - A native mobile application or offline support.
+- Translation of catalog data. Track, artist and album names are rendered as supplied; only interface
+  copy is localized.
+- Right-to-left language support. None of the three supported locales require it, and adding it
+  speculatively would mean maintaining layout rules nothing exercises.
 
 ## Effort guideline
 

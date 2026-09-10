@@ -24,14 +24,19 @@ AXM-001, AXM-002, AXM-003, AXM-004, AXM-005
 **Complete when:** a pull request passes CI, the application is reachable on a Vercel URL, and a
 migrated, seeded database exists.
 
-### M1 — Authentication and identity
+### M1 — Identity, language and authentication
 
-**Goal:** the application looks like Axxes and knows who you are.
+**Goal:** the application looks like Axxes, speaks three languages, and knows who you are.
 
-AXM-010, AXM-011, AXM-013, AXM-014, AXM-020, AXM-021, AXM-022, AXM-023, AXM-024
+AXM-010, AXM-011, AXM-013, AXM-014, AXM-090, AXM-091, AXM-092, AXM-093, AXM-094, AXM-095, AXM-020,
+AXM-021, AXM-022, AXM-023, AXM-024
 
-**Complete when:** an account can be created, sign-in and sign-out work, and unauthenticated visitors
-are routed to the sign-in page.
+**Complete when:** an account can be created, sign-in and sign-out work in all three languages, and
+unauthenticated visitors are routed to the sign-in page with their locale preserved.
+
+Locale routing lands in this milestone rather than later on purpose. Moving routes under `[locale]` is
+cheap while there are four of them and expensive once there are twenty, and every screen built before
+the message catalogs exist is a screen whose copy has to be extracted again afterwards.
 
 ### M2 — Core requirements
 
@@ -79,6 +84,8 @@ A story is complete only when all of the following hold:
 
 - [ ] Every acceptance criterion in the story is demonstrably met.
 - [ ] Empty, loading and error states are handled.
+- [ ] All user-facing copy comes from the message catalogs, in all three languages.
+- [ ] Navigation uses the locale-aware helpers from `src/i18n/navigation.ts`.
 
 **Code**
 
@@ -93,6 +100,7 @@ A story is complete only when all of the following hold:
 - [ ] Focus is visible and moved deliberately on state changes.
 - [ ] Contrast verified in both light and dark themes.
 - [ ] State changes are announced to screen readers.
+- [ ] `<html lang>` matches the active locale, and layouts hold at the longest translation.
 - [ ] No serious or critical axe findings.
 
 **Tests**
@@ -118,3 +126,5 @@ A story is complete only when all of the following hold:
 | Scope grows beyond the available time                | high       | Milestone order is binding; `[proposed]` work is cut first and recorded in the README |
 | iTunes preview clips become unavailable or blocked   | low        | Clips are non-essential; the application is fully functional without audio            |
 | Schedule slips toward the delivery date              | medium     | M2 is a complete delivery point; everything beyond it is optional                     |
+| Translations drift apart as copy is added            | medium     | A build-time check fails when the three catalogs do not expose identical keys         |
+| German copy overflows layouts designed in English    | medium     | Review components at the longest translation; no fixed widths on text containers      |

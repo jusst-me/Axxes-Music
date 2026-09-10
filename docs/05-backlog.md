@@ -16,6 +16,11 @@ Epic overview:
 | G    | Playback                  | 4       | `[proposed]` |
 | H    | Accessibility and polish  | 6       | `[proposed]` |
 | I    | Delivery                  | 3       | mixed        |
+| J    | Internationalization      | 6       | `[proposed]` |
+
+Epic letters reflect grouping, not build order. Epic J is foundational and is scheduled in milestone
+M1, because retrofitting locale routing after the routes exist is far more expensive than starting with
+it. See [06-roadmap.md](./06-roadmap.md).
 
 ---
 
@@ -492,7 +497,79 @@ Priority: high · Estimate: S · Depends on: AXM-045
 ### AXM-082 — Walkthrough script `[proposed]`
 
 - A five-minute route through the application: sign in, search, view details, add, reorder from the
-  keyboard, share, switch theme, play.
+  keyboard, share, switch theme, switch language, play.
 - Verified against the production environment beforehand.
 
 Priority: medium · Estimate: S · Depends on: AXM-080
+
+---
+
+## Epic J — Internationalization
+
+Goal: English, Dutch and German from the first screen onward. Scheduled in M1 despite the epic letter,
+because every route and every string added afterwards would otherwise need reworking.
+
+### AXM-090 — Locale routing and layout `[proposed]`
+
+**As a** user **I want** the application in my own language **so that** I can work without translating
+in my head.
+
+- next-intl configured through `src/i18n/routing.ts` with `en` as default and `nl` and `de` alongside.
+- Locales declared in one constant; adding a language touches a single file.
+- All page routes moved under `src/app/[locale]/`; `/api` stays outside it.
+- The `[locale]` layout sets `<html lang>` and provides `NextIntlClientProvider`.
+- An unknown locale returns a 404 rather than falling back silently.
+- `src/i18n/navigation.ts` exports the locale-aware navigation helpers.
+
+Priority: high · Estimate: L · Depends on: AXM-013
+
+### AXM-091 — Message catalogs `[proposed]`
+
+- `en.json`, `nl.json` and `de.json` in `src/dictionaries/`, with a shared key structure.
+- Keys grouped by domain: `common`, `auth`, `catalog`, `playlist`, `player`, `a11y`.
+- English is the source of truth; the other two are translated from it.
+- No hardcoded user-facing strings remain in components.
+- A test or lint step verifies that all three files expose the same keys, so a missing translation
+  fails the build rather than surfacing as a raw key in production.
+
+Priority: high · Estimate: M · Depends on: AXM-090
+
+### AXM-092 — Language switcher `[proposed]`
+
+- Available in the header, next to the theme toggle.
+- Each language is written in its own language: English, Nederlands, Deutsch.
+- Switching keeps the user on the current page rather than returning to the start.
+- The chosen language is remembered across sessions.
+- The control has an accessible name stating the current language, is keyboard operable, and each
+  option carries a `lang` attribute so a screen reader pronounces it correctly.
+
+Priority: high · Estimate: M · Depends on: AXM-091
+
+### AXM-093 — Locale-aware formatting `[proposed]`
+
+- Release dates, track durations and counts are formatted through next-intl rather than by hand.
+- Pluralization goes through the message catalog, not through string concatenation.
+- Relative timestamps such as "added 2 days ago" are localized.
+- Unit tests cover formatting for all three locales.
+
+Priority: medium · Estimate: S · Depends on: AXM-091
+
+### AXM-094 — Localized authentication flow `[proposed]`
+
+- The proxy resolves the locale before the authentication redirect, so an unauthenticated visitor lands
+  on `/{locale}/login`.
+- After signing in, the user returns to the originally requested path with its locale intact.
+- Auth.js callback routes are excluded from locale prefixing.
+- Validation and authentication error messages come from the message catalogs, which means Zod schemas
+  return keys rather than sentences.
+
+Priority: high · Estimate: M · Depends on: AXM-090, AXM-023
+
+### AXM-095 — Metadata and language alternates `[proposed]`
+
+- Page titles and descriptions are localized.
+- `alternates.languages` declares the three variants, with `x-default` pointing at English.
+- `<html lang>` matches the active locale on every route.
+- The sign-in page is reachable and correct in all three languages.
+
+Priority: medium · Estimate: S · Depends on: AXM-090

@@ -24,22 +24,29 @@ Building on the structure already in place:
 ```
 src/
 ├── app/
-│   ├── (auth)/                  # sign in and registration, layout without the app shell
-│   │   ├── login/
-│   │   └── register/
-│   ├── (app)/                   # everything behind authentication
-│   │   ├── layout.tsx           # app shell: header, navigation, player bar
-│   │   ├── tracks/              # catalog and search
-│   │   │   └── [trackId]/       # detail route, linkable alongside the dialog
-│   │   ├── playlists/
-│   │   │   └── [playlistId]/
-│   │   └── discover/            # playlists shared by other users
-│   └── api/auth/[...nextauth]/  # required Auth.js route handler
+│   ├── [locale]/                # every page route is locale-scoped
+│   │   ├── layout.tsx           # sets <html lang>, wraps NextIntlClientProvider
+│   │   ├── (auth)/              # sign in and registration, layout without the app shell
+│   │   │   ├── login/
+│   │   │   └── register/
+│   │   └── (app)/               # everything behind authentication
+│   │       ├── layout.tsx       # app shell: header, navigation, player bar
+│   │       ├── tracks/          # catalog and search
+│   │       │   └── [trackId]/   # detail route, linkable alongside the dialog
+│   │       ├── playlists/
+│   │       │   └── [playlistId]/
+│   │       └── discover/        # playlists shared by other users
+│   └── api/auth/[...nextauth]/  # Auth.js route handler, deliberately outside [locale]
 ├── components/
 │   ├── ui/                      # shadcn primitives, not edited by hand
 │   ├── player/
 │   ├── playlist/
 │   └── track/
+├── dictionaries/                # en.json, nl.json, de.json
+├── i18n/
+│   ├── routing.ts               # defineRouting: locales, default, prefix strategy
+│   ├── request.ts               # per-request locale resolution and message loading
+│   └── navigation.ts            # locale-aware Link, redirect, useRouter, usePathname
 ├── lib/
 │   ├── auth/                    # Auth.js configuration, hashing, session helpers
 │   ├── data/                    # data access layer, server-only
@@ -50,8 +57,11 @@ src/
 ├── providers/                   # theme provider, player provider
 ├── types/
 ├── constants/
-└── proxy.ts                     # optimistic authentication redirect
+└── proxy.ts                     # locale routing and optimistic authentication redirect
 ```
+
+API routes stay outside `[locale]`. Auth.js callback URLs are fixed and must not be locale-prefixed,
+so the proxy matcher excludes `/api`, `/_next` and anything containing a file extension.
 
 ## Data model
 
@@ -172,17 +182,42 @@ without a database.
 The entire application sits behind authentication; public playlists still require an account. This
 matches an internal office tool, where "public" means visible to all colleagues.
 
+## Localization
+
+Locales are `en` (default), `nl` and `de`, declared once in `src/i18n/routing.ts` and derived from a
+single constant so adding a fourth language touches one file.
+
+- `src/i18n/request.ts` resolves the locale per request and loads the matching dictionary from
+  `src/dictionaries/`.
+- `src/i18n/navigation.ts` exports locale-aware wrappers around `Link`, `redirect`, `useRouter` and
+  `usePathname`. **These are used everywhere**; importing navigation helpers straight from `next` drops
+  the locale prefix and is the most likely way for this to break.
+- The `[locale]` layout sets `<html lang>` from the active locale and wraps the tree in
+  `NextIntlClientProvider`.
+- Every user-facing string comes from a dictionary. That includes validation messages, which means the
+  Zod schemas return message keys rather than sentences, and the form resolves them.
+
+Only interface copy is translated. Track titles, artist names, album names and playlist names are data
+and are rendered as stored.
+
 ## Sessions and route protection
 
-Two layers with a clear division of responsibility:
+Three layers, with a clear division of responsibility:
 
-1. **`src/proxy.ts`** checks for the presence of a session cookie and redirects to `/login` otherwise.
-   This exists for user experience and is explicitly not a security boundary.
+1. **`src/proxy.ts`** runs locale routing first, then checks for the presence of a session cookie and
+   redirects to `/{locale}/login` otherwise. Both concerns live here because they both need to run
+   before the request reaches a route. The order matters: the locale must be resolved before the
+   redirect target can be constructed, and the intl response must be passed along rather than replaced,
+   otherwise the headers next-intl sets are lost.
 2. **The data access layer** resolves the session through `auth()` and verifies permissions on every
    call. This is the authoritative check.
+3. **Server Actions** repeat the session check independently, since an action can be invoked without
+   passing through a page render.
 
-The separation is a direct response to CVE-2025-29927, where a crafted header could bypass the
-middleware layer. Relying on layer one alone leaves the application open.
+The separation between layer one and layer two is a direct response to CVE-2025-29927, where a crafted
+header could bypass the middleware layer. Relying on the proxy alone leaves the application open.
+
+After signing in, the user returns to the originally requested path including its locale prefix.
 
 ## Mutations
 

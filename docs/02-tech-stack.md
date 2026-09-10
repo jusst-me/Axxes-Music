@@ -17,6 +17,7 @@ more useful thing to have written down than "what is X".
 | Authentication | Auth.js v5 (`next-auth@beta`) | 5.x       |
 | Drag and drop  | dnd-kit                       | 6.x       |
 | Motion         | Motion                        | 12.x      |
+| i18n           | next-intl                     | 4.x       |
 | Testing        | Vitest + Testing Library      | 3.x       |
 | Hosting        | Vercel                        | —         |
 
@@ -97,6 +98,32 @@ The preview clip is what turns the player from decoration into a working feature
 The catalog is imported into the application's own database through a seed script rather than queried
 live. That keeps the application functional when the upstream service is unavailable, keeps search fast
 and predictable, and allows indexing on title and artist in Postgres.
+
+## next-intl for internationalization
+
+The application ships in English, Dutch and German, with English as the default. next-intl is the
+established choice for the App Router and is what the team already uses in production elsewhere, so
+the conventions carry over.
+
+Decisions that shape the implementation:
+
+- **Every route carries a locale prefix**, including the default: `/en/tracks`, `/nl/tracks`,
+  `/de/tracks`. Leaving the default unprefixed saves a few characters in the URL and costs a permanent
+  special case in routing, caching and canonical URLs. Consistency wins here.
+- **No automatic detection from `Accept-Language`.** Content negotiation makes the same URL return
+  different pages for different visitors, which complicates caching and surprises users who share
+  links. Language is chosen explicitly through the switcher, and that choice is remembered.
+- **Only interface copy is translated.** Track titles, artist names and playlist names are user or
+  catalog data and are shown as they are. Translating them would be wrong, not incomplete.
+- **Locale-aware formatting** for dates, durations and numbers comes from the same library, so a
+  release date renders as `March 4, 2024`, `4 maart 2024` or `4. März 2024` without bespoke code.
+
+There is an accessibility dimension too: WCAG 2.2 requires the page language to be exposed
+programmatically, so `<html lang>` follows the active locale rather than being hardcoded.
+
+**Alternatives considered.** `next-i18next` targets the Pages Router and does not fit. A hand-rolled
+dictionary lookup is tempting at this scale but would need pluralization, interpolation, formatting and
+locale routing before long — all of which next-intl already provides.
 
 ## Motion for animation
 

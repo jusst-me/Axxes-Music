@@ -23,7 +23,8 @@ pull requests as the changes it describes.
 - A story is complete only when the Definition of Done in [06-roadmap.md](./06-roadmap.md) is met.
 - When an implementation diverges from these documents, the documents are updated in the same pull
   request. Documentation must never lag behind the code.
-- All documentation, code comments and identifiers are written in English.
+- All documentation, code comments and identifiers are written in English. Interface copy is the
+  exception: it lives in `src/dictionaries/` and ships in English, Dutch and German.
 
 ## Story labels
 

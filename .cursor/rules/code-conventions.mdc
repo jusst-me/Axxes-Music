@@ -10,7 +10,8 @@ alwaysApply: true
 Everything written in this repository is in English: documentation, code comments, commit messages,
 identifiers, and branch names. This holds regardless of the language used when discussing the work.
 
-User-facing copy in the interface is the exception and follows the product language.
+User-facing copy is the exception: it lives in the message catalogs under `src/dictionaries/`, never
+inline in components. English is the source of truth there; Dutch and German are translated from it.
 
 ## Imports
 

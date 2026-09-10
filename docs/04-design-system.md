@@ -100,6 +100,9 @@ project:
 - **Touch targets of at least 24 by 24 pixels**, with adequate spacing. Dense list rows with icon
   buttons are the main risk.
 - **One `h1` per page** and a heading structure that does not skip levels.
+- **The page language is exposed programmatically.** `<html lang>` follows the active locale, and each
+  option in the language switcher carries its own `lang` attribute so a screen reader pronounces
+  "Deutsch" in German rather than in English.
 - **Animation is optional.** Everything respects `prefers-reduced-motion`, and the application is fully
   functional without any animation at all.
 
