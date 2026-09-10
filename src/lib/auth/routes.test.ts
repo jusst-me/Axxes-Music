@@ -71,6 +71,15 @@ describe('authRedirect', () => {
     ).toBeNull();
   });
 
+  it.each(['/nl', '/nl/login', '/nl/register'])(
+    'takes a signed-in visitor from %s to their library',
+    pathname => {
+      expect(authRedirect({ pathname, isAuthenticated: true })).toBe(
+        '/nl/playlists',
+      );
+    },
+  );
+
   it('leaves a public page alone', () => {
     expect(
       authRedirect({ pathname: '/nl/login', isAuthenticated: false }),
