@@ -1,0 +1,11 @@
+{
+  "common": {
+    "appName": "Axxes Music"
+  },
+  "home": {
+    "title": "Playlists worth sharing.",
+    "intro": "Browse the catalog, build playlists together and listen to previews. Available in English, Dutch and German.",
+    "createAccount": "Create an account",
+    "signIn": "Sign in"
+  }
+}
