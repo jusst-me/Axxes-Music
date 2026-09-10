@@ -17,10 +17,28 @@ backlog and delivery plan.
 
 ```bash
 pnpm install
+cp .env.dist .env   # then fill in DATABASE_URL and AUTH_SECRET
+pnpm db:deploy
+pnpm db:seed
 pnpm dev
 ```
 
 The application runs at http://localhost:3000.
+
+## Database
+
+Postgres, accessed through Prisma. `.env.dist` lists the variables that must be set; `DATABASE_URL`
+points at a Neon database, one branch per environment.
+
+`pnpm install` regenerates the Prisma client, so it is never committed. The seed imports a catalog from
+the iTunes Search API and creates a demo account; it uses upserts and is safe to re-run.
+
+| Script            | Purpose                                            |
+| ----------------- | -------------------------------------------------- |
+| `pnpm db:migrate` | Create and apply a migration after a schema change |
+| `pnpm db:deploy`  | Apply existing migrations, for CI and production   |
+| `pnpm db:seed`    | Import the catalog and create the demo account     |
+| `pnpm db:studio`  | Browse the data in Prisma Studio                   |
 
 ## Scripts
 

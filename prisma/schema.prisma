@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String                 @id @default(cuid())
+  email          String                 @unique
+  name           String
+  passwordHash   String
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  playlists      Playlist[]
+  collaborations PlaylistCollaborator[]
+}
+
+model Track {
+  id             String          @id @default(cuid())
+  externalId     String          @unique
+  title          String
+  artist         String
+  album          String?
+  genre          String?
+  artworkUrl     String?
+  previewUrl     String?
+  durationMs     Int?
+  releaseDate    DateTime?
+  appleMusicUrl  String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  playlistTracks PlaylistTrack[]
+
+  @@index([title])
+  @@index([artist])
+}
+
+enum PlaylistVisibility {
+  PRIVATE
+  PUBLIC
+}
+
+model Playlist {
+  id            String                 @id @default(cuid())
+  name          String
+  description   String?
+  visibility    PlaylistVisibility     @default(PRIVATE)
+  ownerId       String
+  owner         User                   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  tracks        PlaylistTrack[]
+  collaborators PlaylistCollaborator[]
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  @@index([ownerId])
+  @@index([visibility])
+}
+
+/// Reordering rewrites the positions of the affected rows inside one transaction. Fractional indexing
+/// only becomes worthwhile with thousands of items or simultaneous editors.
+model PlaylistTrack {
+  id         String   @id @default(cuid())
+  playlistId String
+  playlist   Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  trackId    String
+  track      Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  position   Int
+  addedAt    DateTime @default(now())
+  addedById  String?
+
+  @@unique([playlistId, trackId])
+  @@index([playlistId, position])
+}
+
+enum CollaboratorRole {
+  VIEWER
+  EDITOR
+}
+
+model PlaylistCollaborator {
+  id         String           @id @default(cuid())
+  playlistId String
+  playlist   Playlist         @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       CollaboratorRole @default(VIEWER)
+  createdAt  DateTime         @default(now())
+
+  @@unique([playlistId, userId])
+}
