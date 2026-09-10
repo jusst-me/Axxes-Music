@@ -76,6 +76,15 @@ fails `pnpm typecheck` instead of rendering as a raw key. A test then compares t
 English and fails on a missing key, a key English does not have, an empty message, or a placeholder
 that was dropped in translation.
 
+Dates, durations and counts are formatted through `src/lib/format/`, which uses the region tag from
+`src/constants/locales.ts` rather than the routing code: the URL says `en`, but Intl reads that as
+en-US and would put the month first. Plural forms live in the catalogs, so a count is never assembled
+from a number and a noun in code.
+
+Each page declares its language variants through `localeAlternates` in `src/lib/metadata.ts`, with
+`x-default` pointing at English. Set `NEXT_PUBLIC_SITE_URL` to make those URLs absolute; on Vercel the
+production domain is picked up automatically.
+
 ## Testing
 
 Tests run on Vitest with jsdom and Testing Library, and live next to the code they cover as
