@@ -54,6 +54,7 @@ src/
 │   ├── auth/                    # Auth.js configuration, hashing, session helpers
 │   ├── data/                    # data access layer, server-only
 │   ├── permissions/             # authorization rules, pure and testable
+│   ├── testing/                 # helpers used only from test files
 │   └── validation/              # Zod schemas, shared between forms and actions
 ├── server/actions/              # Server Actions grouped by domain
 ├── hooks/
