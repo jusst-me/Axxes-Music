@@ -78,6 +78,34 @@ describe('SignUpForm', () => {
     );
   });
 
+  it('does not make the visitor type everything again after a rejection', async () => {
+    renderForm();
+
+    await userEvent.type(screen.getByLabelText('Name'), 'Ada');
+    await userEvent.type(
+      screen.getByLabelText('Email address'),
+      'ada@example.com',
+    );
+    await userEvent.type(
+      screen.getByLabelText('Password'),
+      'correct horse battery',
+    );
+
+    await submit({
+      errors: { email: 'emailTaken' },
+      values: { name: 'Ada', email: 'ada@example.com' },
+    });
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Name')).toHaveValue('Ada'),
+    );
+    expect(screen.getByLabelText('Email address')).toHaveValue(
+      'ada@example.com',
+    );
+    // The password is the one thing that should not come back from the server.
+    expect(screen.getByLabelText('Password')).toHaveValue('');
+  });
+
   it('moves focus to the first field that is wrong', async () => {
     renderForm();
 

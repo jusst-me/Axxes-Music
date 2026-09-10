@@ -33,7 +33,14 @@ export default function SignUpForm() {
   return (
     <form action={submit} noValidate className="mt-8">
       <FieldGroup>
+        {/*
+         * React empties an uncontrolled form once the action settles, so a rejected attempt would cost
+         * the visitor everything they had typed. Handing the values back as defaults restores them,
+         * and the key makes each attempt a freshly initialised field rather than one whose default
+         * changed underneath Base UI.
+         */}
         <AuthField
+          key={`name-${state.values?.name ?? ''}`}
           ref={nameRef}
           id="name"
           name="name"
@@ -41,9 +48,11 @@ export default function SignUpForm() {
           required
           label={t('fields.name')}
           error={name && message(name)}
+          defaultValue={state.values?.name}
         />
 
         <AuthField
+          key={`email-${state.values?.email ?? ''}`}
           ref={emailRef}
           id="email"
           name="email"
@@ -52,6 +61,7 @@ export default function SignUpForm() {
           required
           label={t('fields.email')}
           error={email && message(email)}
+          defaultValue={state.values?.email}
         />
 
         <AuthField
