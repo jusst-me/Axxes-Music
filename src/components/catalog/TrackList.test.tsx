@@ -21,6 +21,14 @@ vi.mock('@/lib/catalog/actions', () => ({
 // The locale prefixing it adds is covered in src/i18n/routing.test.ts; here only the anchor matters.
 vi.mock('@/i18n/navigation', () => ({
   Link: ({ href, ...props }: { href: string }) => <a href={href} {...props} />,
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+// A 'use server' module drags Prisma and Auth.js in behind it. Adding is covered in
+// src/components/catalog/AddToPlaylistMenu.test.tsx.
+vi.mock('@/lib/playlists/actions', () => ({
+  addTrackAction: vi.fn(),
+  createPlaylistAction: vi.fn(),
 }));
 
 function track(overrides: Partial<CatalogTrack> = {}): CatalogTrack {
@@ -46,6 +54,7 @@ function renderList(props: Partial<Parameters<typeof TrackList>[0]> = {}) {
         hasMore={false}
         total={1}
         query=""
+        playlists={[]}
         {...props}
       />
     </NextIntlClientProvider>,
@@ -71,7 +80,9 @@ describe('TrackList', () => {
     const row = screen.getByRole('listitem');
 
     expect(
-      within(row).getByRole('button', { name: /Around the World/ }),
+      within(row).getByRole('button', {
+        name: 'Around the World, track details',
+      }),
     ).toBeInTheDocument();
     expect(within(row).getByText('Daft Punk · Homework')).toBeInTheDocument();
     expect(within(row).getByText('7:09')).toBeInTheDocument();
@@ -228,6 +239,7 @@ describe('TrackList', () => {
           hasMore={false}
           total={1}
           query="one"
+          playlists={[]}
         />
       </NextIntlClientProvider>,
     );

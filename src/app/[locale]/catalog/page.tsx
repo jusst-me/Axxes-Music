@@ -6,6 +6,7 @@ import CatalogSearch from '@/components/catalog/CatalogSearch';
 import TrackList from '@/components/catalog/TrackList';
 import TrackListSkeleton from '@/components/catalog/TrackListSkeleton';
 import { resolveLocale } from '@/i18n/locale';
+import { listPlaylists } from '@/lib/data/playlists';
 import { listTracks } from '@/lib/data/tracks';
 import { localeAlternates } from '@/lib/metadata';
 
@@ -23,10 +24,21 @@ export async function generateMetadata({
 }
 
 async function CatalogTracks({ query }: { query: string }) {
-  const { tracks, hasMore, total } = await listTracks({ query });
+  // The playlists travel with the rows so every one of them can offer to add to any of them without
+  // a request per row. There are only ever a handful per person.
+  const [{ tracks, hasMore, total }, playlists] = await Promise.all([
+    listTracks({ query }),
+    listPlaylists(),
+  ]);
 
   return (
-    <TrackList tracks={tracks} hasMore={hasMore} total={total} query={query} />
+    <TrackList
+      tracks={tracks}
+      hasMore={hasMore}
+      total={total}
+      query={query}
+      playlists={playlists}
+    />
   );
 }
 

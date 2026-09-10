@@ -3,7 +3,6 @@
 import { redirect } from 'next/navigation';
 import { AuthError } from 'next-auth';
 import { getLocale } from 'next-intl/server';
-import { z } from 'zod';
 
 import { Prisma } from '@/generated/prisma/client';
 import { signIn, signOut } from '@/lib/auth/auth';
@@ -15,6 +14,7 @@ import {
   signUpSchema,
 } from '@/lib/auth/schemas';
 import { prisma } from '@/lib/data/prisma';
+import { fieldErrors, text } from '@/lib/forms/formData';
 
 export type SignInField = 'email' | 'password';
 export type SignUpField = 'name' | SignInField;
@@ -35,21 +35,6 @@ export type SignUpState = {
   values?: { name?: string; email?: string };
 };
 
-function text(formData: FormData, field: string) {
-  const value = formData.get(field);
-
-  return typeof value === 'string' ? value : undefined;
-}
-
-function fieldErrors<T extends Record<string, unknown>>(error: z.ZodError<T>) {
-  return Object.fromEntries(
-    Object.entries(z.flattenError(error).fieldErrors).flatMap(
-      ([field, messages]) =>
-        messages?.[0] ? [[field, messages[0] as AuthErrorKey]] : [],
-    ),
-  );
-}
-
 export async function signInAction(
   _previous: SignInState,
   formData: FormData,
@@ -61,7 +46,7 @@ export async function signInAction(
   });
 
   if (!parsed.success) {
-    return { errors: fieldErrors(parsed.error), values };
+    return { errors: fieldErrors<AuthErrorKey>(parsed.error), values };
   }
 
   /*
@@ -107,7 +92,7 @@ export async function signUpAction(
   });
 
   if (!parsed.success) {
-    return { errors: fieldErrors(parsed.error), values };
+    return { errors: fieldErrors<AuthErrorKey>(parsed.error), values };
   }
 
   const { name, email, password } = parsed.data;

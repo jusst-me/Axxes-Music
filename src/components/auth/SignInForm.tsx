@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useActionState, useEffect, useRef } from 'react';
 
-import AuthField from '@/components/auth/AuthField';
+import TextField from '@/components/forms/TextField';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
 import { signInAction, type SignInState } from '@/lib/auth/actions';
@@ -56,7 +56,7 @@ export default function SignInForm({ callbackUrl }: { callbackUrl: string }) {
          * key makes each attempt a freshly initialised field rather than one whose default changed
          * underneath Base UI.
          */}
-        <AuthField
+        <TextField
           key={state.values?.email ?? ''}
           ref={emailRef}
           id="email"
@@ -69,7 +69,7 @@ export default function SignInForm({ callbackUrl }: { callbackUrl: string }) {
           defaultValue={state.values?.email}
         />
 
-        <AuthField
+        <TextField
           ref={passwordRef}
           id="password"
           name="password"

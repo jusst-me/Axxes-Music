@@ -80,6 +80,9 @@
       "openInAppleMusic": "Openen in Apple Music"
     },
     "addToPlaylist": "Toevoegen aan afspeellijst",
+    "inAPlaylist": "In een afspeellijst",
+    "addTrackToPlaylist": "{title} aan een afspeellijst toevoegen",
+    "trackInPlaylists": "{title} staat in een afspeellijst. Toevoegen aan een andere",
     "backToCatalog": "Terug naar de catalogus",
     "loadMore": "Meer nummers laden",
     "loadMorePending": "Meer nummers laden",
@@ -90,25 +93,56 @@
     "title": "Afspeellijsten",
     "description": "De afspeellijsten die jij en je collega's samen samenstellen.",
     "create": "Nieuwe afspeellijst",
+    "backToPlaylists": "Terug naar je afspeellijsten",
+    "createDialog": {
+      "title": "Nieuwe afspeellijst",
+      "description": "Kies een naam die je collega's herkennen.",
+      "submit": "Afspeellijst aanmaken",
+      "pending": "De afspeellijst wordt aangemaakt"
+    },
     "fields": {
       "name": "Naam",
+      "nameHint": "Maximaal 100 tekens.",
       "description": "Omschrijving",
-      "descriptionOptional": "Optioneel"
+      "descriptionOptional": "Optioneel."
     },
+    "errors": {
+      "nameRequired": "Geef de afspeellijst een naam.",
+      "nameTooLong": "Gebruik maximaal 100 tekens.",
+      "descriptionTooLong": "Gebruik maximaal 500 tekens.",
+      "notFound": "Deze afspeellijst bestaat niet meer.",
+      "duplicate": "Dit nummer staat al in deze afspeellijst."
+    },
+    "created": "{name} is aangemaakt.",
     "visibility": {
       "private": "Privé",
       "shared": "Gedeeld met het team"
+    },
+    "noPlaylists": {
+      "title": "Nog geen afspeellijsten",
+      "description": "Maak er een aan en vul die vanuit de catalogus."
     },
     "empty": {
       "title": "Deze afspeellijst is leeg",
       "description": "Voeg nummers uit de catalogus toe om te beginnen."
     },
+    "search": {
+      "label": "Zoek in deze afspeellijst",
+      "placeholder": "Titel, artiest of album",
+      "clear": "Zoekopdracht wissen"
+    },
+    "noMatches": {
+      "title": "Geen nummers gevonden",
+      "description": "Probeer een andere titel, artiest of album."
+    },
+    "reorderDisabled": "De volgorde kan niet worden gewijzigd zolang er een zoekopdracht actief is. Wis de zoekopdracht om de nummers te herschikken.",
     "trackCount": "{count, plural, =0 {Geen nummers} one {# nummer} other {# nummers}}",
     "added": "{when} toegevoegd",
     "removeTrack": "{title} uit deze afspeellijst verwijderen",
     "trackAdded": "{title} is toegevoegd aan {playlist}.",
     "trackRemoved": "{title} is verwijderd uit {playlist}.",
     "duplicate": "{title} staat al in deze afspeellijst.",
+    "alreadyContains": "Toegevoegd",
     "deleteConfirm": {
       "title": "{name} verwijderen?",
       "description": "Dit kan niet ongedaan worden gemaakt. De nummers blijven in de catalogus staan.",

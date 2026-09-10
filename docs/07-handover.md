@@ -3,7 +3,7 @@
 Where the work stands, how it is being done, and what is waiting. Kept current at the end of each
 milestone so that picking the work back up does not require reading the git history.
 
-Last updated after AXM-031.
+Last updated after AXM-052.
 
 ## Where the work stands
 
@@ -11,22 +11,16 @@ Last updated after AXM-031.
 | ------------------------------------------ | ----------- |
 | M0 — Foundation                            | complete    |
 | M1 — Identity, language and authentication | complete    |
-| M2 — Core requirements                     | in progress |
+| M2 — Core requirements                     | complete    |
 | M3 to M5                                   | not started |
 
-M2 holds eight stories. AXM-030 and AXM-031 are merged. Remaining:
+M2 is a viable delivery point on its own. The six primary requirements from the brief are in place:
+the catalog can be browsed and searched, a track has a detail view, and a playlist can be created,
+filled, emptied and filtered.
 
-| Story   | Subject                                  | Grouped into                   |
-| ------- | ---------------------------------------- | ------------------------------ |
-| AXM-032 | Search the catalog, `?q=` in the URL     | Search and detail pull request |
-| AXM-033 | Track details, dialog and `/tracks/[id]` | Search and detail pull request |
-| AXM-040 | Create a playlist                        | Playlists pull request         |
-| AXM-050 | Add a track to a playlist                | Playlists pull request         |
-| AXM-051 | Remove a track from a playlist           | Playlists pull request         |
-| AXM-052 | View a playlist                          | Playlists pull request         |
-
-Rows in the catalog are deliberately not interactive yet. They become the trigger for the detail view
-in AXM-033, which is what gives them something to do.
+The next milestone is M3 — the optional stories: a theme toggle is already in the header from M1;
+what remains is deleting a playlist (AXM-041) and accessible drag-and-drop within and between lists
+(AXM-053, AXM-054).
 
 ## How the work is being done
 
@@ -51,15 +45,18 @@ reported failures that turned out to be artefacts. Every pull request therefore 
 
 ## Waiting for a manual pass
 
-From [PR #14](https://github.com/jusst-me/Axxes-Music/pull/14), both unresolved and worth a look while
-testing the milestone:
+M2 has not had its milestone walkthrough yet. Work through the numbered list on the playlists pull
+request, then the earlier ones on [PR #16](https://github.com/jusst-me/Axxes-Music/pull/16) and
+[PR #14](https://github.com/jusst-me/Axxes-Music/pull/14) that are still unresolved:
 
-1. A hydration warning against `TrackRow` was reported by an automated pass. The server HTML for a row
-   matches what the client renders, the line it named holds only static markup, and React's own message
-   names a browser extension as a possible cause. The browser console on `/en/catalog` settles it.
-2. The same pass reported no visible focus indicators. The components carry `focus-visible:ring-3`, and
-   an earlier pass over the same components saw the rings, so this is most likely an artefact of the
-   automation rather than a defect.
+1. A hydration warning against `TrackRow` was reported by an automated pass on PR #14. The server HTML
+   for a row matches what the client renders, and React's own message names a browser extension as a
+   possible cause. The browser console on `/en/catalog` settles it.
+2. The same pass reported no visible focus indicators. The components carry `focus-visible:ring-3`, so
+   this is most likely an artefact of the automation rather than a defect.
+3. Vercel preview deployments have been failing on recent pull requests while production on `main`
+   succeeds. The GitHub Actions check is green in those cases. Until the preview project is looked at,
+   production is the environment that can be trusted.
 
 ## Open questions
 
@@ -92,6 +89,12 @@ initialised field.
 
 **The catalog.** `pnpm db:seed` fills the database with roughly 1089 tracks across 56 genres and is
 idempotent. It fails deliberately below 200 playable tracks.
+
+**Playlists.** Ownership is part of the query, never a check afterwards, so a playlist that belongs to
+someone else is indistinguishable from one that never existed. Adding appends; removing closes the
+position gap in the same transaction; undo restores at the old position rather than at the end. Search
+inside a playlist is client-side and does not touch the URL, unlike catalog search, which lives in
+`?q=` so it can be shared.
 
 **Tooling.** Prettier needs the explicit `*.mdc` override to format Cursor rule files. Commits are
 signed through 1Password, which is unreachable from a sandboxed shell.

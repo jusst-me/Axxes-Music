@@ -10,6 +10,7 @@ import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import SkipLink, { MAIN_CONTENT_ID } from '@/components/layout/SkipLink';
 import ThemeProvider from '@/components/layout/ThemeProvider';
+import { Toaster } from '@/components/ui/sonner';
 import { LOCALES } from '@/constants/locales';
 import { resolveLocale } from '@/i18n/locale';
 import { routing } from '@/i18n/routing';
@@ -73,6 +74,8 @@ export default async function RootLayout({
               {children}
             </main>
             <Footer />
+            {/* Sonner announces through its own live region, so a confirmation is heard as well as seen. */}
+            <Toaster />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

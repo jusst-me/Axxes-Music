@@ -80,6 +80,9 @@
       "openInAppleMusic": "Open in Apple Music"
     },
     "addToPlaylist": "Add to playlist",
+    "inAPlaylist": "In a playlist",
+    "addTrackToPlaylist": "Add {title} to a playlist",
+    "trackInPlaylists": "{title} is in a playlist. Add to another",
     "backToCatalog": "Back to the catalog",
     "loadMore": "Load more tracks",
     "loadMorePending": "Loading more tracks",
@@ -90,25 +93,56 @@
     "title": "Playlists",
     "description": "The playlists you and your colleagues are building together.",
     "create": "New playlist",
+    "backToPlaylists": "Back to your playlists",
+    "createDialog": {
+      "title": "New playlist",
+      "description": "Give it a name your colleagues will recognise.",
+      "submit": "Create playlist",
+      "pending": "Creating the playlist"
+    },
     "fields": {
       "name": "Name",
+      "nameHint": "Up to 100 characters.",
       "description": "Description",
-      "descriptionOptional": "Optional"
+      "descriptionOptional": "Optional."
     },
+    "errors": {
+      "nameRequired": "Give the playlist a name.",
+      "nameTooLong": "Use 100 characters or fewer.",
+      "descriptionTooLong": "Use 500 characters or fewer.",
+      "notFound": "That playlist no longer exists.",
+      "duplicate": "That track is already in this playlist."
+    },
+    "created": "{name} was created.",
     "visibility": {
       "private": "Private",
       "shared": "Shared with the team"
+    },
+    "noPlaylists": {
+      "title": "No playlists yet",
+      "description": "Create one, then fill it from the catalog."
     },
     "empty": {
       "title": "This playlist is empty",
       "description": "Add tracks from the catalog to get started."
     },
+    "search": {
+      "label": "Search this playlist",
+      "placeholder": "Title, artist or album",
+      "clear": "Clear search"
+    },
+    "noMatches": {
+      "title": "No tracks match",
+      "description": "Try a different title, artist or album."
+    },
+    "reorderDisabled": "The order cannot be changed while a search is active. Clear the search to rearrange the tracks.",
     "trackCount": "{count, plural, =0 {No tracks} one {# track} other {# tracks}}",
     "added": "Added {when}",
     "removeTrack": "Remove {title} from this playlist",
     "trackAdded": "{title} was added to {playlist}.",
     "trackRemoved": "{title} was removed from {playlist}.",
     "duplicate": "{title} is already in this playlist.",
+    "alreadyContains": "Added",
     "deleteConfirm": {
       "title": "Delete {name}?",
       "description": "This cannot be undone. The tracks stay in the catalog.",

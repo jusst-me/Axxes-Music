@@ -80,6 +80,9 @@
       "openInAppleMusic": "In Apple Music öffnen"
     },
     "addToPlaylist": "Zur Playlist hinzufügen",
+    "inAPlaylist": "In einer Playlist",
+    "addTrackToPlaylist": "{title} zu einer Playlist hinzufügen",
+    "trackInPlaylists": "{title} ist in einer Playlist. Zu einer anderen hinzufügen",
     "backToCatalog": "Zurück zum Katalog",
     "loadMore": "Weitere Titel laden",
     "loadMorePending": "Weitere Titel werden geladen",
@@ -90,25 +93,56 @@
     "title": "Playlists",
     "description": "Die Playlists, die du gemeinsam mit deinen Kolleginnen und Kollegen zusammenstellst.",
     "create": "Neue Playlist",
+    "backToPlaylists": "Zurück zu deinen Playlists",
+    "createDialog": {
+      "title": "Neue Playlist",
+      "description": "Wähle einen Namen, den deine Kolleginnen und Kollegen erkennen.",
+      "submit": "Playlist erstellen",
+      "pending": "Die Playlist wird erstellt"
+    },
     "fields": {
       "name": "Name",
+      "nameHint": "Höchstens 100 Zeichen.",
       "description": "Beschreibung",
-      "descriptionOptional": "Optional"
+      "descriptionOptional": "Optional."
     },
+    "errors": {
+      "nameRequired": "Gib der Playlist einen Namen.",
+      "nameTooLong": "Verwende höchstens 100 Zeichen.",
+      "descriptionTooLong": "Verwende höchstens 500 Zeichen.",
+      "notFound": "Diese Playlist gibt es nicht mehr.",
+      "duplicate": "Dieser Titel ist bereits in dieser Playlist."
+    },
+    "created": "{name} wurde erstellt.",
     "visibility": {
       "private": "Privat",
       "shared": "Mit dem Team geteilt"
+    },
+    "noPlaylists": {
+      "title": "Noch keine Playlists",
+      "description": "Erstelle eine und fülle sie aus dem Katalog."
     },
     "empty": {
       "title": "Diese Playlist ist leer",
       "description": "Füge Titel aus dem Katalog hinzu, um zu beginnen."
     },
+    "search": {
+      "label": "Diese Playlist durchsuchen",
+      "placeholder": "Titel, Interpret oder Album",
+      "clear": "Suche zurücksetzen"
+    },
+    "noMatches": {
+      "title": "Keine Titel gefunden",
+      "description": "Versuche einen anderen Titel, Interpreten oder ein anderes Album."
+    },
+    "reorderDisabled": "Die Reihenfolge lässt sich nicht ändern, solange eine Suche aktiv ist. Setze die Suche zurück, um die Titel neu anzuordnen.",
     "trackCount": "{count, plural, =0 {Keine Titel} one {# Titel} other {# Titel}}",
     "added": "{when} hinzugefügt",
     "removeTrack": "{title} aus dieser Playlist entfernen",
     "trackAdded": "{title} wurde zu {playlist} hinzugefügt.",
     "trackRemoved": "{title} wurde aus {playlist} entfernt.",
     "duplicate": "{title} ist bereits in dieser Playlist.",
+    "alreadyContains": "Hinzugefügt",
     "deleteConfirm": {
       "title": "{name} löschen?",
       "description": "Das lässt sich nicht rückgängig machen. Die Titel bleiben im Katalog.",

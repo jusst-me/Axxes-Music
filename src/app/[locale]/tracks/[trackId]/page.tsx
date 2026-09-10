@@ -3,10 +3,12 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
+import AddToPlaylistMenu from '@/components/catalog/AddToPlaylistMenu';
 import TrackDetails from '@/components/catalog/TrackDetails';
 import { Button } from '@/components/ui/button';
 import { resolveLocale } from '@/i18n/locale';
 import { Link } from '@/i18n/navigation';
+import { listPlaylists } from '@/lib/data/playlists';
 import { getTrack } from '@/lib/data/tracks';
 import { localeAlternates } from '@/lib/metadata';
 
@@ -32,7 +34,10 @@ export default async function TrackPage({
   params,
 }: PageProps<'/[locale]/tracks/[trackId]'>) {
   const { trackId } = await params;
-  const track = await getTrack(trackId);
+  const [track, playlists] = await Promise.all([
+    getTrack(trackId),
+    listPlaylists(),
+  ]);
 
   if (!track) {
     notFound();
@@ -52,6 +57,14 @@ export default async function TrackPage({
 
       <div className="mt-8">
         <TrackDetails track={track} />
+      </div>
+
+      <div className="mt-8">
+        <AddToPlaylistMenu
+          track={track}
+          playlists={playlists}
+          appearance="labelled"
+        />
       </div>
     </div>
   );

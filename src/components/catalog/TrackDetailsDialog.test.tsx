@@ -1,12 +1,25 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NextIntlClientProvider } from 'next-intl';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import TrackDetailsDialog from '@/components/catalog/TrackDetailsDialog';
 import messages from '@/dictionaries/en.json';
 import type { CatalogTrack } from '@/lib/data/tracks';
 import { axe } from '@/lib/testing/axe';
+
+// next-intl's client navigation reaches for `next/navigation` and a 'use server' module drags
+// Prisma in behind it; neither resolves under Vitest. Adding is covered in
+// src/components/catalog/AddToPlaylistMenu.test.tsx.
+vi.mock('@/i18n/navigation', () => ({
+  Link: ({ href, ...props }: { href: string }) => <a href={href} {...props} />,
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+vi.mock('@/lib/playlists/actions', () => ({
+  addTrackAction: vi.fn(),
+  createPlaylistAction: vi.fn(),
+}));
 
 function track(overrides: Partial<CatalogTrack> = {}): CatalogTrack {
   return {
@@ -26,7 +39,7 @@ function track(overrides: Partial<CatalogTrack> = {}): CatalogTrack {
 function renderDialog(overrides: Partial<CatalogTrack> = {}) {
   return render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <TrackDetailsDialog track={track(overrides)} />
+      <TrackDetailsDialog track={track(overrides)} playlists={[]} />
     </NextIntlClientProvider>,
   );
 }

@@ -2,16 +2,24 @@
 
 import { useTranslations } from 'next-intl';
 
+import AddToPlaylistMenu from '@/components/catalog/AddToPlaylistMenu';
 import TrackDetails from '@/components/catalog/TrackDetails';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import type { PlaylistSummary } from '@/lib/data/playlists';
 import type { CatalogTrack } from '@/lib/data/tracks';
+
+type TrackDetailsDialogProps = {
+  track: CatalogTrack;
+  playlists: PlaylistSummary[];
+};
 
 /**
  * The title of a track, and the details behind it.
@@ -19,7 +27,10 @@ import type { CatalogTrack } from '@/lib/data/tracks';
  * Focus trapping, escape and the return of focus to this trigger all come from the dialog primitive.
  * The same details are linkable at /tracks/[trackId] for anyone who wants to share them.
  */
-export default function TrackDetailsDialog({ track }: { track: CatalogTrack }) {
+export default function TrackDetailsDialog({
+  track,
+  playlists,
+}: TrackDetailsDialogProps) {
   const t = useTranslations('catalog.track');
 
   return (
@@ -43,6 +54,14 @@ export default function TrackDetailsDialog({ track }: { track: CatalogTrack }) {
         </DialogHeader>
 
         <TrackDetails track={track} />
+
+        <DialogFooter>
+          <AddToPlaylistMenu
+            track={track}
+            playlists={playlists}
+            appearance="labelled"
+          />
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
