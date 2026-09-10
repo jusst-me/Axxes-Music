@@ -18,7 +18,7 @@ more useful thing to have written down than "what is X".
 | Drag and drop  | dnd-kit                       | 6.x       |
 | Motion         | Motion                        | 12.x      |
 | i18n           | next-intl                     | 4.x       |
-| Testing        | Vitest + Testing Library      | 3.x       |
+| Testing        | Vitest + Testing Library      | 5.x       |
 | Hosting        | Vercel                        | —         |
 
 > Next.js 16 differs from earlier versions in several conventions. Consult

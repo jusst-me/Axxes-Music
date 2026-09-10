@@ -22,17 +22,34 @@ The application runs at http://localhost:3000.
 
 ## Scripts
 
-| Script                | Purpose                                        |
-| --------------------- | ---------------------------------------------- |
-| `pnpm dev`            | Start the development server                   |
-| `pnpm build`          | Production build                               |
-| `pnpm start`          | Serve the production build                     |
-| `pnpm lint`           | Run ESLint                                     |
-| `pnpm lint:fix`       | Run ESLint and apply fixes                     |
-| `pnpm prettier`       | Format the codebase                            |
-| `pnpm prettier:check` | Verify formatting without writing              |
-| `pnpm typecheck`      | Type-check without emitting                    |
-| `pnpm check`          | Everything CI runs: lint, formatting and types |
+| Script                | Purpose                                               |
+| --------------------- | ----------------------------------------------------- |
+| `pnpm dev`            | Start the development server                          |
+| `pnpm build`          | Production build                                      |
+| `pnpm start`          | Serve the production build                            |
+| `pnpm lint`           | Run ESLint                                            |
+| `pnpm lint:fix`       | Run ESLint and apply fixes                            |
+| `pnpm prettier`       | Format the codebase                                   |
+| `pnpm prettier:check` | Verify formatting without writing                     |
+| `pnpm typecheck`      | Type-check without emitting                           |
+| `pnpm test`           | Run the test suite once                               |
+| `pnpm test:watch`     | Run tests in watch mode                               |
+| `pnpm test:coverage`  | Run tests with a coverage report                      |
+| `pnpm check`          | Everything CI runs: lint, formatting, types and tests |
+
+## Testing
+
+Tests run on Vitest with jsdom and Testing Library, and live next to the code they cover as
+`*.test.ts` or `*.test.tsx`. Component tests assert against accessible roles and names rather than
+class names or test ids, so a passing test also says something about how the component behaves for
+assistive technology.
+
+For accessibility assertions, use the `axe` helper from `@/lib/testing/axe`:
+
+```tsx
+const { container } = render(<Button>Play</Button>);
+expect(await axe(container)).toHaveNoViolations();
+```
 
 ## Commit conventions
 
