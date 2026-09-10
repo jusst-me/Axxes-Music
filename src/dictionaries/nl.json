@@ -1,11 +1,122 @@
 {
   "common": {
-    "appName": "Axxes Music"
+    "appName": "Axxes Music",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "confirm": "Bevestigen",
+    "delete": "Verwijderen",
+    "save": "Opslaan",
+    "retry": "Opnieuw proberen",
+    "undo": "Ongedaan maken",
+    "loading": "Laden",
+    "error": "Er is iets misgegaan. Probeer het opnieuw."
   },
-  "home": {
+  "landing": {
     "title": "Afspeellijsten die je wilt delen.",
     "intro": "Blader door de catalogus, stel samen afspeellijsten samen en luister naar previews. Beschikbaar in het Engels, Nederlands en Duits.",
     "createAccount": "Account aanmaken",
     "signIn": "Inloggen"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Inloggen",
+      "description": "Log in om samen met je collega's afspeellijsten te maken.",
+      "submit": "Inloggen",
+      "pending": "Bezig met inloggen",
+      "noAccount": "Nog geen account?",
+      "createAccount": "Maak er een aan"
+    },
+    "signUp": {
+      "title": "Account aanmaken",
+      "description": "Kies een naam die je collega's herkennen.",
+      "submit": "Account aanmaken",
+      "pending": "Je account wordt aangemaakt",
+      "hasAccount": "Heb je al een account?",
+      "signIn": "Inloggen"
+    },
+    "fields": {
+      "name": "Naam",
+      "email": "E-mailadres",
+      "password": "Wachtwoord",
+      "passwordHint": "Minimaal 12 tekens."
+    },
+    "errors": {
+      "nameRequired": "Vul je naam in.",
+      "emailInvalid": "Vul een geldig e-mailadres in.",
+      "emailTaken": "Er bestaat al een account met dit e-mailadres.",
+      "passwordTooShort": "Gebruik minimaal 12 tekens.",
+      "invalidCredentials": "Dit e-mailadres en wachtwoord horen niet bij een account."
+    },
+    "signOut": "Uitloggen",
+    "userMenu": "Accountmenu"
+  },
+  "catalog": {
+    "title": "Catalogus",
+    "search": {
+      "label": "Zoek in de catalogus",
+      "placeholder": "Titel, artiest of album",
+      "clear": "Zoekopdracht wissen"
+    },
+    "empty": {
+      "title": "Geen nummers gevonden",
+      "description": "Probeer een andere titel, artiest of album."
+    },
+    "track": {
+      "album": "Album",
+      "genre": "Genre",
+      "releaseDate": "Uitgebracht",
+      "duration": "Duur",
+      "artwork": "Albumhoes van {title} van {artist}",
+      "noArtwork": "Geen albumhoes beschikbaar",
+      "details": "Nummerdetails",
+      "openInAppleMusic": "Openen in Apple Music"
+    },
+    "addToPlaylist": "Toevoegen aan afspeellijst",
+    "loadMore": "Meer nummers laden"
+  },
+  "playlist": {
+    "title": "Afspeellijsten",
+    "create": "Nieuwe afspeellijst",
+    "fields": {
+      "name": "Naam",
+      "description": "Omschrijving",
+      "descriptionOptional": "Optioneel"
+    },
+    "visibility": {
+      "private": "Privé",
+      "shared": "Gedeeld met het team"
+    },
+    "empty": {
+      "title": "Deze afspeellijst is leeg",
+      "description": "Voeg nummers uit de catalogus toe om te beginnen."
+    },
+    "removeTrack": "{title} uit deze afspeellijst verwijderen",
+    "trackAdded": "{title} is toegevoegd aan {playlist}.",
+    "trackRemoved": "{title} is verwijderd uit {playlist}.",
+    "duplicate": "{title} staat al in deze afspeellijst.",
+    "deleteConfirm": {
+      "title": "{name} verwijderen?",
+      "description": "Dit kan niet ongedaan worden gemaakt. De nummers blijven in de catalogus staan.",
+      "confirm": "Afspeellijst verwijderen"
+    }
+  },
+  "player": {
+    "play": "{title} afspelen",
+    "pause": "{title} pauzeren",
+    "nowPlaying": "Nu aan het spelen",
+    "preview": "Preview van 30 seconden",
+    "volume": "Volume",
+    "mute": "Geluid uit",
+    "unmute": "Geluid aan",
+    "seek": "Spoel door de preview",
+    "unavailable": "Voor dit nummer is geen preview beschikbaar."
+  },
+  "a11y": {
+    "skipToContent": "Naar de hoofdinhoud",
+    "mainNavigation": "Hoofdnavigatie",
+    "languageSwitcher": "Taal, nu {language}",
+    "themeToggle": "Overschakelen naar {theme} thema",
+    "searchResults": "{count, plural, =0 {Geen nummers} one {# nummer} other {# nummers}} gevonden",
+    "loading": "Bezig met laden"
   }
 }
