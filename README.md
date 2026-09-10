@@ -30,8 +30,12 @@ The application runs at http://localhost:3000.
 Postgres, accessed through Prisma. `.env.dist` lists the variables that must be set; `DATABASE_URL`
 points at a Neon database, one branch per environment.
 
-`pnpm install` regenerates the Prisma client, so it is never committed. The seed imports a catalog from
-the iTunes Search API and creates a demo account; it uses upserts and is safe to re-run.
+The Prisma client is generated rather than committed. `build` and `typecheck` regenerate it themselves,
+because a host that restores a dependency cache skips `postinstall` and would otherwise type-check
+against a client that is not there.
+
+The seed imports a catalog from the iTunes Search API and creates a demo account; it uses upserts and
+is safe to re-run.
 
 | Script            | Purpose                                            |
 | ----------------- | -------------------------------------------------- |
