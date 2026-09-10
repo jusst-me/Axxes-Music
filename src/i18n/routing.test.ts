@@ -18,8 +18,8 @@ describe('routing', () => {
     expect(routing.locales).toEqual(locales);
   });
 
-  it('does not negotiate the locale from the browser', () => {
-    expect(routing.localeDetection).toBe(false);
+  it('routes an unprefixed request by the visitor’s preference', () => {
+    expect(routing.localeDetection).toBe(true);
   });
 });
 
