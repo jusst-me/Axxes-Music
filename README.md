@@ -1,5 +1,7 @@
 # Axxes Music
 
+[![CI](https://github.com/jusst-me/Axxes-Music/actions/workflows/ci.yml/badge.svg)](https://github.com/jusst-me/Axxes-Music/actions/workflows/ci.yml)
+
 A collaborative playlist application: browse a music catalog, build playlists together, reorder them by
 pointer or keyboard, and play preview clips. Available in English, Dutch and German.
 
@@ -63,3 +65,9 @@ The hooks install themselves through the `prepare` script when you run `pnpm ins
 
 If a hook blocks an urgent commit, bypass it with `git commit --no-verify`. Use this sparingly: CI runs
 the same checks and will fail the pull request regardless.
+
+## Continuous integration
+
+Every push to `main` and every pull request runs lint, formatting, types, tests and a production build
+as separate steps, so a red check points straight at what broke. `pnpm check` runs the same set locally,
+minus the build.

@@ -20,7 +20,7 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
