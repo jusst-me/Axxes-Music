@@ -76,10 +76,11 @@
       "durationLabel": "{minutes, plural, one {# Minute} other {# Minuten}} und {seconds, plural, one {# Sekunde} other {# Sekunden}}",
       "artwork": "Albumcover von {title} von {artist}",
       "noArtwork": "Kein Cover verfügbar",
-      "details": "Titeldetails",
+      "detailsFor": "{title}, Titeldetails",
       "openInAppleMusic": "In Apple Music öffnen"
     },
     "addToPlaylist": "Zur Playlist hinzufügen",
+    "backToCatalog": "Zurück zum Katalog",
     "loadMore": "Weitere Titel laden",
     "loadMorePending": "Weitere Titel werden geladen",
     "showing": "{shown} von {total, plural, one {# Titel} other {# Titel}} werden angezeigt",

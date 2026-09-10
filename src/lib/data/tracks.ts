@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { cache } from 'react';
+
 import type { Prisma } from '@/generated/prisma/client';
 import { requireSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/data/prisma';
@@ -7,13 +9,21 @@ import { prisma } from '@/lib/data/prisma';
 /** Enough to fill a first screen without sending a thousand rows nobody asked for. */
 export const TRACKS_PER_REQUEST = 24;
 
+/**
+ * A row shows five of these fields and the detail view shows all of them. They are read together
+ * because they sit in the same row: fetching them costs nothing extra, and it means opening the
+ * details of a track already on screen needs no round trip at all.
+ */
 const trackSelect = {
   id: true,
   title: true,
   artist: true,
   album: true,
+  genre: true,
   artworkUrl: true,
   durationMs: true,
+  releaseDate: true,
+  appleMusicUrl: true,
 } satisfies Prisma.TrackSelect;
 
 export type CatalogTrack = Prisma.TrackGetPayload<{
@@ -74,3 +84,15 @@ export async function listTracks({ skip = 0, query = '' } = {}) {
     total,
   };
 }
+
+/**
+ * One track, or `null` when the identifier belongs to nothing.
+ *
+ * Cached for the duration of the request, because the detail route asks for the same track twice:
+ * once to title the page and once to render it.
+ */
+export const getTrack = cache(async (id: string) => {
+  await requireSession();
+
+  return prisma.track.findUnique({ where: { id }, select: trackSelect });
+});

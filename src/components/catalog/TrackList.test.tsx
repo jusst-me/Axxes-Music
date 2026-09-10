@@ -29,8 +29,11 @@ function track(overrides: Partial<CatalogTrack> = {}): CatalogTrack {
     title: 'Around the World',
     artist: 'Daft Punk',
     album: 'Homework',
+    genre: 'Electronic',
     artworkUrl: 'https://is1-ssl.mzstatic.com/image/thumb/cover.jpg',
     durationMs: 429_000,
+    releaseDate: new Date('1997-01-20T00:00:00.000Z'),
+    appleMusicUrl: 'https://music.apple.com/album/homework/697194953',
     ...overrides,
   };
 }
@@ -67,7 +70,9 @@ describe('TrackList', () => {
 
     const row = screen.getByRole('listitem');
 
-    expect(within(row).getByText('Around the World')).toBeInTheDocument();
+    expect(
+      within(row).getByRole('button', { name: /Around the World/ }),
+    ).toBeInTheDocument();
     expect(within(row).getByText('Daft Punk · Homework')).toBeInTheDocument();
     expect(within(row).getByText('7:09')).toBeInTheDocument();
   });

@@ -76,10 +76,11 @@
       "durationLabel": "{minutes, plural, one {# minute} other {# minutes}} and {seconds, plural, one {# second} other {# seconds}}",
       "artwork": "Album artwork for {title} by {artist}",
       "noArtwork": "No artwork available",
-      "details": "Track details",
+      "detailsFor": "{title}, track details",
       "openInAppleMusic": "Open in Apple Music"
     },
     "addToPlaylist": "Add to playlist",
+    "backToCatalog": "Back to the catalog",
     "loadMore": "Load more tracks",
     "loadMorePending": "Loading more tracks",
     "showing": "Showing {shown} of {total, plural, one {# track} other {# tracks}}",
