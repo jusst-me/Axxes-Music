@@ -31,6 +31,19 @@ const trackOrder = [
   { id: 'asc' },
 ] satisfies Prisma.TrackOrderByWithRelationInput[];
 
+/** The three fields a listener searches by, matched case-insensitively and anywhere in the value. */
+function matching(query: string): Prisma.TrackWhereInput {
+  if (!query) {
+    return {};
+  }
+
+  const contains = { contains: query, mode: 'insensitive' } as const;
+
+  return {
+    OR: [{ title: contains }, { artist: contains }, { album: contains }],
+  };
+}
+
 /**
  * A slice of the catalog, along with whether asking again would yield anything.
  *
@@ -38,18 +51,21 @@ const trackOrder = [
  * change while someone is reading it, and at this size the database counts past the offset faster than
  * the page can render. A cursor would buy correctness against inserts that never happen.
  */
-export async function listTracks({ skip = 0 } = {}) {
+export async function listTracks({ skip = 0, query = '' } = {}) {
   await requireSession();
+
+  const where = matching(query);
 
   const [tracks, total] = await Promise.all([
     prisma.track.findMany({
+      where,
       select: trackSelect,
       orderBy: trackOrder,
       skip,
       // One more than asked for, which answers whether there is a next slice without a second query.
       take: TRACKS_PER_REQUEST + 1,
     }),
-    prisma.track.count(),
+    prisma.track.count({ where }),
   ]);
 
   return {

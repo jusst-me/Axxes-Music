@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
+import CatalogSearch from '@/components/catalog/CatalogSearch';
 import TrackList from '@/components/catalog/TrackList';
 import TrackListSkeleton from '@/components/catalog/TrackListSkeleton';
 import { resolveLocale } from '@/i18n/locale';
@@ -21,14 +22,20 @@ export async function generateMetadata({
   };
 }
 
-async function CatalogTracks() {
-  const { tracks, hasMore, total } = await listTracks();
+async function CatalogTracks({ query }: { query: string }) {
+  const { tracks, hasMore, total } = await listTracks({ query });
 
-  return <TrackList tracks={tracks} hasMore={hasMore} total={total} />;
+  return (
+    <TrackList tracks={tracks} hasMore={hasMore} total={total} query={query} />
+  );
 }
 
-export default async function CatalogPage() {
+export default async function CatalogPage({
+  searchParams,
+}: PageProps<'/[locale]/catalog'>) {
   const t = await getTranslations('catalog');
+  const { q } = await searchParams;
+  const query = typeof q === 'string' ? q.trim() : '';
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
@@ -37,9 +44,13 @@ export default async function CatalogPage() {
         {t('description')}
       </p>
 
-      {/* The heading is on screen while the query runs, rather than the whole page waiting on it. */}
+      <CatalogSearch query={query} />
+
+      {/* The heading and the field are on screen while the query runs, rather than the whole page
+          waiting on it. The boundary is deliberately not keyed on the query: remounting it would
+          replace the results with skeletons on every search and take the live region down with them. */}
       <Suspense fallback={<TrackListSkeleton />}>
-        <CatalogTracks />
+        <CatalogTracks query={query} />
       </Suspense>
     </div>
   );

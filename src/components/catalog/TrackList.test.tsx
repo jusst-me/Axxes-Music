@@ -8,10 +8,19 @@ import messages from '@/dictionaries/en.json';
 import type { CatalogTrack } from '@/lib/data/tracks';
 import { axe } from '@/lib/testing/axe';
 
-const loadMore = vi.hoisted(() => vi.fn());
+const loadMore = vi.hoisted(() =>
+  vi.fn<(request: { skip: number; query: string }) => unknown>(),
+);
 
 vi.mock('@/lib/catalog/actions', () => ({
-  loadMoreTracksAction: (skip: number) => loadMore(skip),
+  loadMoreTracksAction: (request: { skip: number; query: string }) =>
+    loadMore(request),
+}));
+
+// next-intl's client navigation reaches for `next/navigation`, which does not resolve under Vitest.
+// The locale prefixing it adds is covered in src/i18n/routing.test.ts; here only the anchor matters.
+vi.mock('@/i18n/navigation', () => ({
+  Link: ({ href, ...props }: { href: string }) => <a href={href} {...props} />,
 }));
 
 function track(overrides: Partial<CatalogTrack> = {}): CatalogTrack {
@@ -29,7 +38,13 @@ function track(overrides: Partial<CatalogTrack> = {}): CatalogTrack {
 function renderList(props: Partial<Parameters<typeof TrackList>[0]> = {}) {
   return render(
     <NextIntlClientProvider locale="en" messages={messages}>
-      <TrackList tracks={[track()]} hasMore={false} total={1} {...props} />
+      <TrackList
+        tracks={[track()]}
+        hasMore={false}
+        total={1}
+        query=""
+        {...props}
+      />
     </NextIntlClientProvider>,
   );
 }
@@ -114,7 +129,19 @@ describe('TrackList', () => {
       screen.getByRole('button', { name: 'Load more tracks' }),
     );
 
-    expect(loadMore).toHaveBeenCalledWith(1);
+    expect(loadMore).toHaveBeenCalledWith({ skip: 1, query: '' });
+  });
+
+  it('pages through the search rather than through the whole catalog', async () => {
+    loadMore.mockResolvedValue({ tracks: [], hasMore: false, total: 1 });
+
+    renderList({ hasMore: true, total: 3, query: 'daft' });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Load more tracks' }),
+    );
+
+    expect(loadMore).toHaveBeenCalledWith({ skip: 1, query: 'daft' });
   });
 
   it('catches focus when the last slice takes the button away', async () => {
@@ -142,6 +169,66 @@ describe('TrackList', () => {
       screen.getByRole('heading', { name: 'No tracks found' }),
     ).toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
+  });
+
+  it('offers a way out of a search that found nothing', () => {
+    renderList({ tracks: [], hasMore: false, total: 0, query: 'zzz' });
+
+    expect(
+      screen.getByRole('link', { name: 'Clear search' }),
+    ).toBeInTheDocument();
+  });
+
+  it('leaves the clear control out when there is no search to clear', () => {
+    renderList({ tracks: [], hasMore: false, total: 0 });
+
+    expect(
+      screen.queryByRole('link', { name: 'Clear search' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('keeps the live region in the document when a search finds nothing', () => {
+    const { container } = renderList({
+      tracks: [],
+      hasMore: false,
+      total: 0,
+      query: 'zzz',
+    });
+
+    expect(container.querySelector('[aria-live="polite"]')).toHaveTextContent(
+      'No tracks found',
+    );
+  });
+
+  it('starts over rather than appending when the search changes', async () => {
+    loadMore.mockResolvedValue({
+      tracks: [track({ id: 'track-2', title: 'Digital Love' })],
+      hasMore: false,
+      total: 2,
+    });
+
+    const { rerender } = renderList({ hasMore: true, total: 2 });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Load more tracks' }),
+    );
+    await waitFor(() =>
+      expect(screen.getAllByRole('listitem')).toHaveLength(2),
+    );
+
+    rerender(
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <TrackList
+          tracks={[track({ id: 'track-3', title: 'One More Time' })]}
+          hasMore={false}
+          total={1}
+          query="one"
+        />
+      </NextIntlClientProvider>,
+    );
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(1);
+    expect(screen.getByText('One More Time')).toBeInTheDocument();
   });
 
   it('has no accessibility violations', async () => {
