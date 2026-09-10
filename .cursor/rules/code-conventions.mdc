@@ -5,6 +5,13 @@ alwaysApply: true
 
 # Code Conventions
 
+## Language
+
+Everything written in this repository is in English: documentation, code comments, commit messages,
+identifiers, and branch names. This holds regardless of the language used when discussing the work.
+
+User-facing copy in the interface is the exception and follows the product language.
+
 ## Imports
 
 Always use the `@/` alias for imports from the `src` directory.

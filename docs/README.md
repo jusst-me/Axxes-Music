@@ -1,31 +1,35 @@
-# Axxes Music — projectdocumentatie
+# Axxes Music — project documentation
 
-Deze map is de backlog en het projectgeheugen van dit project. Er is geen Jira of Linear; alles staat hier
-als Markdown zodat het meegroeit met de code, in code review zichtbaar is, en tijdens het
-sollicitatiegesprek gewoon voorgelezen kan worden.
+This directory holds the working documentation for the project: scope, technical decisions, backlog
+and delivery plan. There is no external issue tracker, so everything lives here as Markdown. It
+travels with the code, shows up in review, and stays correct because it is maintained in the same
+pull requests as the changes it describes.
 
-## Leeswijzer
+## Contents
 
-| Document                                     | Waarvoor                                                                     |
-| -------------------------------------------- | ---------------------------------------------------------------------------- |
-| [01-brief.md](./01-brief.md)                 | Wat Axxes gevraagd heeft, wat ik er bewust bij doe, en wat buiten scope valt |
-| [02-tech-stack.md](./02-tech-stack.md)       | Elke technologiekeuze met onderbouwing en overwogen alternatieven            |
-| [03-architecture.md](./03-architecture.md)   | Mappenindeling, datamodel, autorisatie en dataflow                           |
-| [04-design-system.md](./04-design-system.md) | Axxes-huisstijl vertaald naar tokens, inclusief contrastberekeningen         |
-| [05-backlog.md](./05-backlog.md)             | Alle user stories met acceptatiecriteria                                     |
-| [06-roadmap.md](./06-roadmap.md)             | Volgorde van bouwen, mijlpalen en de Definition of Done                      |
+| Document                                     | Purpose                                                             |
+| -------------------------------------------- | ------------------------------------------------------------------- |
+| [01-brief.md](./01-brief.md)                 | Client requirements, agreed scope and explicit exclusions           |
+| [02-tech-stack.md](./02-tech-stack.md)       | Every technology decision, with rationale and rejected alternatives |
+| [03-architecture.md](./03-architecture.md)   | Directory layout, data model, authorization and data flow           |
+| [04-design-system.md](./04-design-system.md) | Axxes brand identity as design tokens, including contrast analysis  |
+| [05-backlog.md](./05-backlog.md)             | User stories with acceptance criteria                               |
+| [06-roadmap.md](./06-roadmap.md)             | Delivery order, milestones and the Definition of Done               |
 
-## Werkafspraken
+## Working agreements
 
-- Eén story per branch, met de story-ID in de branchnaam: `feature/axm-041-playlist-verwijderen`.
-- Commits volgen [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
-- Een story is pas klaar als de Definition of Done in [06-roadmap.md](./06-roadmap.md) is afgevinkt.
-- Wijkt de implementatie af van wat hier staat? Dan wordt dit document bijgewerkt in dezelfde
-  pull request. De documentatie mag nooit achterlopen op de code.
+- One story per branch, with the story ID in the branch name: `feature/axm-041-delete-playlist`.
+- Commits follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+- A story is complete only when the Definition of Done in [06-roadmap.md](./06-roadmap.md) is met.
+- When an implementation diverges from these documents, the documents are updated in the same pull
+  request. Documentation must never lag behind the code.
+- All documentation, code comments and identifiers are written in English.
 
-## Statuslegenda
+## Story labels
 
-Stories in de backlog dragen twee labels:
+Backlog items carry one of three labels:
 
-- `[opdracht]` — expliciet gevraagd in de opdrachtomschrijving van Axxes.
-- `[extra]` — mijn eigen toevoeging om vakmanschap te laten zien. Deze zijn los te laten als de tijd knelt.
+- `[required]` — explicitly requested in the client brief.
+- `[required, optional]` — listed in the brief as an optional requirement.
+- `[proposed]` — not requested, added because it raises the quality of the delivered product. These
+  are the first candidates to drop if the schedule tightens.

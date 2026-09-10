@@ -1,120 +1,120 @@
-# 06 — Volgorde, mijlpalen en Definition of Done
+# 06 — Delivery plan
 
-## Uitgangspunt van de volgorde
+## Sequencing principle
 
-De volgorde is zo gekozen dat er na elke mijlpaal iets werkends staat dat gedemonstreerd kan worden.
-Niet eerst alle infrastructuur en dan pas functionaliteit: dan bestaat het risico dat de demo op het
-laatste moment moet ontstaan.
+The order is chosen so that something demonstrable exists after every milestone. Not all
+infrastructure first and features afterwards: that pattern leaves the working product to emerge at the
+last moment, which is where delivery risk concentrates.
 
-Twee harde afspraken:
+Two fixed rules:
 
-1. **Alles wat de opdracht letterlijk vraagt, is af vóór er aan `[extra]`-werk begonnen wordt.** Loopt de
-   tijd op, dan sneuvelt het extra werk, niet de opdracht.
-2. **De app staat vanaf mijlpaal 1 live op Vercel.** Deployen is dan geen sluitstuk en dus geen risico.
+1. **Everything in the client brief is complete before any `[proposed]` work starts.** If the schedule
+   tightens, the proposed increment is cut, never the agreed scope.
+2. **The application is deployed from milestone M0 onward.** Deployment is therefore never a final
+   step, and never a surprise.
 
-## Mijlpalen
+## Milestones
 
-### M0 — Fundament
+### M0 — Foundation
 
-**Doel:** een lege maar gezonde applicatie, live, met kwaliteitsbewaking die werkt.
+**Goal:** an empty but healthy application, deployed, with working quality gates.
 
 AXM-001, AXM-002, AXM-003, AXM-004, AXM-005
 
-**Klaar als:** een pull request draait door CI, de app is bereikbaar op een Vercel-URL en er staat een
-gemigreerde database met seed.
+**Complete when:** a pull request passes CI, the application is reachable on a Vercel URL, and a
+migrated, seeded database exists.
 
-### M1 — Inloggen en huisstijl
+### M1 — Authentication and identity
 
-**Doel:** de app ziet eruit als Axxes en herkent wie je bent.
+**Goal:** the application looks like Axxes and knows who you are.
 
 AXM-010, AXM-011, AXM-013, AXM-014, AXM-020, AXM-021, AXM-022, AXM-023, AXM-024
 
-**Klaar als:** je een account kunt aanmaken, kunt inloggen en uitloggen, en niet-ingelogde bezoekers
-netjes bij de login uitkomen.
+**Complete when:** an account can be created, sign-in and sign-out work, and unauthenticated visitors
+are routed to the sign-in page.
 
-### M2 — De kern van de opdracht
+### M2 — Core requirements
 
-**Doel:** alles wat de opdracht als hoofdeis noemt, werkt.
+**Goal:** everything the brief lists as a primary requirement.
 
 AXM-030, AXM-031, AXM-032, AXM-033, AXM-040, AXM-050, AXM-051, AXM-052
 
-**Klaar als:** de zes hoofdeisen uit [01-brief.md](./01-brief.md) aantoonbaar werken. Dit is het punt
-waarop de opdracht in principe ingeleverd kan worden.
+**Complete when:** the six primary requirements in [01-brief.md](./01-brief.md) are demonstrably
+working. This is a viable delivery point on its own.
 
-### M3 — De optionele stories
+### M3 — Optional requirements
 
-**Doel:** de drie optionele user stories uit de opdracht.
+**Goal:** the three optional stories from the brief.
 
 AXM-012, AXM-041, AXM-053, AXM-054
 
-**Klaar als:** meerdere afspeellijsten, slepen tussen en binnen lijsten inclusief toetsenbordbediening,
-en een werkende thema-schakelaar.
+**Complete when:** multiple playlists, dragging within and between lists including keyboard operation,
+and a working theme toggle.
 
-### M4 — Eigen profilering
+### M4 — Proposed increment
 
-**Doel:** het werk waarmee ik me onderscheid.
+**Goal:** the additions that raise the product beyond the brief.
 
 AXM-042, AXM-043, AXM-044, AXM-045, AXM-046, AXM-055, AXM-060, AXM-061, AXM-062, AXM-063
 
-**Klaar als:** afspeellijsten hebben zichtbaarheid en mede-bewerkers, en de speler werkt met echte
-previewfragmenten.
+**Complete when:** playlists support visibility and collaborators, and the player works with real
+preview clips.
 
-### M5 — Afronden
+### M5 — Hardening and handover
 
-**Doel:** oplevering waar ik achter sta.
+**Goal:** a delivery worth signing off on.
 
 AXM-070, AXM-071, AXM-072, AXM-073, AXM-074, AXM-075, AXM-080, AXM-081, AXM-082
 
-**Klaar als:** de toegankelijkheidsaudit schoon is, de README compleet is inclusief restpunten, en het
-demoscenario op productie is doorlopen.
+**Complete when:** the accessibility audit is clean, the README is complete including outstanding work,
+and the walkthrough has been verified against production.
 
-> De opdracht vraagt om twee dagen vóór het gesprek klaar te zijn. M5 moet dus voor die datum af zijn,
-> niet op die datum.
+> M5 must be finished ahead of the agreed delivery date, not on it.
 
 ## Definition of Done
 
-Een story is pas klaar als al het volgende geldt:
+A story is complete only when all of the following hold:
 
-**Functioneel**
+**Functional**
 
-- [ ] Alle acceptatiecriteria uit de story zijn aantoonbaar behaald.
-- [ ] Lege, ladende en foutstatussen zijn afgehandeld.
+- [ ] Every acceptance criterion in the story is demonstrably met.
+- [ ] Empty, loading and error states are handled.
 
 **Code**
 
-- [ ] `pnpm check` en `pnpm typecheck` slagen zonder waarschuwingen.
-- [ ] Geen `any`, geen uitgezette lint-regels zonder toelichting.
-- [ ] Alle imports gebruiken het `@/`-alias.
-- [ ] Geen commentaar dat herhaalt wat de code al zegt.
+- [ ] `pnpm check` and `pnpm typecheck` pass without warnings.
+- [ ] No `any`, and no disabled lint rules without a written justification.
+- [ ] All imports use the `@/` alias.
+- [ ] No comments restating what the code already says.
 
-**Toegankelijkheid**
+**Accessibility**
 
-- [ ] Volledig bedienbaar met alleen het toetsenbord.
-- [ ] Focus is zichtbaar en wordt bij statuswijzigingen bewust verplaatst.
-- [ ] Contrast gecontroleerd in zowel het lichte als het donkere thema.
-- [ ] Statuswijzigingen worden aangekondigd aan schermlezers.
-- [ ] Geen axe-bevindingen van niveau ernstig of kritiek.
+- [ ] Fully operable with the keyboard alone.
+- [ ] Focus is visible and moved deliberately on state changes.
+- [ ] Contrast verified in both light and dark themes.
+- [ ] State changes are announced to screen readers.
+- [ ] No serious or critical axe findings.
 
 **Tests**
 
-- [ ] Logica met vertakkingen heeft unittests, met de randgevallen erbij.
-- [ ] Autorisatiewijzigingen hebben een test per rol.
-- [ ] Alle tests slagen lokaal en in CI.
+- [ ] Branching logic is covered by unit tests, including edge cases.
+- [ ] Authorization changes are covered per role.
+- [ ] The full suite passes locally and in CI.
 
-**Proces**
+**Process**
 
-- [ ] Branch heeft de story-ID in de naam.
-- [ ] Commits volgen Conventional Commits.
-- [ ] CI is groen en de preview-deploy is met de hand gecontroleerd.
-- [ ] Afwijkingen van de documentatie zijn in dezelfde pull request bijgewerkt.
+- [ ] The branch name contains the story ID.
+- [ ] Commits follow Conventional Commits.
+- [ ] CI is green and the preview deployment has been checked manually.
+- [ ] Any divergence from the documentation is corrected in the same pull request.
 
-## Risico's
+## Risks
 
-| Risico                                                       | Kans   | Aanpak                                                                                     |
-| ------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------ |
-| Toegankelijk slepen kost meer tijd dan gedacht               | hoog   | Eerst AXM-053 binnen één lijst afmaken; AXM-054 tussen lijsten is pas daarna aan de beurt  |
-| Next.js 16 wijkt af van bekende patronen                     | middel | Vóór elke taak de meegeleverde documentatie in `node_modules/next/dist/docs/` raadplegen   |
-| Auth.js v5 draait op een beta-versie                         | middel | Versie vastzetten, niet meeliften op nieuwe releases tijdens het project                   |
-| Scope groeit voorbij wat in de resterende tijd past          | hoog   | De mijlpaalvolgorde is bindend; `[extra]` sneuvelt eerst en komt in de README als restpunt |
-| Previewfragmenten van iTunes vallen weg of blokkeren         | laag   | Fragmenten zijn niet essentieel; de app werkt zonder geluid volledig                       |
-| Uitloop richting de deadline van twee dagen vóór het gesprek | middel | M2 is een volwaardig inleverpunt; alles daarna is optioneel                                |
+| Risk                                                 | Likelihood | Mitigation                                                                            |
+| ---------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------- |
+| Accessible drag and drop takes longer than estimated | high       | Finish AXM-053 within a single list first; AXM-054 across lists only afterwards       |
+| Next.js 16 diverges from familiar patterns           | medium     | Consult the bundled documentation in `node_modules/next/dist/docs/` before each task  |
+| Auth.js v5 is a pre-release version                  | medium     | Pin the version; do not adopt new releases mid-project                                |
+| Scope grows beyond the available time                | high       | Milestone order is binding; `[proposed]` work is cut first and recorded in the README |
+| iTunes preview clips become unavailable or blocked   | low        | Clips are non-essential; the application is fully functional without audio            |
+| Schedule slips toward the delivery date              | medium     | M2 is a complete delivery point; everything beyond it is optional                     |

@@ -1,117 +1,118 @@
-# 04 — Designsysteem en toegankelijkheid
+# 04 — Design system and accessibility
 
-De huisstijl is afgeleid van de stylesheet van axxes.nl. Het doel is herkenbaarheid, geen imitatie:
-een beoordelaar moet bij het openen van de app meteen zien dat er over de merkcontext is nagedacht.
+The visual identity is derived from the stylesheet of axxes.nl. The goal is recognition rather than
+imitation: the application should read as part of the Axxes family without pretending to be the
+corporate website.
 
-## Merkkleuren
+## Brand colors
 
-Uit `axxes.nl/assets/css/main.css`, op frequentie van gebruik:
+Taken from `axxes.nl/assets/css/main.css`, ordered by frequency of use:
 
-| Rol in de huisstijl | Hex       | Waarvoor bij Axxes                 |
-| ------------------- | --------- | ---------------------------------- |
-| Accent (oranje)     | `#E9531D` | Knoppen, accenten, hover-vlakken   |
-| Donker (charcoal)   | `#1D242B` | Footer, donkere secties, bodytekst |
-| Licht               | `#F9F9F9` | Paginaachtergrond                  |
-| Slate               | `#313D47` | Secundaire donkere vlakken         |
-| Grijs               | `#5B6770` | Secundaire tekst                   |
-| Lichtgrijs          | `#A0A7AB` | Randen, uitgeschakelde elementen   |
-| Teal donker         | `#035D67` | Secundair accent                   |
-| Teal licht          | `#90B6BB` | Secundair accent                   |
-| Oranje donker       | `#BC3F12` | Hover-variant van het accent       |
+| Role            | Hex       | Usage on axxes.nl                |
+| --------------- | --------- | -------------------------------- |
+| Accent (orange) | `#E9531D` | Buttons, accents, hover surfaces |
+| Charcoal        | `#1D242B` | Footer, dark sections, body text |
+| Light           | `#F9F9F9` | Page background                  |
+| Slate           | `#313D47` | Secondary dark surfaces          |
+| Gray            | `#5B6770` | Secondary text                   |
+| Light gray      | `#A0A7AB` | Borders, disabled elements       |
+| Teal dark       | `#035D67` | Secondary accent                 |
+| Teal light      | `#90B6BB` | Secondary accent                 |
+| Orange dark     | `#BC3F12` | Hover variant of the accent      |
 
-Typografie op axxes.nl is Montserrat in combinatie met objektiv-mk1. Die laatste is een
-Adobe-licentiefont en gebruiken we niet; **Montserrat** via `next/font/google` draagt de huisstijl
-voldoende.
+Typography on axxes.nl pairs Montserrat with objektiv-mk1. The latter is an Adobe-licensed typeface and
+is not used here; **Montserrat** through `next/font/google` carries the identity well enough.
 
-## Het contrastprobleem, en hoe we het oplossen
+## The contrast problem, and how it is resolved
 
-Het merkoranje is het karakteristieke element van de huisstijl, maar het is als bodytekst niet
-toegankelijk. Onderstaande verhoudingen zijn berekend volgens de WCAG-formule voor relatieve
-luminantie en worden bij implementatie geverifieerd met een contrasttool.
+The brand orange is the defining element of the identity, but it is not accessible as body text. The
+ratios below are calculated using the WCAG relative luminance formula and are verified against a
+contrast tool during implementation.
 
-| Combinatie             | Ratio      | AA-bodytekst (4.5:1) | AA-groot en UI (3:1) |
-| ---------------------- | ---------- | -------------------- | -------------------- |
-| `#E9531D` op wit       | ≈ 3.7 : 1  | onvoldoende          | voldoende            |
-| `#E9531D` op `#1D242B` | ≈ 4.3 : 1  | onvoldoende          | voldoende            |
-| `#BC3F12` op `#F9F9F9` | ≈ 5.4 : 1  | voldoende            | voldoende            |
-| `#1D242B` op `#F9F9F9` | ≈ 14.9 : 1 | voldoende            | voldoende            |
-| `#5B6770` op `#F9F9F9` | ≈ 5.5 : 1  | voldoende            | voldoende            |
-| `#A0A7AB` op `#F9F9F9` | ≈ 2.3 : 1  | onvoldoende          | onvoldoende          |
-| `#035D67` op wit       | ≈ 7.6 : 1  | voldoende            | voldoende            |
-| `#90B6BB` op `#1D242B` | ≈ 7.2 : 1  | voldoende            | voldoende            |
+| Combination            | Ratio      | AA body text (4.5:1) | AA large text and UI (3:1) |
+| ---------------------- | ---------- | -------------------- | -------------------------- |
+| `#E9531D` on white     | ≈ 3.7 : 1  | fails                | passes                     |
+| `#E9531D` on `#1D242B` | ≈ 4.3 : 1  | fails                | passes                     |
+| `#BC3F12` on `#F9F9F9` | ≈ 5.4 : 1  | passes               | passes                     |
+| `#1D242B` on `#F9F9F9` | ≈ 14.9 : 1 | passes               | passes                     |
+| `#5B6770` on `#F9F9F9` | ≈ 5.5 : 1  | passes               | passes                     |
+| `#A0A7AB` on `#F9F9F9` | ≈ 2.3 : 1  | fails                | fails                      |
+| `#035D67` on white     | ≈ 7.6 : 1  | passes               | passes                     |
+| `#90B6BB` on `#1D242B` | ≈ 7.2 : 1  | passes               | passes                     |
 
-Daaruit volgen drie regels die de hele UI sturen:
+Three rules follow from this and govern the entire interface:
 
-1. **`#E9531D` is een vlakkleur, geen tekstkleur.** Prima voor knopachtergronden met witte tekst, voor
-   randen, voor focusringen en voor grote koppen. Niet voor lopende tekst of kleine links.
-2. **Oranje tekst krijgt per thema een eigen tint.** In het lichte thema `#BC3F12`, in het donkere thema
-   een lichtere tint rond `#FF7A45` (≈ 6.1 : 1 op charcoal).
-3. **`#A0A7AB` is nooit tekst.** Alleen randen, scheidingslijnen en uitgeschakelde elementen — en zelfs
-   dan met een controle of de 3:1-eis voor UI-componenten gehaald wordt.
+1. **`#E9531D` is a surface color, not a text color.** It works for button backgrounds with white text,
+   for borders, for focus rings and for large headings. It does not work for body copy or small links.
+2. **Orange text uses a per-theme variant.** `#BC3F12` in the light theme, a lighter tint around
+   `#FF7A45` in the dark theme (approximately 6.1 : 1 on charcoal).
+3. **`#A0A7AB` is never text.** Borders, dividers and disabled states only, and even then verified
+   against the 3:1 requirement for UI components.
 
-Gelukkig haalt het merkoranje in beide thema's wél de 3:1 die WCAG voor focusindicatoren vraagt. De
-focusring kan dus in beide thema's oranje blijven, wat de huisstijl juist versterkt.
+The brand orange does clear the 3:1 threshold WCAG requires for focus indicators in both themes, so the
+focus ring can stay orange throughout, which reinforces the identity rather than compromising it.
 
 ## Tokens
 
-Tailwind v4 configureert alles in CSS, dus de tokens komen in `src/app/globals.css` te staan. shadcn
-werkt al met semantische variabelen (`--primary`, `--background`, `--muted`); die vullen we met de
-Axxes-waarden in plaats van er nieuwe namen naast te zetten.
+Tailwind v4 is configured entirely in CSS, so tokens live in `src/app/globals.css`. shadcn already
+works with semantic variables (`--primary`, `--background`, `--muted`); those are populated with the
+Axxes values rather than introducing a parallel naming scheme.
 
-Toewijzing op hoofdlijnen:
+Mapping at a high level:
 
-| shadcn-token           | Licht thema           | Donker thema        |
-| ---------------------- | --------------------- | ------------------- |
-| `--background`         | `#F9F9F9`             | `#1D242B`           |
-| `--foreground`         | `#1D242B`             | `#F9F9F9`           |
-| `--card`, `--popover`  | wit                   | `#313D47`           |
-| `--primary`            | `#E9531D`             | `#E9531D`           |
-| `--primary-foreground` | wit                   | wit                 |
-| `--secondary`          | `#035D67`             | `#90B6BB`           |
-| `--muted-foreground`   | `#5B6770`             | lichtere grijstint  |
-| `--border`, `--input`  | `#A0A7AB` transparant | wit op lage dekking |
-| `--ring`               | `#E9531D`             | `#E9531D`           |
+| shadcn token           | Light theme          | Dark theme           |
+| ---------------------- | -------------------- | -------------------- |
+| `--background`         | `#F9F9F9`            | `#1D242B`            |
+| `--foreground`         | `#1D242B`            | `#F9F9F9`            |
+| `--card`, `--popover`  | white                | `#313D47`            |
+| `--primary`            | `#E9531D`            | `#E9531D`            |
+| `--primary-foreground` | white                | white                |
+| `--secondary`          | `#035D67`            | `#90B6BB`            |
+| `--muted-foreground`   | `#5B6770`            | lighter gray tint    |
+| `--border`, `--input`  | `#A0A7AB` at opacity | white at low opacity |
+| `--ring`               | `#E9531D`            | `#E9531D`            |
 
-Kleuren worden genoteerd in `oklch()`, in lijn met wat shadcn genereert. Dat maakt tinten afleiden
-voorspelbaarder dan met hex.
+Colors are written in `oklch()`, matching what shadcn generates. Deriving tints is more predictable
+there than in hexadecimal.
 
-## Thema's
+## Themes
 
-Licht, donker en "volg systeem", via `next-themes` met een klasse op `<html>`. De keuze wordt onthouden.
-De schakelaar staat in de header en is een echte knop met een toegankelijke naam die de huidige stand
-benoemt.
+Light, dark and "follow system", through `next-themes` with a class on `<html>`. The preference is
+persisted. The toggle sits in the header as a real button with an accessible name that states the
+current mode.
 
-Belangrijk detail: de themavoorkeur moet vóór de eerste paint toegepast worden, anders flitst het
-lichte thema kort door bij een donkere voorkeur. `next-themes` regelt dat met een inline script.
+One detail matters: the theme must be applied before first paint, otherwise the light theme flashes
+briefly for users who prefer dark. `next-themes` handles this with an inline script.
 
-## Toegankelijkheidsuitgangspunten
+## Accessibility principles
 
-De volledige regelset staat in `.cursor/rules/wcag.mdc`. De punten die in dit project het meeste sturen:
+The full rule set lives in `.cursor/rules/wcag.mdc`. The points that drive the most decisions in this
+project:
 
-- **Toetsenbord voor alles.** Elke functie moet zonder muis bruikbaar zijn. Slepen is hierin de
-  lastigste, en tegelijk de meest sprekende: dnd-kit levert de toetsenbordbediening, wij leveren de
-  instructie en de aankondigingen.
-- **Zichtbare focus.** Minimaal 2 pixels, in merkoranje, nooit weggehaald zonder alternatief, en niet
-  afgedekt door de spelerbalk onderaan. Dat laatste vraagt om `scroll-padding-bottom` ter hoogte van
-  de speler.
-- **Meldingen die je hoort.** Nummer toegevoegd, nummer verwijderd, volgorde gewijzigd, zoekresultaten
-  bijgewerkt: allemaal via een `aria-live`-gebied. Een schermlezer mag niet in stilte achterblijven.
-- **Raakvlakken van minimaal 24 bij 24 pixels**, met voldoende tussenruimte. Dichte lijsten met
-  icoonknoppen zijn hier het risico.
-- **Eén `h1` per pagina** en een koppenstructuur die niet springt.
-- **Animatie is optioneel.** Alles achter `prefers-reduced-motion`; zonder animatie moet de app
-  volledig werken.
+- **Everything works from the keyboard.** Drag and drop is the hardest case and the most telling:
+  dnd-kit provides the keyboard interaction, the application provides the instructions and the
+  announcements.
+- **Focus stays visible.** At least 2 pixels, in brand orange, never removed without a replacement, and
+  never obscured by the player bar at the bottom of the viewport. The last point requires
+  `scroll-padding-bottom` matching the player height.
+- **State changes are announced.** Track added, track removed, order changed, search results updated —
+  all through an `aria-live` region. A screen reader must not be left in silence.
+- **Touch targets of at least 24 by 24 pixels**, with adequate spacing. Dense list rows with icon
+  buttons are the main risk.
+- **One `h1` per page** and a heading structure that does not skip levels.
+- **Animation is optional.** Everything respects `prefers-reduced-motion`, and the application is fully
+  functional without any animation at all.
 
-## Animatieprincipes
+## Motion principles
 
-Animatie legt uit wat er gebeurde, en trekt geen aandacht naar zichzelf.
+Animation explains what changed. It does not draw attention to itself.
 
-| Waar                     | Wat                                                     | Duur       |
-| ------------------------ | ------------------------------------------------------- | ---------- |
-| Nummer toegevoegd of weg | Rij schuift in of uit, omliggende rijen verschuiven mee | 150–200 ms |
-| Volgorde gewijzigd       | Layout-animatie van dnd-kit en Motion                   | 200 ms     |
-| Dialog en sheet          | Fade met lichte schaal                                  | 150 ms     |
-| Spelerbalk verschijnt    | Schuift omhoog vanaf de onderrand                       | 250 ms     |
-| Themawissel              | Korte kleurovergang op achtergrond en tekst             | 200 ms     |
+| Where                  | What                                                 | Duration   |
+| ---------------------- | ---------------------------------------------------- | ---------- |
+| Track added or removed | Row fades and slides, surrounding rows shift to fill | 150–200 ms |
+| Order changed          | Layout animation from dnd-kit and Motion             | 200 ms     |
+| Dialog and sheet       | Fade with a slight scale                             | 150 ms     |
+| Player bar appears     | Slides up from the bottom edge                       | 250 ms     |
+| Theme change           | Short color transition on background and text        | 200 ms     |
 
-Niets duurt langer dan 300 ms, en er beweegt niets zonder dat de gebruiker iets deed.
+Nothing exceeds 300 ms, and nothing moves without a user action preceding it.

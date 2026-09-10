@@ -1,495 +1,498 @@
 # 05 — Backlog
 
-Labels: `[opdracht]` staat letterlijk in de opdrachtomschrijving, `[extra]` is mijn eigen toevoeging.
-Schatting in T-shirtmaten: S is onder het uur, M is een tot drie uur, L is meer dan drie uur.
+Labels: `[required]` appears in the client brief, `[proposed]` is an addition made by the development
+team. Estimates use T-shirt sizes: S is under an hour, M is one to three hours, L is more than three.
 
-Overzicht van de epics:
+Epic overview:
 
-| Epic | Onderwerp                  | Stories | Zwaartepunt  |
-| ---- | -------------------------- | ------- | ------------ |
-| A    | Fundament en kwaliteit     | 5       | `[extra]`    |
-| B    | Designsysteem en thema's   | 5       | gemengd      |
-| C    | Authenticatie              | 5       | `[opdracht]` |
-| D    | Muziekcatalogus            | 4       | `[opdracht]` |
-| E    | Afspeellijsten beheren     | 6       | gemengd      |
-| F    | Inhoud van afspeellijsten  | 6       | `[opdracht]` |
-| G    | Afspelen                   | 4       | `[extra]`    |
-| H    | Toegankelijkheid en polish | 6       | `[extra]`    |
-| I    | Oplevering                 | 3       | gemengd      |
-
----
-
-## Epic A — Fundament en kwaliteit
-
-Doel: voordat er functionaliteit komt, staat de kwaliteitsbewaking. Anders is die later niet meer geloofwaardig.
-
-### AXM-001 — Husky, lint-staged en commitlint `[extra]`
-
-**Als** ontwikkelaar **wil ik** dat fouten worden tegengehouden vóór de commit **zodat** kwaliteit niet
-van mijn oplettendheid afhangt.
-
-- Pre-commit draait ESLint en Prettier over alleen de gewijzigde bestanden.
-- Commit-msg valideert tegen Conventional Commits en weigert een commit die niet voldoet.
-- De hooks installeren zichzelf via een `prepare`-script na `pnpm install`.
-- README beschrijft hoe je een hook in noodgevallen overslaat.
-
-Prioriteit: hoog · Schatting: S
-
-### AXM-002 — Testopzet met Vitest `[extra]`
-
-**Als** ontwikkelaar **wil ik** tests kunnen schrijven en draaien **zodat** gedrag vastligt.
-
-- Vitest met jsdom, Testing Library en `@testing-library/jest-dom`.
-- `vitest-axe` beschikbaar voor toegankelijkheidsassertions.
-- Scripts `test`, `test:watch` en `test:coverage`.
-- Padalias `@/` werkt in tests, en één voorbeeldtest draait groen.
-
-Prioriteit: hoog · Schatting: M
-
-### AXM-003 — GitHub Actions CI `[extra]`
-
-**Als** beoordelaar **wil ik** aan de PR zien dat de build gezond is **zodat** ik de code kan
-vertrouwen.
-
-- Workflow draait op push naar `main` en op elke pull request.
-- Stappen: install met pnpm-cache, lint, typecheck, test, build.
-- Faalt één stap, dan faalt de workflow zichtbaar.
-- Doorlooptijd onder de vijf minuten.
-
-Prioriteit: hoog · Schatting: M · Na: AXM-002
-
-### AXM-004 — Vercel en Neon inrichten `[extra]`
-
-**Als** beoordelaar **wil ik** de app in de browser kunnen openen **zodat** ik niets hoef te installeren.
-
-- Vercel-project gekoppeld aan de GitHub-repository.
-- Neon Postgres aangemaakt; `DATABASE_URL`, `AUTH_SECRET` en `AUTH_URL` staan als omgevingsvariabelen.
-- Preview-deploy per pull request werkt.
-- `.env.dist` staat in de repository, echte `.env` niet.
-
-Prioriteit: hoog · Schatting: M
-
-### AXM-005 — Prisma, schema en migraties `[extra]`
-
-**Als** ontwikkelaar **wil ik** een getypeerd datamodel **zodat** de rest van de app daarop kan bouwen.
-
-- Prisma geïnstalleerd en geconfigureerd; client wordt als singleton geëxporteerd om verbindingslekken
-  bij hot reload te voorkomen.
-- Schema volgens [03-architecture.md](./03-architecture.md), inclusief indexen en unieke constraints.
-- Eerste migratie staat in versiebeheer.
-- `pnpm db:seed` vult een demo-account en een startcatalogus.
-
-Prioriteit: hoog · Schatting: L · Na: AXM-004
+| Epic | Subject                   | Stories | Weighting    |
+| ---- | ------------------------- | ------- | ------------ |
+| A    | Foundation and quality    | 5       | `[proposed]` |
+| B    | Design system and theming | 5       | mixed        |
+| C    | Authentication            | 5       | `[required]` |
+| D    | Music catalog             | 4       | `[required]` |
+| E    | Playlist management       | 6       | mixed        |
+| F    | Playlist contents         | 6       | `[required]` |
+| G    | Playback                  | 4       | `[proposed]` |
+| H    | Accessibility and polish  | 6       | `[proposed]` |
+| I    | Delivery                  | 3       | mixed        |
 
 ---
 
-## Epic B — Designsysteem en thema's
+## Epic A — Foundation and quality
 
-### AXM-010 — Axxes-tokens in globals.css `[extra]`
+Goal: quality gates are in place before feature work begins. Added afterwards, they tend not to be
+added at all.
 
-**Als** gebruiker **wil ik** een app die eruitziet alsof hij bij Axxes hoort **zodat** het geheel
-doordacht aanvoelt.
+### AXM-001 — Husky, lint-staged and commitlint `[proposed]`
 
-- Alle shadcn-tokens gevuld met de waarden uit [04-design-system.md](./04-design-system.md), in `oklch()`.
-- Zowel licht als donker volledig gedefinieerd.
-- Geverifieerd met een contrasttool; de resultaten komen in het designsysteemdocument.
-- Geen losse kleurwaarden meer in componenten.
+**As a** developer **I want** mistakes blocked before they are committed **so that** quality does not
+depend on attentiveness.
 
-Prioriteit: hoog · Schatting: M
+- Pre-commit runs ESLint and Prettier across changed files only.
+- Commit-msg validates against Conventional Commits and rejects non-conforming messages.
+- Hooks install themselves through a `prepare` script after `pnpm install`.
+- The README documents how to bypass a hook in an emergency.
 
-### AXM-011 — Montserrat en typografieschaal `[extra]`
+Priority: high · Estimate: S
 
-- Montserrat via `next/font/google` met `display: swap` en alleen de benodigde gewichten.
-- De Geist- en Inter-fonts uit de create-next-app-opzet zijn verwijderd.
-- Koppenschaal vastgelegd in `@theme`; regelafstand van lopende tekst minimaal 1.5.
+### AXM-002 — Test setup with Vitest `[proposed]`
 
-Prioriteit: middel · Schatting: S · Na: AXM-010
+**As a** developer **I want** to write and run tests **so that** behavior is pinned down.
 
-### AXM-012 — Thema-schakelaar `[opdracht, optioneel]`
+- Vitest with jsdom, Testing Library and `@testing-library/jest-dom`.
+- `vitest-axe` available for accessibility assertions.
+- Scripts `test`, `test:watch` and `test:coverage`.
+- The `@/` path alias resolves in tests, and one example test passes.
 
-**Als** gebruiker **wil ik** kunnen wisselen tussen licht en donker **zodat** de app prettig is in mijn
-werkomgeving.
+Priority: high · Estimate: M
 
-- Drie standen: licht, donker en systeem; de keuze wordt onthouden.
-- Geen zichtbare flits van het verkeerde thema bij het laden.
-- De knop heeft een toegankelijke naam die de huidige stand benoemt en is bedienbaar met het toetsenbord.
-- Beide thema's voldoen aan de contrasteisen.
+### AXM-003 — GitHub Actions CI `[proposed]`
 
-Prioriteit: hoog · Schatting: M · Na: AXM-010
+**As a** reviewer **I want** build health visible on the pull request **so that** I can trust the
+change.
 
-### AXM-013 — App-shell en navigatie `[extra]`
+- Workflow runs on push to `main` and on every pull request.
+- Steps: install with pnpm cache, lint, typecheck, test, build.
+- Any failing step fails the workflow visibly.
+- Total runtime under five minutes.
 
-- Header met logo, hoofdnavigatie, thema-schakelaar en gebruikersmenu.
-- Semantische landmarks: `header`, `nav`, `main`, `footer`.
-- Skip-link naar de hoofdinhoud, zichtbaar zodra hij focus krijgt.
-- Werkt van 320 pixels breed tot desktop.
-- De actieve navigatie-item is gemarkeerd met `aria-current="page"`.
+Priority: high · Estimate: M · Depends on: AXM-002
 
-Prioriteit: hoog · Schatting: M
+### AXM-004 — Vercel and Neon provisioning `[proposed]`
 
-### AXM-014 — shadcn-componenten toevoegen `[extra]`
+**As a** stakeholder **I want** to open the application in a browser **so that** I can follow progress
+without a local setup.
 
-- Toegevoegd via de CLI, niet met de hand: `dialog`, `dropdown-menu`, `input`, `label`, `form`,
+- Vercel project connected to the GitHub repository.
+- Neon Postgres provisioned; `DATABASE_URL`, `AUTH_SECRET` and `AUTH_URL` set as environment variables.
+- Preview deployment per pull request verified working.
+- `.env.dist` committed; the real `.env` is not.
+
+Priority: high · Estimate: M
+
+### AXM-005 — Prisma, schema and migrations `[proposed]`
+
+**As a** developer **I want** a typed data model **so that** the rest of the application can build on
+it.
+
+- Prisma installed and configured; the client is exported as a singleton to avoid connection leaks
+  during hot reload.
+- Schema per [03-architecture.md](./03-architecture.md), including indexes and unique constraints.
+- Initial migration committed.
+- `pnpm db:seed` creates a demo account and an initial catalog.
+
+Priority: high · Estimate: L · Depends on: AXM-004
+
+---
+
+## Epic B — Design system and theming
+
+### AXM-010 — Axxes tokens in globals.css `[proposed]`
+
+**As a** user **I want** an application that looks like it belongs to Axxes **so that** it feels
+considered and trustworthy.
+
+- All shadcn tokens populated with the values from [04-design-system.md](./04-design-system.md), in
+  `oklch()`.
+- Light and dark themes both fully defined.
+- Verified with a contrast tool; results recorded in the design system document.
+- No literal color values remain in components.
+
+Priority: high · Estimate: M
+
+### AXM-011 — Montserrat and type scale `[proposed]`
+
+- Montserrat through `next/font/google` with `display: swap` and only the required weights.
+- The Geist and Inter fonts from the create-next-app scaffold are removed.
+- Heading scale defined in `@theme`; body line height at least 1.5.
+
+Priority: medium · Estimate: S · Depends on: AXM-010
+
+### AXM-012 — Theme toggle `[required, optional]`
+
+**As a** user **I want** to switch between light and dark **so that** the application suits my working
+environment.
+
+- Three modes: light, dark and system; the choice is persisted.
+- No visible flash of the wrong theme on load.
+- The control has an accessible name stating the current mode and is keyboard operable.
+- Both themes meet the contrast requirements.
+
+Priority: high · Estimate: M · Depends on: AXM-010
+
+### AXM-013 — App shell and navigation `[proposed]`
+
+- Header with logo, primary navigation, theme toggle and user menu.
+- Semantic landmarks: `header`, `nav`, `main`, `footer`.
+- Skip link to main content, visible on focus.
+- Works from 320 pixels wide up to desktop.
+- The active navigation item is marked with `aria-current="page"`.
+
+Priority: high · Estimate: M
+
+### AXM-014 — Install shadcn components `[proposed]`
+
+- Added through the CLI rather than by hand: `dialog`, `dropdown-menu`, `input`, `label`, `form`,
   `sheet`, `sonner`, `tooltip`, `avatar`, `skeleton`, `alert-dialog`, `select`, `switch`, `slider`.
-- Alle componenten gecontroleerd tegen de Axxes-tokens.
+- Each component checked against the Axxes tokens.
 
-Prioriteit: middel · Schatting: S · Na: AXM-010
-
----
-
-## Epic C — Authenticatie
-
-### AXM-020 — Auth.js met e-mail en wachtwoord `[opdracht]`
-
-**Als** medewerker **wil ik** inloggen met e-mail en wachtwoord **zodat** mijn afspeellijsten van mij zijn.
-
-- Auth.js v5 met de credentials-provider en JWT-sessies.
-- Wachtwoorden gehasht met Argon2id; het hash-veld verlaat de server nooit.
-- Bij onjuiste gegevens dezelfde foutmelding voor onbekend e-mailadres en fout wachtwoord, zodat er
-  geen accounts te achterhalen zijn.
-- Sessie bevat gebruikers-ID, naam en e-mail; het type is uitgebreid zodat TypeScript meedenkt.
-
-Prioriteit: hoog · Schatting: L · Na: AXM-005
-
-### AXM-021 — Loginpagina `[opdracht]`
-
-- Formulier met gekoppelde labels, `autocomplete` op e-mail en wachtwoord, en plakken toegestaan.
-- Validatie met Zod, gedeeld tussen client en server.
-- Fouten gekoppeld via `aria-describedby`, veld gemarkeerd met `aria-invalid`, focus springt naar het
-  eerste foute veld.
-- Laadstatus tijdens verzenden; dubbel verzenden is niet mogelijk.
-- Na inloggen door naar de oorspronkelijk gevraagde pagina.
-
-Prioriteit: hoog · Schatting: M · Na: AXM-020
-
-### AXM-022 — Registratiepagina `[extra]`
-
-- Naam, e-mail en wachtwoord met minimale sterkte-eis en zichtbare uitleg vooraf.
-- Dubbel e-mailadres levert een nette veldfout op, geen serverfout.
-- Na registratie is de gebruiker meteen ingelogd.
-
-Prioriteit: hoog · Schatting: M · Na: AXM-020
-
-### AXM-023 — Routebescherming `[opdracht]`
-
-- `src/proxy.ts` stuurt bezoekers zonder sessie door naar `/login`, met de bestemming als parameter.
-- Elke server action en elke data-functie controleert de sessie zelfstandig; proxy is niet leidend.
-- Een test toont aan dat een data-functie weigert zonder geldige sessie.
-
-Prioriteit: hoog · Schatting: M · Na: AXM-020
-
-### AXM-024 — Gebruikersmenu en uitloggen `[extra]`
-
-- Menu in de header toont naam en e-mail en bevat een uitlogoptie.
-- Uitloggen wist de sessie en stuurt door naar de loginpagina.
-- Het menu volgt het toetsenbordpatroon van een menu en geeft de focus netjes terug bij sluiten.
-
-Prioriteit: middel · Schatting: S · Na: AXM-020
+Priority: medium · Estimate: S · Depends on: AXM-010
 
 ---
 
-## Epic D — Muziekcatalogus
+## Epic C — Authentication
 
-### AXM-030 — Catalogus importeren `[extra]`
+### AXM-020 — Auth.js with email and password `[required]`
 
-**Als** gebruiker **wil ik** een gevulde muziekbibliotheek **zodat** ik meteen aan de slag kan.
+**As an** employee **I want** to sign in with email and password **so that** my playlists are mine.
 
-- Script haalt nummers op bij de iTunes Search API over meerdere genres en artiesten.
-- Per nummer worden titel, artiest, album, genre, releasedatum, speelduur, hoes, previewfragment en
-  Apple Music-link opgeslagen.
-- Herhaald draaien maakt geen duplicaten: `externalId` is uniek en er wordt `upsert` gebruikt.
-- Minimaal 200 nummers met een bruikbaar previewfragment.
-- Nummers zonder previewfragment worden overgeslagen of gemarkeerd.
+- Auth.js v5 with the credentials provider and JWT sessions.
+- Passwords hashed with Argon2id; the hash never leaves the server.
+- Invalid credentials return an identical message for unknown email and wrong password, so accounts
+  cannot be enumerated.
+- The session carries user ID, name and email, with the type extended so TypeScript is aware of it.
 
-Prioriteit: hoog · Schatting: M · Na: AXM-005
+Priority: high · Estimate: L · Depends on: AXM-005
 
-### AXM-031 — Overzicht van beschikbare nummers `[opdracht]`
+### AXM-021 — Sign-in page `[required]`
 
-**Als** gebruiker **wil ik** de beschikbare nummers zien **zodat** ik kan kiezen wat ik toevoeg.
+- Form with associated labels, `autocomplete` on email and password, and paste permitted.
+- Validation with Zod, shared between client and server.
+- Errors linked through `aria-describedby`, fields marked with `aria-invalid`, focus moved to the first
+  invalid field.
+- Loading state during submission; double submission is prevented.
+- After signing in, the user continues to the originally requested page.
 
-- Server Component toont hoes, titel, artiest, album en speelduur.
-- Paginering of oneindig scrollen; niet alles in één keer renderen.
-- De lijst is opgebouwd als een echte lijst en per rij met het toetsenbord te bereiken.
-- Laadstatus met skeletons en een nette lege staat.
-- Ontbrekende hoes valt terug op een placeholder met passende alt-tekst.
+Priority: high · Estimate: M · Depends on: AXM-020
 
-Prioriteit: hoog · Schatting: L · Na: AXM-030
+### AXM-022 — Registration page `[proposed]`
 
-### AXM-032 — Zoeken in de catalogus `[opdracht]`
+- Name, email and password with a minimum strength requirement stated before the field.
+- A duplicate email produces a field-level error, not a server error.
+- The user is signed in immediately after registering.
 
-- Zoekterm staat in de URL als `?q=`, zodat de zoekopdracht deelbaar is en de terugknop werkt.
-- Zoekt hoofdletterongevoelig op titel, artiest en album.
-- Invoer wordt vertraagd verwerkt; de invoer verliest geen focus tijdens het typen.
-- Aantal resultaten wordt aangekondigd via een live region.
-- Lege staat met een duidelijke suggestie en een knop om te wissen.
+Priority: high · Estimate: M · Depends on: AXM-020
 
-Prioriteit: hoog · Schatting: M · Na: AXM-031
+### AXM-023 — Route protection `[required]`
 
-### AXM-033 — Nummerdetails `[opdracht]`
+- `src/proxy.ts` redirects unauthenticated visitors to `/login`, preserving the intended destination.
+- Every server action and data function verifies the session independently; proxy is not authoritative.
+- A test demonstrates that a data function refuses to run without a valid session.
 
-**Als** gebruiker **wil ik** meer weten over een nummer **zodat** ik weet wat ik toevoeg.
+Priority: high · Estimate: M · Depends on: AXM-020
 
-- Dialog toont album, genre, releasedatum, speelduur, grote hoes en een link naar Apple Music.
-- Ook bereikbaar als eigen route `/tracks/[trackId]`, zodat de details deelbaar zijn.
-- De dialog houdt de focus vast, sluit met Escape en geeft de focus terug aan de openende knop.
-- Vanuit het detail kan het nummer direct aan een afspeellijst worden toegevoegd.
+### AXM-024 — User menu and sign out `[proposed]`
 
-Prioriteit: hoog · Schatting: M · Na: AXM-031
+- Header menu showing name and email, with a sign-out option.
+- Signing out clears the session and returns to the sign-in page.
+- The menu follows the standard menu keyboard pattern and restores focus on close.
+
+Priority: medium · Estimate: S · Depends on: AXM-020
 
 ---
 
-## Epic E — Afspeellijsten beheren
+## Epic D — Music catalog
 
-### AXM-040 — Afspeellijst aanmaken `[opdracht, optioneel]`
+### AXM-030 — Import the catalog `[proposed]`
 
-- Naam is verplicht, maximaal 100 tekens; omschrijving is optioneel.
-- Nieuwe lijst is standaard privé.
-- Na aanmaken gaat de gebruiker naar de nieuwe lijst en volgt er een bevestiging.
-- Validatiefouten verschijnen bij het veld zelf.
+**As a** user **I want** a populated music library **so that** I can start immediately.
 
-Prioriteit: hoog · Schatting: M · Na: AXM-023
+- Script pulls tracks from the iTunes Search API across multiple genres and artists.
+- Stores title, artist, album, genre, release date, duration, artwork, preview URL and Apple Music link.
+- Re-running produces no duplicates: `externalId` is unique and the script upserts.
+- At least 200 tracks with a usable preview clip.
+- Tracks without a preview clip are skipped or flagged.
 
-### AXM-041 — Afspeellijst verwijderen `[extra]`
+Priority: high · Estimate: M · Depends on: AXM-005
 
-- Alleen de eigenaar mag verwijderen.
-- Bevestigingsdialoog met de naam van de lijst erin; de standaardactie is annuleren.
-- Bijbehorende `PlaylistTrack`-rijen worden meeverwijderd via cascade.
-- Na verwijderen terug naar het overzicht met een bevestiging.
+### AXM-031 — List of available tracks `[required]`
 
-Prioriteit: hoog · Schatting: S · Na: AXM-040
+**As a** user **I want** to see the available tracks **so that** I can choose what to add.
 
-### AXM-042 — Afspeellijst bewerken `[extra]`
+- Server Component renders artwork, title, artist, album and duration.
+- Paginated or incrementally loaded; the full catalog is never rendered at once.
+- Rendered as a genuine list and reachable per row from the keyboard.
+- Loading state with skeletons and a considered empty state.
+- Missing artwork falls back to a placeholder with appropriate alternative text.
 
-- Naam en omschrijving zijn aanpasbaar door de eigenaar.
-- Wijzigingen zijn direct zichtbaar zonder volledige herlaadbeurt.
+Priority: high · Estimate: L · Depends on: AXM-030
 
-Prioriteit: middel · Schatting: S · Na: AXM-040
+### AXM-032 — Search the catalog `[required]`
 
-### AXM-043 — Zichtbaarheid instellen `[extra]`
+- The query lives in the URL as `?q=`, so searches are shareable and the back button behaves.
+- Case-insensitive matching on title, artist and album.
+- Input is debounced; the field does not lose focus while typing.
+- The result count is announced through a live region.
+- Empty state offers a clear next step and a control to clear the search.
 
-**Als** eigenaar **wil ik** kiezen of collega's mijn lijst zien **zodat** ik ook privé kan verzamelen.
+Priority: high · Estimate: M · Depends on: AXM-031
 
-- Schakelaar tussen privé en openbaar, met uitleg wat elke stand betekent.
-- Alleen de eigenaar kan dit wijzigen.
-- Een privélijst opvragen als buitenstaander geeft een 404, geen 403 — het bestaan van de lijst lekt niet.
-- De huidige stand is zichtbaar op de lijstpagina.
+### AXM-033 — Track details `[required]`
 
-Prioriteit: hoog · Schatting: M · Na: AXM-040
+**As a** user **I want** more information about a track **so that** I know what I am adding.
 
-### AXM-044 — Openbare afspeellijsten ontdekken `[extra]`
+- Dialog shows album, genre, release date, duration, large artwork and a link to Apple Music.
+- Also reachable as a dedicated route at `/tracks/[trackId]`, so details are linkable.
+- The dialog traps focus, closes on escape and returns focus to the triggering control.
+- The track can be added to a playlist directly from the detail view.
 
-- Overzicht van alle openbare lijsten met eigenaar en aantal nummers.
-- Eigen lijsten zijn herkenbaar gemarkeerd.
-- Zonder bewerkrechten zijn de bewerkknoppen afwezig, niet slechts uitgeschakeld.
+Priority: high · Estimate: M · Depends on: AXM-031
 
-Prioriteit: middel · Schatting: M · Na: AXM-043
+---
 
-### AXM-045 — Mede-bewerkers beheren `[extra]`
+## Epic E — Playlist management
 
-**Als** eigenaar **wil ik** collega's laten meebewerken **zodat** we samen de kantoorplaylist maken.
+### AXM-040 — Create a playlist `[required, optional]`
 
-- Collega toevoegen op e-mailadres, met rol kijker of bewerker.
-- Rol wijzigen en toegang intrekken kan alleen de eigenaar.
-- De lijst met mede-bewerkers is zichtbaar op de lijstpagina.
-- Een onbekend e-mailadres geeft een nette melding.
+- Name is required, up to 100 characters; description is optional.
+- New playlists default to private.
+- After creation the user lands on the new playlist and receives confirmation.
+- Validation errors appear alongside the relevant field.
 
-Prioriteit: middel · Schatting: L · Na: AXM-043
+Priority: high · Estimate: M · Depends on: AXM-023
 
-### AXM-046 — Autorisatieregels centraal en getest `[extra]`
+### AXM-041 — Delete a playlist `[proposed]`
 
-- De rechtenmatrix uit [03-architecture.md](./03-architecture.md) staat als pure functies in
+- Only the owner can delete.
+- Confirmation dialog naming the playlist; the default action is cancel.
+- Associated `PlaylistTrack` rows are removed by cascade.
+- After deletion the user returns to the overview with a confirmation message.
+
+Priority: high · Estimate: S · Depends on: AXM-040
+
+### AXM-042 — Edit a playlist `[proposed]`
+
+- The owner can change name and description.
+- Changes appear immediately without a full page reload.
+
+Priority: medium · Estimate: S · Depends on: AXM-040
+
+### AXM-043 — Set visibility `[proposed]`
+
+**As an** owner **I want** to decide whether colleagues can see my playlist **so that** I can also
+collect privately.
+
+- Toggle between private and public, with copy explaining what each mode means.
+- Only the owner can change it.
+- Requesting a private playlist as an outsider returns 404 rather than 403, so existence is not leaked.
+- The current mode is visible on the playlist page.
+
+Priority: high · Estimate: M · Depends on: AXM-040
+
+### AXM-044 — Discover public playlists `[proposed]`
+
+- Overview of all public playlists with owner and track count.
+- The user's own playlists are marked as such.
+- Without edit rights, editing controls are absent rather than merely disabled.
+
+Priority: medium · Estimate: M · Depends on: AXM-043
+
+### AXM-045 — Manage collaborators `[proposed]`
+
+**As an** owner **I want** to let colleagues edit **so that** we build the office playlist together.
+
+- Add a colleague by email address with the role viewer or editor.
+- Only the owner can change roles or revoke access.
+- The collaborator list is visible on the playlist page.
+- An unknown email address produces a clear message.
+
+Priority: medium · Estimate: L · Depends on: AXM-043
+
+### AXM-046 — Centralize and test authorization `[proposed]`
+
+- The permission matrix from [03-architecture.md](./03-architecture.md) implemented as pure functions in
   `src/lib/permissions/`.
-- Elke cel van de matrix heeft een test.
-- Server Actions en data-functies gebruiken uitsluitend deze functies.
+- Every cell of the matrix is covered by a test.
+- Server Actions and data functions use these functions exclusively.
 
-Prioriteit: hoog · Schatting: M · Na: AXM-045
-
----
-
-## Epic F — Inhoud van afspeellijsten
-
-### AXM-050 — Nummer toevoegen `[opdracht]`
-
-- Toevoegen kan vanuit de catalogus, vanuit het zoekresultaat en vanuit het detailvenster.
-- Bij meerdere afspeellijsten volgt een keuzemenu; anders wordt direct toegevoegd.
-- Het nummer komt onderaan de lijst.
-- Een dubbele toevoeging wordt netjes gemeld, niet als serverfout.
-- De lijst reageert direct en rolt terug als de actie faalt.
-- De toevoeging wordt aangekondigd via een live region.
-
-Prioriteit: hoog · Schatting: M · Na: AXM-040
-
-### AXM-051 — Nummer verwijderen `[opdracht]`
-
-- Verwijderknop per rij, met een toegankelijke naam die het nummer benoemt.
-- Direct zichtbaar effect, met terugrollen bij een fout.
-- Ongedaan maken via de melding.
-- Resterende posities blijven aaneengesloten.
-
-Prioriteit: hoog · Schatting: M · Na: AXM-050
-
-### AXM-052 — Zoeken binnen een afspeellijst `[opdracht]`
-
-- Filtert in de client op titel, artiest en album.
-- Bij een actief filter is de volgorde niet aan te passen, met uitleg waarom.
-- Het aantal resultaten wordt aangekondigd.
-- Filter wissen herstelt de volledige lijst.
-
-Prioriteit: hoog · Schatting: S · Na: AXM-050
-
-### AXM-053 — Volgorde aanpassen `[opdracht, optioneel]`
-
-**Als** gebruiker **wil ik** de volgorde bepalen **zodat** de lijst loopt zoals ik wil.
-
-- Slepen met de muis en met touch, via dnd-kit.
-- Volledig met het toetsenbord: spatie pakt op, pijltjes verplaatsen, spatie laat los, Escape annuleert.
-- Elke verplaatsing wordt aangekondigd, bijvoorbeeld "Verplaatst naar positie 3 van 12".
-- Zichtbare instructie voor toetsenbordgebruikers bij de sleepgreep.
-- Nieuwe volgorde wordt in één transactie opgeslagen en blijft na herladen bewaard.
-- De sleepgreep is minimaal 24 bij 24 pixels.
-- Zonder animatie, bij `prefers-reduced-motion`, werkt alles nog.
-
-Prioriteit: hoog · Schatting: L · Na: AXM-050
-
-### AXM-054 — Slepen tussen de lijsten `[opdracht, optioneel]`
-
-- Een nummer uit de catalogus is naar de afspeellijst te slepen.
-- Het doelgebied is duidelijk gemarkeerd tijdens het slepen.
-- Er is een gelijkwaardig alternatief zonder slepen, namelijk de toevoegknop uit AXM-050.
-- Loslaten buiten een geldig doel annuleert netjes.
-
-Prioriteit: middel · Schatting: L · Na: AXM-053
-
-### AXM-055 — Optimistische updates `[extra]`
-
-- Toevoegen, verwijderen en herordenen tonen het resultaat direct.
-- Bij een fout rolt de state terug en verschijnt er een begrijpelijke melding.
-- Er is een test die het terugrollen aantoont.
-
-Prioriteit: middel · Schatting: M · Na: AXM-053
+Priority: high · Estimate: M · Depends on: AXM-045
 
 ---
 
-## Epic G — Afspelen
+## Epic F — Playlist contents
 
-### AXM-060 — Spelerbalk en spelerstate `[extra]`
+### AXM-050 — Add a track `[required]`
 
-- Provider boven de app-shell, zodat het geluid doorloopt bij navigatie.
-- Vaste balk onderaan met hoes, titel, artiest en bediening.
-- Geen autoplay; er klinkt pas iets na een handeling van de gebruiker.
-- De balk dekt geen focus af; de pagina houdt onderaan ruimte vrij.
+- Adding is possible from the catalog, from search results and from the detail dialog.
+- With multiple playlists the user picks one; with a single playlist the track is added directly.
+- The track is appended to the end of the list.
+- A duplicate is reported gracefully rather than surfacing as a server error.
+- The list updates immediately and rolls back if the action fails.
+- The addition is announced through a live region.
 
-Prioriteit: middel · Schatting: L · Na: AXM-031
+Priority: high · Estimate: M · Depends on: AXM-040
 
-### AXM-061 — Bediening en voortgang `[extra]`
+### AXM-051 — Remove a track `[required]`
 
-- Afspelen, pauzeren, vorige, volgende en volume.
-- Voortgangsbalk is versleepbaar en toont verstreken en resterende tijd.
-- Aan het eind van het fragment start automatisch het volgende nummer uit de wachtrij.
-- Netwerkfouten leveren een melding op, geen stille stilte.
+- Per-row remove control with an accessible name that identifies the track.
+- Immediate visual effect, with rollback on failure.
+- Undo offered through the confirmation message.
+- Remaining positions stay contiguous.
 
-Prioriteit: middel · Schatting: M · Na: AXM-060
+Priority: high · Estimate: M · Depends on: AXM-050
 
-### AXM-062 — Toegankelijke speler `[extra]`
+### AXM-052 — Search within a playlist `[required]`
 
-- Alle bediening is met het toetsenbord te gebruiken en heeft toegankelijke namen.
-- De afspeelknop meldt zijn toestand via `aria-pressed` of een wisselende naam.
-- De voortgangsbalk is een schuifregelaar met correcte waarden en is met pijltjes te bedienen.
-- Het spelende nummer wordt bij wisseling beleefd aangekondigd.
+- Filters on the client by title, artist and album.
+- While a filter is active, reordering is disabled with an explanation of why.
+- The result count is announced.
+- Clearing the filter restores the full list.
 
-Prioriteit: hoog · Schatting: M · Na: AXM-061
+Priority: high · Estimate: S · Depends on: AXM-050
 
-### AXM-063 — Wachtrij vanuit een afspeellijst `[extra]`
+### AXM-053 — Reorder tracks `[required, optional]`
 
-- "Alles afspelen" zet de hele lijst in de wachtrij in de huidige volgorde.
-- Het spelende nummer is in de lijst gemarkeerd.
-- De wachtrij volgt een wijziging van de volgorde.
+**As a** user **I want** to control the order **so that** the playlist flows the way I intend.
 
-Prioriteit: laag · Schatting: M · Na: AXM-061
+- Pointer and touch dragging through dnd-kit.
+- Full keyboard operation: space picks up, arrow keys move, space drops, escape cancels.
+- Each move is announced, for example "Moved to position 3 of 12".
+- A visible instruction accompanies the drag handle for keyboard users.
+- The new order is persisted in a single transaction and survives a reload.
+- The drag handle is at least 24 by 24 pixels.
+- Everything still works with animation disabled under `prefers-reduced-motion`.
 
----
+Priority: high · Estimate: L · Depends on: AXM-050
 
-## Epic H — Toegankelijkheid en polish
+### AXM-054 — Drag between the lists `[required, optional]`
 
-### AXM-070 — Focusbeheer `[extra]`
+- A track can be dragged from the catalog onto the playlist.
+- The drop target is clearly indicated during the drag.
+- An equivalent non-drag alternative exists, namely the add control from AXM-050.
+- Dropping outside a valid target cancels cleanly.
 
-- Zichtbare focusindicator van minimaal 2 pixels op elk bedienbaar element, in beide thema's.
-- Bij het sluiten van een dialog gaat de focus terug naar het element dat hem opende.
-- Na het verwijderen van een rij landt de focus op een logische plek, niet op `body`.
-- Focus wordt nooit afgedekt door de spelerbalk.
+Priority: medium · Estimate: L · Depends on: AXM-053
 
-Prioriteit: hoog · Schatting: M
+### AXM-055 — Optimistic updates `[proposed]`
 
-### AXM-071 — Meldingen via live regions `[extra]`
+- Adding, removing and reordering show their result immediately.
+- On failure the state rolls back and a comprehensible message appears.
+- A test demonstrates the rollback path.
 
-- Eén centrale live region voor statusmeldingen.
-- Toevoegen, verwijderen, verplaatsen en zoekresultaten worden gemeld.
-- Beleefd waar het kan, dringend alleen bij fouten.
-- Meldingen worden niet gestapeld tot ruis.
-
-Prioriteit: hoog · Schatting: M
-
-### AXM-072 — Contrast valideren `[extra]`
-
-- Alle tekst- en achtergrondcombinaties in beide thema's gemeten.
-- Bodytekst haalt 4.5:1, grote tekst en UI-elementen halen 3:1.
-- De uitkomsten staan in [04-design-system.md](./04-design-system.md).
-
-Prioriteit: hoog · Schatting: S · Na: AXM-010
-
-### AXM-073 — Animatie met respect voor voorkeuren `[extra]`
-
-- Alle animaties worden uitgeschakeld bij `prefers-reduced-motion: reduce`.
-- Zonder animatie is elke functie volledig bruikbaar.
-- Niets duurt langer dan 300 ms.
-
-Prioriteit: middel · Schatting: M
-
-### AXM-074 — Lege, ladende en foutstatussen `[extra]`
-
-- Elke lijst heeft een lege staat met een zinvolle vervolgstap.
-- Laadstatussen gebruiken skeletons in plaats van een springende layout.
-- Er is een `error.tsx` en een `not-found.tsx` in de app-routes.
-- Foutmeldingen zijn in gewone taal, zonder stacktrace.
-
-Prioriteit: middel · Schatting: M
-
-### AXM-075 — Toegankelijkheidsaudit `[extra]`
-
-- Automatische axe-controle op de hoofdpagina's, zonder bevindingen van niveau ernstig of kritiek.
-- Handmatige doorloop met alleen het toetsenbord over de belangrijkste route.
-- Steekproef met VoiceOver op de catalogus, de afspeellijst en het slepen.
-- Bevindingen en oplossingen vastgelegd in `docs/`.
-
-Prioriteit: hoog · Schatting: M · Na: alle functionele epics
+Priority: medium · Estimate: M · Depends on: AXM-053
 
 ---
 
-## Epic I — Oplevering
+## Epic G — Playback
 
-### AXM-080 — README `[opdracht]`
+### AXM-060 — Player bar and player state `[proposed]`
 
-- Korte uitleg van het project met een link naar de live demo.
-- Instructies om lokaal te draaien, inclusief database en seed.
-- Gemaakte keuzes en de onderbouwing, met verwijzing naar `docs/`.
-- Expliciete lijst met wat er niet af is en wat ik als volgende stap zou doen — de opdracht vraagt hier
-  om.
-- Verantwoording waarom er zonder de startercode is gewerkt.
+- Provider above the app shell so audio survives navigation.
+- Fixed bar at the bottom showing artwork, title, artist and controls.
+- No autoplay; audio starts only after a user action.
+- The bar never obscures focused content; the page reserves space at the bottom.
 
-Prioriteit: hoog · Schatting: M
+Priority: medium · Estimate: L · Depends on: AXM-031
 
-### AXM-081 — Demodata `[extra]`
+### AXM-061 — Transport controls and progress `[proposed]`
 
-- Seed maakt twee gebruikers, zodat samen bewerken te demonstreren is.
-- Vooraf gevulde afspeellijsten: één privé, één openbaar en één gedeeld.
-- De inloggegevens van het demo-account staan in de README.
+- Play, pause, previous, next and volume.
+- Draggable progress bar showing elapsed and remaining time.
+- At the end of a clip the next queued track starts automatically.
+- Network failures surface a message rather than silence.
 
-Prioriteit: hoog · Schatting: S · Na: AXM-045
+Priority: medium · Estimate: M · Depends on: AXM-060
 
-### AXM-082 — Demoscenario `[extra]`
+### AXM-062 — Accessible player `[proposed]`
 
-- Uitgeschreven route van vijf minuten voor het gesprek: inloggen, zoeken, detail bekijken,
-  toevoegen, herordenen met het toetsenbord, delen, thema wisselen, afspelen.
-- Vooraf gecontroleerd op de productieomgeving.
+- All controls are keyboard operable and carry accessible names.
+- The play control communicates its state through `aria-pressed` or a changing name.
+- The progress bar is a slider with correct values and responds to arrow keys.
+- Track changes are announced politely.
 
-Prioriteit: middel · Schatting: S · Na: AXM-080
+Priority: high · Estimate: M · Depends on: AXM-061
+
+### AXM-063 — Queue from a playlist `[proposed]`
+
+- "Play all" queues the entire playlist in its current order.
+- The currently playing track is marked in the list.
+- The queue follows a change in playlist order.
+
+Priority: low · Estimate: M · Depends on: AXM-061
+
+---
+
+## Epic H — Accessibility and polish
+
+### AXM-070 — Focus management `[proposed]`
+
+- Visible focus indicator of at least 2 pixels on every interactive element, in both themes.
+- Closing a dialog returns focus to the element that opened it.
+- After removing a row, focus lands somewhere sensible rather than on `body`.
+- Focus is never obscured by the player bar.
+
+Priority: high · Estimate: M
+
+### AXM-071 — Live region announcements `[proposed]`
+
+- One central live region for status messages.
+- Additions, removals, moves and search results are announced.
+- Polite where possible, assertive only for errors.
+- Messages do not stack into noise.
+
+Priority: high · Estimate: M
+
+### AXM-072 — Validate contrast `[proposed]`
+
+- Every text and background combination measured in both themes.
+- Body text reaches 4.5:1; large text and UI elements reach 3:1.
+- Results recorded in [04-design-system.md](./04-design-system.md).
+
+Priority: high · Estimate: S · Depends on: AXM-010
+
+### AXM-073 — Motion preferences `[proposed]`
+
+- All animation is disabled under `prefers-reduced-motion: reduce`.
+- Every feature remains fully usable without animation.
+- No transition exceeds 300 ms.
+
+Priority: medium · Estimate: M
+
+### AXM-074 — Empty, loading and error states `[proposed]`
+
+- Every list has an empty state offering a meaningful next step.
+- Loading states use skeletons rather than shifting layout.
+- `error.tsx` and `not-found.tsx` present in the app routes.
+- Error messages are in plain language, without stack traces.
+
+Priority: medium · Estimate: M
+
+### AXM-075 — Accessibility audit `[proposed]`
+
+- Automated axe checks on the primary pages, with no serious or critical findings.
+- Manual keyboard-only pass across the main user journey.
+- Screen reader spot check with VoiceOver on the catalog, a playlist and reordering.
+- Findings and resolutions recorded in `docs/`.
+
+Priority: high · Estimate: M · Depends on: all feature epics
+
+---
+
+## Epic I — Delivery
+
+### AXM-080 — README `[required]`
+
+- Short project description with a link to the deployed environment.
+- Instructions to run locally, including database setup and seeding.
+- Decisions and their rationale, linking into `docs/`.
+- An explicit list of what is unfinished and what the next steps would be.
+- Explanation of why the project was built greenfield.
+
+Priority: high · Estimate: M
+
+### AXM-081 — Demo data `[proposed]`
+
+- The seed creates two users so collaboration can be demonstrated.
+- Pre-populated playlists: one private, one public and one shared.
+- Demo account credentials documented in the README.
+
+Priority: high · Estimate: S · Depends on: AXM-045
+
+### AXM-082 — Walkthrough script `[proposed]`
+
+- A five-minute route through the application: sign in, search, view details, add, reorder from the
+  keyboard, share, switch theme, play.
+- Verified against the production environment beforehand.
+
+Priority: medium · Estimate: S · Depends on: AXM-080

@@ -1,61 +1,61 @@
-# 03 — Architectuur
+# 03 — Architecture
 
-## Grondbeginsel
+## Guiding principle
 
-Alle data-toegang loopt via één laag die weet wie de huidige gebruiker is. Componenten en pagina's
-stellen geen eigen queries samen. Daarmee staat autorisatie op één plek, is die te testen, en kan er
-geen route ontstaan die de controle per ongeluk overslaat.
+All data access flows through a single layer that knows who the current user is. Pages and components
+never compose their own queries. Authorization therefore lives in one place, can be tested in
+isolation, and no route can be added that accidentally skips the check.
 
 ```
 Server Component / Server Action
-        ↓  roept aan
-src/lib/data/*          ← controleert sessie en rechten, praat met Prisma
+        ↓  calls
+src/lib/data/*          ← verifies session and permissions, talks to Prisma
         ↓
 Prisma Client → PostgreSQL
 ```
 
-De data-accesslaag is gemarkeerd met `import 'server-only'`, zodat het een buildfout oplevert als
-iemand er vanuit een client component naar grijpt.
+The data access layer is marked with `import 'server-only'`, so reaching for it from a client component
+fails at build time rather than at runtime.
 
-## Mappenindeling
+## Directory layout
 
-Voortbouwend op de structuur die al staat:
+Building on the structure already in place:
 
 ```
 src/
 ├── app/
-│   ├── (auth)/                  # login en registratie, eigen layout zonder app-shell
+│   ├── (auth)/                  # sign in and registration, layout without the app shell
 │   │   ├── login/
 │   │   └── register/
-│   ├── (app)/                   # alles achter de login
-│   │   ├── layout.tsx           # app-shell: header, nav, spelerbalk
-│   │   ├── tracks/              # catalogus met zoeken
-│   │   │   └── [trackId]/       # detail, deep-linkbaar naast de dialog
+│   ├── (app)/                   # everything behind authentication
+│   │   ├── layout.tsx           # app shell: header, navigation, player bar
+│   │   ├── tracks/              # catalog and search
+│   │   │   └── [trackId]/       # detail route, linkable alongside the dialog
 │   │   ├── playlists/
 │   │   │   └── [playlistId]/
-│   │   └── discover/            # openbare afspeellijsten van anderen
-│   └── api/auth/[...nextauth]/  # verplichte route handler van Auth.js
+│   │   └── discover/            # playlists shared by other users
+│   └── api/auth/[...nextauth]/  # required Auth.js route handler
 ├── components/
-│   ├── ui/                      # shadcn-primitieven, niet handmatig bewerken
+│   ├── ui/                      # shadcn primitives, not edited by hand
 │   ├── player/
 │   ├── playlist/
 │   └── track/
 ├── lib/
-│   ├── auth/                    # Auth.js-configuratie, hashing, sessiehelpers
-│   ├── data/                    # data-accesslaag, server-only
-│   ├── permissions/             # autorisatieregels, puur en testbaar
-│   └── validation/              # Zod-schema's, gedeeld tussen formulier en action
-├── server/actions/              # Server Actions per domein
+│   ├── auth/                    # Auth.js configuration, hashing, session helpers
+│   ├── data/                    # data access layer, server-only
+│   ├── permissions/             # authorization rules, pure and testable
+│   └── validation/              # Zod schemas, shared between forms and actions
+├── server/actions/              # Server Actions grouped by domain
 ├── hooks/
 ├── providers/                   # theme provider, player provider
 ├── types/
 ├── constants/
-└── proxy.ts                     # optimistische auth-redirect
+└── proxy.ts                     # optimistic authentication redirect
 ```
 
-## Datamodel
+## Data model
 
-Opzet van het Prisma-schema. Definitief bij het uitvoeren van Epic A.
+Proposed Prisma schema, finalized during Epic A.
 
 ```prisma
 model User {
@@ -71,7 +71,7 @@ model User {
 
 model Track {
   id             String          @id @default(cuid())
-  externalId     String          @unique  // trackId uit de iTunes API
+  externalId     String          @unique // trackId from the iTunes API
   title          String
   artist         String
   album          String?
@@ -142,80 +142,78 @@ model PlaylistCollaborator {
 }
 ```
 
-Een paar keuzes die uitleg verdienen:
+Decisions worth recording:
 
-- **`@@unique([playlistId, trackId])`** voorkomt hetzelfde nummer twee keer in één afspeellijst. Dat is
-  een productkeuze, geen technische: Spotify staat duplicaten wel toe. De constraint is de simpelste
-  plek om er duidelijk over te zijn.
-- **`position` als geheel getal.** Bij het verslepen worden de posities van de betrokken rijen in één
-  transactie herschreven. Bij afspeellijsten van deze omvang is dat prima en veruit het makkelijkst te
-  volgen. Fractional indexing zou nodig worden bij duizenden items of gelijktijdige bewerkers; dat
-  staat als notitie in de code, niet als implementatie.
-- **Geen `Account`- en `Session`-tabel.** De credentials-provider gebruikt JWT-sessies, dus de
-  Prisma-adapter van Auth.js is niet nodig.
+- **`@@unique([playlistId, trackId])`** prevents the same track appearing twice in one playlist. This is
+  a product decision rather than a technical one — Spotify permits duplicates. The constraint is the
+  clearest place to be explicit about it.
+- **Integer `position`.** Reordering rewrites the positions of the affected rows inside a single
+  transaction. At the expected playlist sizes this is straightforward and easy to reason about.
+  Fractional indexing becomes relevant with thousands of items or concurrent editors; that is recorded
+  as a code comment, not implemented.
+- **No `Account` or `Session` tables.** The credentials provider uses JWT sessions, so the Auth.js
+  Prisma adapter is not required.
 
-## Autorisatie
+## Authorization
 
-De regels staan als pure functies in `src/lib/permissions/`, zonder Prisma-afhankelijkheid, zodat ze
-zonder database te testen zijn.
+Rules live as pure functions in `src/lib/permissions/` with no Prisma dependency, so they can be tested
+without a database.
 
-| Actie                          | Eigenaar | Editor | Viewer | Ingelogd, geen relatie | Uitgelogd |
-| ------------------------------ | -------- | ------ | ------ | ---------------------- | --------- |
-| Privé-afspeellijst bekijken    | ja       | ja     | ja     | nee                    | nee       |
-| Openbare afspeellijst bekijken | ja       | ja     | ja     | ja                     | nee       |
-| Nummers toevoegen of weghalen  | ja       | ja     | nee    | nee                    | nee       |
-| Volgorde wijzigen              | ja       | ja     | nee    | nee                    | nee       |
-| Naam of zichtbaarheid wijzigen | ja       | nee    | nee    | nee                    | nee       |
-| Mede-bewerkers beheren         | ja       | nee    | nee    | nee                    | nee       |
-| Afspeellijst verwijderen       | ja       | nee    | nee    | nee                    | nee       |
+| Action                      | Owner | Editor | Viewer | Authenticated, unrelated | Anonymous |
+| --------------------------- | ----- | ------ | ------ | ------------------------ | --------- |
+| View a private playlist     | yes   | yes    | yes    | no                       | no        |
+| View a public playlist      | yes   | yes    | yes    | yes                      | no        |
+| Add or remove tracks        | yes   | yes    | no     | no                       | no        |
+| Reorder tracks              | yes   | yes    | no     | no                       | no        |
+| Rename or change visibility | yes   | no     | no     | no                       | no        |
+| Manage collaborators        | yes   | no     | no     | no                       | no        |
+| Delete the playlist         | yes   | no     | no     | no                       | no        |
 
-De hele applicatie zit achter de login; ook openbare afspeellijsten vragen om een account. Dat past bij
-de context van een intern kantoorhulpmiddel. "Openbaar" betekent hier: zichtbaar voor alle collega's.
+The entire application sits behind authentication; public playlists still require an account. This
+matches an internal office tool, where "public" means visible to all colleagues.
 
-## Sessies en routebescherming
+## Sessions and route protection
 
-Twee lagen, met een duidelijke taakverdeling:
+Two layers with a clear division of responsibility:
 
-1. **`src/proxy.ts`** kijkt of er een sessiecookie is en stuurt anders door naar `/login`. Dit is puur
-   voor de gebruikerservaring en is nadrukkelijk géén beveiliging.
-2. **De data-accesslaag** haalt de sessie op met `auth()` en controleert per aanroep de rechten. Dit
-   is de bindende controle.
+1. **`src/proxy.ts`** checks for the presence of a session cookie and redirects to `/login` otherwise.
+   This exists for user experience and is explicitly not a security boundary.
+2. **The data access layer** resolves the session through `auth()` and verifies permissions on every
+   call. This is the authoritative check.
 
-Die scheiding is een direct gevolg van CVE-2025-29927, waarbij een geprepareerde header de
-middleware-laag kon omzeilen. Wie alleen op laag 1 vertrouwt, heeft een open applicatie.
+The separation is a direct response to CVE-2025-29927, where a crafted header could bypass the
+middleware layer. Relying on layer one alone leaves the application open.
 
-## Mutaties
+## Mutations
 
-Alle wijzigingen lopen via Server Actions, niet via zelfgebouwde API-routes. Elke action volgt hetzelfde
-stramien:
+All writes go through Server Actions rather than custom API routes. Every action follows the same
+sequence:
 
-1. Sessie ophalen; geen sessie betekent afbreken.
-2. Invoer valideren met een Zod-schema uit `src/lib/validation/`, dat ook het formulier typeert.
-3. Rechten controleren met de functies uit `src/lib/permissions/`.
-4. Muteren via Prisma, waar nodig in een transactie.
-5. `revalidatePath` of `revalidateTag` aanroepen.
-6. Een resultaatobject teruggeven, zodat het formulier fouten kan tonen zonder een uitzondering op te
-   vangen.
+1. Resolve the session; abort when absent.
+2. Validate input against a Zod schema from `src/lib/validation/`, which also types the form.
+3. Check permissions using the functions in `src/lib/permissions/`.
+4. Mutate through Prisma, wrapped in a transaction where multiple rows change together.
+5. Call `revalidatePath` or `revalidateTag`.
+6. Return a result object so the form can render errors without catching exceptions.
 
-Voor herordenen en voor toevoegen of verwijderen gebruiken we `useOptimistic`, zodat de lijst direct
-meebeweegt. Faalt de action, dan rolt de state terug en verschijnt er een melding in een live region.
+Reordering, adding and removing use `useOptimistic` so the list responds immediately. When an action
+fails, state rolls back and the failure is announced through a live region.
 
-## Zoeken
+## Search
 
-Zoeken in de catalogus gebeurt op de server, met de zoekterm in de URL als `?q=`. Daarmee is een
-zoekopdracht deelbaar, werkt de terugknop zoals verwacht, en blijft de state uit de client.
+Catalog search runs on the server with the query in the URL as `?q=`. That makes a search shareable,
+makes the back button behave as expected, and keeps the state out of the client.
 
-Zoeken binnen een afspeellijst gebeurt in de client, omdat de volledige lijst daar al geladen is en een
-serverrondgang alleen maar vertraging toevoegt.
+Search within a playlist runs on the client, because the full list is already loaded and a server round
+trip would only add latency.
 
-In beide gevallen: invoer met vertraging verwerken, resultaten aankondigen via een live region, en een
-duidelijke lege staat tonen.
+In both cases: debounce the input, announce the result count through a live region, and render a
+meaningful empty state.
 
-## Afspelen
+## Playback
 
-De spelerstatus leeft in een provider boven de app-shell, zodat het geluid doorloopt bij navigatie. Eén
-`<audio>`-element, aangestuurd via een ref; React beheert de wachtrij en de huidige index, niet de
-audiostroom zelf.
+Player state lives in a provider above the app shell so audio survives navigation. A single `<audio>`
+element is driven through a ref; React owns the queue and the current index, not the audio stream
+itself.
 
-Geen autoplay bij het laden van een pagina. Dat is zowel een WCAG-eis als de reden dat browsers het
-alsnog zouden blokkeren.
+No autoplay on page load. This is both a WCAG requirement and the behavior browsers enforce regardless.

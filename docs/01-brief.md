@@ -1,82 +1,83 @@
-# 01 — Opdracht en scope
+# 01 — Brief and scope
 
 ## Context
 
-Axxes IT Consultancy vraagt als technisch assessment om een Spotify-achtige applicatie waarmee
-collega's samen afspeellijsten kunnen samenstellen. De begeleidende tekst schetst een project dat
-door een stagiair is begonnen en niet is afgemaakt; de opdracht is om het "productie-waardig" op te
-leveren.
+Axxes IT Consultancy runs music through the office speakers all day. To keep everyone happy, the
+client wants a Spotify-style application in which colleagues can build shared playlists together.
 
-## Uitgangspunt: opnieuw opgebouwd
+## Starting point: greenfield build
 
-Er is geen bruikbare startercode of API beschikbaar gesteld, dus dit project is volledig opnieuw
-opgezet in Next.js. Dat is een bewuste keuze en geen omweg:
+No usable codebase or backing API was handed over at project start, so the application is built from
+scratch on Next.js. Two consequences follow from that decision:
 
-- De opdracht vraagt om TypeScript en React. Next.js voegt daar de server-kant aan toe, waardoor
-  login, autorisatie en gedeelde afspeellijsten echt kunnen werken in plaats van alleen in de browser.
-- De opdracht noemt "een API die aanvullende informatie over de nummers levert". Die rol wordt
-  ingevuld door de publieke iTunes Search API, waaruit de catalogus wordt geïmporteerd. Die levert
-  album, genre, releasedatum, speelduur én een previewfragment van 30 seconden.
+- The brief specifies TypeScript and React. Next.js adds the server side, which is what makes
+  authentication, authorization and shared playlists work as real features rather than
+  browser-only illusions.
+- The brief refers to "an API that supplies additional information about the tracks". That role is
+  filled by the public iTunes Search API, from which the catalog is imported. It provides album,
+  genre, release date, duration and a 30-second preview clip per track.
 
-Dit staat ook in de README, zodat de beoordelaar weet waarom er van het startpunt is afgeweken.
+Both points are restated in the root README so anyone picking up the project understands the origin
+of the data.
 
-## Wat Axxes expliciet vraagt
+## Client requirements
 
-Uit de opdrachtomschrijving, in volgorde van de tekst:
+From the brief, in the order stated:
 
-| #   | Eis                                                          | Backlog     |
-| --- | ------------------------------------------------------------ | ----------- |
-| 1   | Login met e-mail en wachtwoord                               | Epic C      |
-| 2   | Tonen van een lijst van beschikbare nummers                  | Epic D      |
-| 3   | Een nummer toevoegen aan de afspeellijst                     | Epic F      |
-| 4   | Een nummer verwijderen van de afspeellijst                   | Epic F      |
-| 5   | Zoekfunctionaliteit in beide lijsten                         | Epic D en F |
-| 6   | Aanvullende nummerinformatie tonen in pop-up of detailpagina | Epic D      |
+| #   | Requirement                                                  | Epic    |
+| --- | ------------------------------------------------------------ | ------- |
+| 1   | Sign in with email and password                              | C       |
+| 2   | Display a list of available tracks                           | D       |
+| 3   | Add a track to a playlist                                    | F       |
+| 4   | Remove a track from a playlist                               | F       |
+| 5   | Search within both lists                                     | D and F |
+| 6   | Show additional track information in a dialog or detail page | D       |
 
-En als optionele user stories:
+Listed by the client as optional:
 
-| #   | Optionele eis                           | Backlog |
-| --- | --------------------------------------- | ------- |
-| 7   | Drag-and-drop tussen de lijsten         | Epic F  |
-| 8   | Meerdere afspeellijsten kunnen aanmaken | Epic E  |
-| 9   | Dark & light theme                      | Epic B  |
+| #   | Optional requirement                | Epic |
+| --- | ----------------------------------- | ---- |
+| 7   | Drag and drop between the two lists | F    |
+| 8   | Support for multiple playlists      | E    |
+| 9   | Dark and light theme                | B    |
 
-Alle negen punten zitten in de scope. De drie optionele stories zijn juist interessant om op te
-pakken, omdat ze het verschil laten zien tussen "werkt" en "goed gebouwd".
+All nine are in scope. The three optional items are worth taking on precisely because they are where
+the difference between "functional" and "well built" becomes visible.
 
-## Wat ik er zelf bovenop doe
+## Proposed additions
 
-Deze punten staan niet in de opdracht maar horen bij hoe ik voor echte klanten werk. Ze zijn in de
-backlog gelabeld met `[extra]` zodat ze los te laten zijn als de tijd knelt.
+The following was not requested. It is included because it materially improves the delivered product,
+and it is labeled `[proposed]` in the backlog so it can be dropped without touching the agreed scope.
 
-- **Zichtbaarheid van afspeellijsten** — privé of openbaar, plus het optioneel uitnodigen van
-  collega's als mede-bewerker. Dit past bij de context uit de opdracht: één kantoor dat samen de
-  muziek bepaalt. Het dwingt ook een fatsoenlijk autorisatiemodel af.
-- **WCAG 2.2 AA** — met name toetsenbordbediening en contrast. Drag-and-drop is hierin het
-  interessantste onderdeel, omdat sleepinteracties standaard onbruikbaar zijn zonder muis.
-- **Werkende audiospeler** — previewfragmenten, met een verzorgde spelerbalk.
-- **Subtiele animaties** — die respecteren `prefers-reduced-motion`.
-- **Unit tests** — op de logica die er echt toe doet: autorisatie, zoeken en herordenen.
-- **GitHub Actions, Husky en commitlint** — kwaliteitsbewaking die niet afhangt van discipline.
-- **Deploy op Vercel** — met preview-omgevingen per pull request.
-- **Axxes-huisstijl** — kleuren en typografie afgeleid van axxes.nl, zie
+- **Playlist visibility** — private or shared with the whole team, with the option to invite
+  colleagues as collaborators. This matches the stated context of a single office deciding on the
+  music together, and it forces a proper authorization model rather than an implicit one.
+- **WCAG 2.2 AA compliance** — primarily keyboard operation and color contrast. Drag and drop is the
+  most demanding part here, since drag interactions are unusable without a pointing device unless
+  explicitly designed otherwise.
+- **Working audio playback** — preview clips through a persistent player bar.
+- **Motion design** — subtle, purposeful, and disabled under `prefers-reduced-motion`.
+- **Unit tests** — covering the logic that carries risk: authorization, search and reordering.
+- **CI, pre-commit hooks and commit linting** — quality gates that do not depend on discipline.
+- **Deployment to Vercel** — with a preview environment per pull request.
+- **Axxes brand identity** — colors and typography derived from axxes.nl, see
   [04-design-system.md](./04-design-system.md).
 
-## Buiten scope
+## Out of scope
 
-Bewust niet gebouwd, en als zodanig genoemd in de README:
+Deliberately not built, and documented as such in the root README:
 
-- Echte muziekstreaming of rechten op volledige nummers. Previewfragmenten van 30 seconden zijn
-  representatief en juridisch onproblematisch voor een demo.
-- Wachtwoord vergeten, e-mailverificatie en OAuth-providers. Interessant, maar het voegt niets toe aan
-  wat de opdracht toetst.
-- Realtime samenwerking via websockets. Mede-bewerkers zien elkaars wijzigingen na een refetch, niet
-  live. De reden hiervoor staat in [02-tech-stack.md](./02-tech-stack.md).
-- Native mobiele app of offline-ondersteuning.
+- Full music streaming or licensing for complete tracks. Thirty-second preview clips are
+  representative and carry no licensing risk.
+- Password reset, email verification and OAuth providers. Worthwhile in a longer-running product, but
+  they add nothing to the functionality under discussion here.
+- Real-time collaboration over websockets. Collaborators see each other's changes on refetch rather
+  than live. The reasoning is in [02-tech-stack.md](./02-tech-stack.md).
+- A native mobile application or offline support.
 
-## Tijdsindicatie
+## Effort guideline
 
-De opdracht adviseert niet meer dan acht uur te besteden en het restant in de README te noteren. Die
-acht uur dekt ruwweg de negen genoemde eisen. Alles met het label `[extra]` valt daarbuiten; dat is
-een bewuste investering in het gesprek en wordt in de README ook zo benoemd. De backlog is zo
-geordend dat de opdracht-eisen eerst af zijn.
+The client indicated a budget of roughly one working day for the core requirements. That covers the
+nine items listed above. Everything labeled `[proposed]` falls outside that budget and is treated as a
+separate, optional increment. The backlog is ordered so the required scope is complete and
+demonstrable before any proposed work begins.
