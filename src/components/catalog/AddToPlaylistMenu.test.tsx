@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NextIntlClientProvider } from 'next-intl';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -10,6 +10,7 @@ import type { CatalogTrack } from '@/lib/data/tracks';
 import { axe } from '@/lib/testing/axe';
 
 const addTrack = vi.hoisted(() => vi.fn());
+const createPlaylist = vi.hoisted(() => vi.fn());
 const toasts = vi.hoisted(() => ({
   success: vi.fn(),
   info: vi.fn(),
@@ -19,7 +20,8 @@ const toasts = vi.hoisted(() => ({
 vi.mock('@/lib/playlists/actions', () => ({
   addTrackAction: (request: { playlistId: string; trackId: string }) =>
     addTrack(request),
-  createPlaylistAction: vi.fn(),
+  createPlaylistAction: (previous: unknown, formData: FormData) =>
+    createPlaylist(previous, formData),
 }));
 
 vi.mock('@/i18n/navigation', () => ({
@@ -86,6 +88,7 @@ async function open(playlists: PlaylistSummary[]) {
 beforeEach(() => {
   vi.clearAllMocks();
   addTrack.mockResolvedValue({ added: true, playlistName: 'Friday afternoon' });
+  createPlaylist.mockResolvedValue({});
 });
 
 describe('AddToPlaylistMenu', () => {
@@ -167,6 +170,35 @@ describe('AddToPlaylistMenu', () => {
     expect(
       await screen.findByRole('dialog', { name: 'New playlist' }),
     ).toBeInTheDocument();
+  });
+
+  it('does not open the form again after the playlist has been made', async () => {
+    createPlaylist.mockResolvedValue({
+      created: { id: 'playlist-new', name: 'Late night' },
+    });
+    addTrack.mockResolvedValue({ added: true, playlistName: 'Late night' });
+
+    await open([playlist('playlist-1', 'Friday afternoon')]);
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'New playlist' }),
+    );
+
+    const dialog = await screen.findByRole('dialog', { name: 'New playlist' });
+
+    await userEvent.type(within(dialog).getByLabelText('Name'), 'Late night');
+    await userEvent.click(
+      within(dialog).getByRole('button', { name: 'Create playlist' }),
+    );
+
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    );
+    expect(addTrack).toHaveBeenCalledTimes(1);
+    expect(addTrack).toHaveBeenCalledWith({
+      playlistId: 'playlist-new',
+      trackId: 'track-1',
+    });
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('says where the track went and then marks the row as saved', async () => {

@@ -122,6 +122,16 @@ export default function AddToPlaylistMenu({
     });
   }
 
+  function handleOpenChange(next: boolean) {
+    setCreating(next);
+
+    // Remount only once the dialog has left, so a leftover `created` cannot open a fresh form
+    // while this one is still marked as open.
+    if (!next) {
+      setCreateKey(key => key + 1);
+    }
+  }
+
   function handleCreated(created: { id: string; name: string }) {
     setPlaylists(current => [
       ...current,
@@ -134,7 +144,7 @@ export default function AddToPlaylistMenu({
         tracks: [],
       },
     ]);
-    setCreating(false);
+    handleOpenChange(false);
     add(created.id, false);
   }
 
@@ -183,12 +193,7 @@ export default function AddToPlaylistMenu({
 
           {playlists.length > 0 && <DropdownMenuSeparator />}
 
-          <DropdownMenuItem
-            onClick={() => {
-              setCreateKey(key => key + 1);
-              setCreating(true);
-            }}
-          >
+          <DropdownMenuItem onClick={() => setCreating(true)}>
             <PlusIcon aria-hidden />
             {playlistCopy('create')}
           </DropdownMenuItem>
@@ -198,7 +203,7 @@ export default function AddToPlaylistMenu({
       <CreatePlaylistDialog
         key={createKey}
         open={creating}
-        onOpenChange={setCreating}
+        onOpenChange={handleOpenChange}
         onCreated={handleCreated}
       />
     </>

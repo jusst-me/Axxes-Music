@@ -65,10 +65,18 @@ export default function CreatePlaylistDialog({
   const { created } = state;
   const setOpen = onOpenChange ?? setRequested;
   const requestedOpen = openProp ?? requested;
+  const handled = useRef<string | null>(null);
+  const onCreatedRef = useRef(onCreated);
 
-  // Open because it was asked for and the playlist it would create does not exist yet. Derived
-  // rather than closed by hand, so the form cannot come back over the page it just navigated to.
-  const open = requestedOpen && !created;
+  // On the playlists page the dialog closes itself once the playlist exists, so it cannot return
+  // over the page that is about to replace it. From the catalog the parent owns the open state:
+  // deriving it here from `created` closed the dialog while the parent still thought it was open,
+  // and the next render remounted a fresh form on top of that.
+  const open = onCreated ? requestedOpen : requestedOpen && !created;
+
+  useEffect(() => {
+    onCreatedRef.current = onCreated;
+  }, [onCreated]);
 
   useEffect(() => {
     if (name) {
@@ -79,12 +87,14 @@ export default function CreatePlaylistDialog({
   }, [name, description]);
 
   useEffect(() => {
-    if (!created) {
+    if (!created || handled.current === created.id) {
       return;
     }
 
-    if (onCreated) {
-      onCreated(created);
+    handled.current = created.id;
+
+    if (onCreatedRef.current) {
+      onCreatedRef.current(created);
       return;
     }
 
@@ -92,7 +102,7 @@ export default function CreatePlaylistDialog({
     // the time it is read the form that named it is gone.
     toast.success(t('created', { name: created.name }));
     router.push(`/playlists/${created.id}`);
-  }, [created, onCreated, router, t]);
+  }, [created, router, t]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
