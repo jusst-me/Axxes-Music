@@ -140,8 +140,11 @@ Priority: high · Estimate: M
 
 ### AXM-014 — Install shadcn components `[proposed]`
 
-- Added through the CLI rather than by hand: `dialog`, `dropdown-menu`, `input`, `label`, `form`,
+- Added through the CLI rather than by hand: `dialog`, `dropdown-menu`, `input`, `label`, `field`,
   `sheet`, `sonner`, `tooltip`, `avatar`, `skeleton`, `alert-dialog`, `select`, `switch`, `slider`.
+- `field` replaces `form`: the registry entry for `form` is empty in the Base UI style this project
+  uses, because Base UI's own `Field` handles label association, `aria-describedby` and `aria-invalid`
+  rather than delegating that to react-hook-form.
 - Each component checked against the Axxes tokens.
 
 Priority: medium · Estimate: S · Depends on: AXM-010
