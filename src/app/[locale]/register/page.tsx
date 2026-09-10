@@ -1,50 +1,42 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
-import SignInForm from '@/components/auth/SignInForm';
+import SignUpForm from '@/components/auth/SignUpForm';
 import { resolveLocale } from '@/i18n/locale';
 import { Link } from '@/i18n/navigation';
-import { safeCallbackUrl } from '@/lib/auth/routes';
 import { localeAlternates } from '@/lib/metadata';
 
 export async function generateMetadata({
   params,
-}: PageProps<'/[locale]/login'>): Promise<Metadata> {
+}: PageProps<'/[locale]/register'>): Promise<Metadata> {
   const locale = resolveLocale((await params).locale);
-  const t = await getTranslations({ locale, namespace: 'auth.signIn' });
+  const t = await getTranslations({ locale, namespace: 'auth.signUp' });
 
   return {
     title: t('title'),
     description: t('description'),
-    alternates: localeAlternates(locale, '/login'),
+    alternates: localeAlternates(locale, '/register'),
   };
 }
 
-export default async function LoginPage({
+export default async function RegisterPage({
   params,
-  searchParams,
-}: PageProps<'/[locale]/login'>) {
+}: PageProps<'/[locale]/register'>) {
   const locale = resolveLocale((await params).locale);
-  const { callbackUrl } = await searchParams;
-  const t = await getTranslations({ locale, namespace: 'auth.signIn' });
+  const t = await getTranslations({ locale, namespace: 'auth.signUp' });
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-16 sm:px-6">
       <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
       <p className="text-muted-foreground mt-3">{t('description')}</p>
-      <SignInForm
-        callbackUrl={safeCallbackUrl(
-          typeof callbackUrl === 'string' ? callbackUrl : null,
-          locale,
-        )}
-      />
+      <SignUpForm />
       <p className="text-muted-foreground mt-8 text-sm">
-        {t('noAccount')}{' '}
+        {t('hasAccount')}{' '}
         <Link
-          href="/register"
+          href="/login"
           className="text-foreground font-medium underline underline-offset-4"
         >
-          {t('createAccount')}
+          {t('signIn')}
         </Link>
       </p>
     </div>

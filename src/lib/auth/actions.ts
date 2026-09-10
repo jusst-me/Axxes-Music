@@ -5,18 +5,30 @@ import { AuthError } from 'next-auth';
 import { getLocale } from 'next-intl/server';
 import { z } from 'zod';
 
-import { signIn } from '@/lib/auth/auth';
-import { safeCallbackUrl } from '@/lib/auth/routes';
-import { type AuthErrorKey, signInSchema } from '@/lib/auth/schemas';
+import { Prisma } from '@/generated/prisma/client';
+import { signIn, signOut } from '@/lib/auth/auth';
+import { hashPassword } from '@/lib/auth/password';
+import { LIBRARY_PATH, safeCallbackUrl, SIGN_IN_PATH } from '@/lib/auth/routes';
+import {
+  type AuthErrorKey,
+  signInSchema,
+  signUpSchema,
+} from '@/lib/auth/schemas';
+import { prisma } from '@/lib/data/prisma';
 
 export type SignInField = 'email' | 'password';
+export type SignUpField = 'name' | SignInField;
 
 /** `form` holds what is wrong with the attempt as a whole rather than with one field. */
 export type SignInState = {
   errors?: Partial<Record<SignInField | 'form', AuthErrorKey>>;
 };
 
-function fieldErrors(error: z.ZodError<{ email: string; password: string }>) {
+export type SignUpState = {
+  errors?: Partial<Record<SignUpField | 'form', AuthErrorKey>>;
+};
+
+function fieldErrors<T extends Record<string, unknown>>(error: z.ZodError<T>) {
   return Object.fromEntries(
     Object.entries(z.flattenError(error).fieldErrors).flatMap(
       ([field, messages]) =>
@@ -58,4 +70,52 @@ export async function signInAction(
 
   // Outside the try, because redirect signals through an exception the framework is meant to catch.
   redirect(safeCallbackUrl(formData.get('callbackUrl')?.toString(), locale));
+}
+
+export async function signOutAction() {
+  const locale = await getLocale();
+
+  await signOut({ redirectTo: `/${locale}${SIGN_IN_PATH}` });
+}
+
+export async function signUpAction(
+  _previous: SignUpState,
+  formData: FormData,
+): Promise<SignUpState> {
+  const parsed = signUpSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
+  });
+
+  if (!parsed.success) {
+    return { errors: fieldErrors(parsed.error) };
+  }
+
+  const { name, email, password } = parsed.data;
+
+  try {
+    await prisma.user.create({
+      data: { name, email, passwordHash: await hashPassword(password) },
+    });
+  } catch (error) {
+    /*
+     * The unique constraint is what actually answers this: a query beforehand can only report what was
+     * true a moment ago, and between that answer and the insert someone else can take the address.
+     */
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      return { errors: { email: 'emailTaken' } };
+    }
+
+    throw error;
+  }
+
+  await signIn('credentials', { email, password, redirect: false });
+
+  const locale = await getLocale();
+
+  redirect(`/${locale}${LIBRARY_PATH}`);
 }

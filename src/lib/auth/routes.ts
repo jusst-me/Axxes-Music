@@ -11,6 +11,9 @@ export const PUBLIC_PATHS = ['/', '/login', '/register'];
 
 export const SIGN_IN_PATH = '/login';
 
+/** Where someone with a session belongs when they have not asked for anything in particular. */
+export const LIBRARY_PATH = '/playlists';
+
 /** Carries the page the visitor was after, so signing in continues rather than starts over. */
 export const CALLBACK_PARAM = 'callbackUrl';
 
@@ -53,7 +56,10 @@ type Visit = {
 };
 
 /**
- * Where an unauthenticated visitor should be sent, or `null` when the request may continue.
+ * Where a visit should be sent instead, or `null` when the request may continue.
+ *
+ * It works in both directions. Without a session, a private page becomes the sign-in page. With one,
+ * the landing page and the two forms become the library, because there is nothing left to decide there.
  *
  * A path without a locale prefix is left alone: the intl middleware adds the prefix first, and the
  * request comes back around with a locale this can preserve.
@@ -65,7 +71,15 @@ export function authRedirect({
 }: Visit) {
   const { locale, path } = splitLocale(pathname);
 
-  if (!locale || isAuthenticated || isPublicPath(path)) {
+  if (!locale) {
+    return null;
+  }
+
+  if (isAuthenticated) {
+    return isPublicPath(path) ? `/${locale}${LIBRARY_PATH}` : null;
+  }
+
+  if (isPublicPath(path)) {
     return null;
   }
 

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { Link } from '@/i18n/navigation';
 import { localeAlternates } from '@/lib/metadata';
 
 export async function generateMetadata({
@@ -24,11 +25,17 @@ export default function Home() {
         <p className="text-muted-foreground max-w-prose text-lg">
           {t('landing.intro')}
         </p>
+        {/* Links rather than buttons: both of these go somewhere, and a link is what announces that. */}
         <div className="flex flex-wrap gap-3">
-          <Button size="lg">{t('landing.createAccount')}</Button>
-          <Button size="lg" variant="outline">
+          <Link href="/register" className={buttonVariants({ size: 'lg' })}>
+            {t('landing.createAccount')}
+          </Link>
+          <Link
+            href="/login"
+            className={buttonVariants({ size: 'lg', variant: 'outline' })}
+          >
             {t('landing.signIn')}
-          </Button>
+          </Link>
         </div>
       </div>
     </div>
