@@ -14,7 +14,7 @@ export const TRACKS_PER_REQUEST = 24;
  * because they sit in the same row: fetching them costs nothing extra, and it means opening the
  * details of a track already on screen needs no round trip at all.
  */
-const trackSelect = {
+export const trackSelect = {
   id: true,
   title: true,
   artist: true,

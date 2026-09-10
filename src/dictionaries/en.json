@@ -90,14 +90,33 @@
     "title": "Playlists",
     "description": "The playlists you and your colleagues are building together.",
     "create": "New playlist",
+    "createDialog": {
+      "title": "New playlist",
+      "description": "Give it a name your colleagues will recognise.",
+      "submit": "Create playlist",
+      "pending": "Creating the playlist"
+    },
     "fields": {
       "name": "Name",
+      "nameHint": "Up to 100 characters.",
       "description": "Description",
-      "descriptionOptional": "Optional"
+      "descriptionOptional": "Optional."
     },
+    "errors": {
+      "nameRequired": "Give the playlist a name.",
+      "nameTooLong": "Use 100 characters or fewer.",
+      "descriptionTooLong": "Use 500 characters or fewer.",
+      "notFound": "That playlist no longer exists.",
+      "duplicate": "That track is already in this playlist."
+    },
+    "created": "{name} was created.",
     "visibility": {
       "private": "Private",
       "shared": "Shared with the team"
+    },
+    "noPlaylists": {
+      "title": "No playlists yet",
+      "description": "Create one, then fill it from the catalog."
     },
     "empty": {
       "title": "This playlist is empty",

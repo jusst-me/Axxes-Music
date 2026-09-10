@@ -90,14 +90,33 @@
     "title": "Playlists",
     "description": "Die Playlists, die du gemeinsam mit deinen Kolleginnen und Kollegen zusammenstellst.",
     "create": "Neue Playlist",
+    "createDialog": {
+      "title": "Neue Playlist",
+      "description": "Wähle einen Namen, den deine Kolleginnen und Kollegen erkennen.",
+      "submit": "Playlist erstellen",
+      "pending": "Die Playlist wird erstellt"
+    },
     "fields": {
       "name": "Name",
+      "nameHint": "Höchstens 100 Zeichen.",
       "description": "Beschreibung",
-      "descriptionOptional": "Optional"
+      "descriptionOptional": "Optional."
     },
+    "errors": {
+      "nameRequired": "Gib der Playlist einen Namen.",
+      "nameTooLong": "Verwende höchstens 100 Zeichen.",
+      "descriptionTooLong": "Verwende höchstens 500 Zeichen.",
+      "notFound": "Diese Playlist gibt es nicht mehr.",
+      "duplicate": "Dieser Titel ist bereits in dieser Playlist."
+    },
+    "created": "{name} wurde erstellt.",
     "visibility": {
       "private": "Privat",
       "shared": "Mit dem Team geteilt"
+    },
+    "noPlaylists": {
+      "title": "Noch keine Playlists",
+      "description": "Erstelle eine und fülle sie aus dem Katalog."
     },
     "empty": {
       "title": "Diese Playlist ist leer",

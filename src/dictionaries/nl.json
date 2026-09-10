@@ -90,14 +90,33 @@
     "title": "Afspeellijsten",
     "description": "De afspeellijsten die jij en je collega's samen samenstellen.",
     "create": "Nieuwe afspeellijst",
+    "createDialog": {
+      "title": "Nieuwe afspeellijst",
+      "description": "Kies een naam die je collega's herkennen.",
+      "submit": "Afspeellijst aanmaken",
+      "pending": "De afspeellijst wordt aangemaakt"
+    },
     "fields": {
       "name": "Naam",
+      "nameHint": "Maximaal 100 tekens.",
       "description": "Omschrijving",
-      "descriptionOptional": "Optioneel"
+      "descriptionOptional": "Optioneel."
     },
+    "errors": {
+      "nameRequired": "Geef de afspeellijst een naam.",
+      "nameTooLong": "Gebruik maximaal 100 tekens.",
+      "descriptionTooLong": "Gebruik maximaal 500 tekens.",
+      "notFound": "Deze afspeellijst bestaat niet meer.",
+      "duplicate": "Dit nummer staat al in deze afspeellijst."
+    },
+    "created": "{name} is aangemaakt.",
     "visibility": {
       "private": "Privé",
       "shared": "Gedeeld met het team"
+    },
+    "noPlaylists": {
+      "title": "Nog geen afspeellijsten",
+      "description": "Maak er een aan en vul die vanuit de catalogus."
     },
     "empty": {
       "title": "Deze afspeellijst is leeg",
