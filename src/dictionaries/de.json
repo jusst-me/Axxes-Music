@@ -9,7 +9,12 @@
     "retry": "Erneut versuchen",
     "undo": "Rückgängig",
     "loading": "Wird geladen",
-    "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "theme": {
+      "light": "Hell",
+      "dark": "Dunkel",
+      "system": "System"
+    }
   },
   "landing": {
     "title": "Playlists, die man teilen möchte.",
@@ -115,7 +120,8 @@
     "skipToContent": "Zum Hauptinhalt springen",
     "mainNavigation": "Hauptnavigation",
     "languageSwitcher": "Sprache, aktuell {language}",
-    "themeToggle": "Zum {theme} Thema wechseln",
+    "theme": "Erscheinungsbild",
+    "themeSwitcher": "Erscheinungsbild, aktuell {theme}",
     "searchResults": "{count, plural, =0 {Keine Titel} one {# Titel} other {# Titel}} gefunden",
     "loading": "Wird geladen, bitte warten"
   }

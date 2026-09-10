@@ -8,6 +8,7 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import SkipLink, { MAIN_CONTENT_ID } from '@/components/layout/SkipLink';
+import ThemeProvider from '@/components/layout/ThemeProvider';
 import { LOCALES } from '@/constants/locales';
 import { routing } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
@@ -40,22 +41,26 @@ export default async function RootLayout({
   }
 
   return (
+    // next-themes sets the class on <html> before paint, which React would otherwise flag as a mismatch.
     <html
       lang={LOCALES[locale]}
       className={cn('h-full antialiased', montserrat.variable)}
+      suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col font-sans">
         <NextIntlClientProvider>
-          <SkipLink />
-          <Header />
-          <main
-            id={MAIN_CONTENT_ID}
-            tabIndex={-1}
-            className="flex flex-1 flex-col"
-          >
-            {children}
-          </main>
-          <Footer />
+          <ThemeProvider>
+            <SkipLink />
+            <Header />
+            <main
+              id={MAIN_CONTENT_ID}
+              tabIndex={-1}
+              className="flex flex-1 flex-col"
+            >
+              {children}
+            </main>
+            <Footer />
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>
