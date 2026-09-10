@@ -69,7 +69,11 @@ export default async function PlaylistPage({
         )}
       </p>
 
-      <PlaylistTracks entries={playlist.tracks} />
+      <PlaylistTracks
+        playlistId={playlist.id}
+        playlistName={playlist.name}
+        entries={playlist.tracks}
+      />
     </div>
   );
 }

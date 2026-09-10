@@ -133,3 +133,93 @@ export async function addTrackAction({
 
   return { added: true, playlistName: playlist.name };
 }
+
+/**
+ * `position` is where the track sat, which is what makes undoing a genuine undo rather than an
+ * append. Closing the gap happens in the same transaction, so no reader ever sees a hole.
+ */
+export type RemoveTrackResult =
+  | { removed: true; position: number }
+  | { removed: false; reason: PlaylistErrorKey };
+
+export async function removeTrackAction({
+  playlistId,
+  trackId,
+}: {
+  playlistId: string;
+  trackId: string;
+}): Promise<RemoveTrackResult> {
+  const { playlist } = await ownedPlaylist(playlistId);
+
+  if (!playlist) {
+    return { removed: false, reason: 'notFound' };
+  }
+
+  const entry = await prisma.playlistTrack.findUnique({
+    where: { playlistId_trackId: { playlistId, trackId } },
+    select: { position: true },
+  });
+
+  if (!entry) {
+    return { removed: false, reason: 'notFound' };
+  }
+
+  await prisma.$transaction([
+    prisma.playlistTrack.delete({
+      where: { playlistId_trackId: { playlistId, trackId } },
+    }),
+    prisma.playlistTrack.updateMany({
+      where: { playlistId, position: { gt: entry.position } },
+      data: { position: { decrement: 1 } },
+    }),
+  ]);
+
+  revalidatePlaylists();
+
+  return { removed: true, position: entry.position };
+}
+
+export type RestoreTrackResult =
+  { restored: true } | { restored: false; reason: PlaylistErrorKey };
+
+/** Puts a removed track back where it was, rather than at the end where a fresh addition would go. */
+export async function restoreTrackAction({
+  playlistId,
+  trackId,
+  position,
+}: {
+  playlistId: string;
+  trackId: string;
+  position: number;
+}): Promise<RestoreTrackResult> {
+  const { userId, playlist } = await ownedPlaylist(playlistId);
+
+  if (!playlist) {
+    return { restored: false, reason: 'notFound' };
+  }
+
+  try {
+    await prisma.$transaction([
+      prisma.playlistTrack.updateMany({
+        where: { playlistId, position: { gte: position } },
+        data: { position: { increment: 1 } },
+      }),
+      prisma.playlistTrack.create({
+        data: { playlistId, trackId, position, addedById: userId },
+      }),
+    ]);
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      return { restored: false, reason: 'duplicate' };
+    }
+
+    throw error;
+  }
+
+  revalidatePlaylists();
+
+  return { restored: true };
+}
