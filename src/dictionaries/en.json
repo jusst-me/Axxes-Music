@@ -49,6 +49,7 @@
       "nameRequired": "Enter your name.",
       "emailInvalid": "Enter a valid email address.",
       "emailTaken": "An account with this email address already exists.",
+      "passwordRequired": "Enter your password.",
       "passwordTooShort": "Use at least 12 characters.",
       "invalidCredentials": "That email address and password do not match an account."
     },

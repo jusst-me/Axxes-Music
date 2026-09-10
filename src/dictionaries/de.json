@@ -49,6 +49,7 @@
       "nameRequired": "Gib deinen Namen ein.",
       "emailInvalid": "Gib eine gültige E-Mail-Adresse ein.",
       "emailTaken": "Mit dieser E-Mail-Adresse besteht bereits ein Konto.",
+      "passwordRequired": "Gib dein Passwort ein.",
       "passwordTooShort": "Verwende mindestens 12 Zeichen.",
       "invalidCredentials": "Diese E-Mail-Adresse und dieses Passwort gehören zu keinem Konto."
     },
