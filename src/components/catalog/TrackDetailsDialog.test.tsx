@@ -13,9 +13,13 @@ import { axe } from '@/lib/testing/axe';
 // src/components/catalog/AddToPlaylistMenu.test.tsx.
 vi.mock('@/i18n/navigation', () => ({
   Link: ({ href, ...props }: { href: string }) => <a href={href} {...props} />,
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
-vi.mock('@/lib/playlists/actions', () => ({ addTrackAction: vi.fn() }));
+vi.mock('@/lib/playlists/actions', () => ({
+  addTrackAction: vi.fn(),
+  createPlaylistAction: vi.fn(),
+}));
 
 function track(overrides: Partial<CatalogTrack> = {}): CatalogTrack {
   return {

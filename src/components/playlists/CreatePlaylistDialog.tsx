@@ -30,7 +30,25 @@ import {
 
 const NOTHING_SUBMITTED: CreatePlaylistState = {};
 
-export default function CreatePlaylistDialog() {
+type CreatePlaylistDialogProps = {
+  /**
+   * When set, the dialog is opened from elsewhere (the add-to-playlist menu) and has no trigger of
+   * its own. The playlists page leaves this unset and shows the "New playlist" button.
+   */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /**
+   * The catalog stays where it is and adds the track it was holding. The playlists page leaves this
+   * unset and walks over to the new playlist instead.
+   */
+  onCreated?: (playlist: { id: string; name: string }) => void;
+};
+
+export default function CreatePlaylistDialog({
+  open: openProp,
+  onOpenChange,
+  onCreated,
+}: CreatePlaylistDialogProps = {}) {
   const t = useTranslations('playlist');
   const common = useTranslations('common');
   const message = useTranslations('playlist.errors');
@@ -45,10 +63,12 @@ export default function CreatePlaylistDialog() {
 
   const { name, description } = state.errors ?? {};
   const { created } = state;
+  const setOpen = onOpenChange ?? setRequested;
+  const requestedOpen = openProp ?? requested;
 
   // Open because it was asked for and the playlist it would create does not exist yet. Derived
   // rather than closed by hand, so the form cannot come back over the page it just navigated to.
-  const open = requested && !created;
+  const open = requestedOpen && !created;
 
   useEffect(() => {
     if (name) {
@@ -63,18 +83,25 @@ export default function CreatePlaylistDialog() {
       return;
     }
 
+    if (onCreated) {
+      onCreated(created);
+      return;
+    }
+
     // The playlist itself is the confirmation, and the message says which one was made, because by
     // the time it is read the form that named it is gone.
     toast.success(t('created', { name: created.name }));
     router.push(`/playlists/${created.id}`);
-  }, [created, router, t]);
+  }, [created, onCreated, router, t]);
 
   return (
-    <Dialog open={open} onOpenChange={setRequested}>
-      <DialogTrigger render={<Button />}>
-        <PlusIcon aria-hidden />
-        {t('create')}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      {openProp === undefined && (
+        <DialogTrigger render={<Button />}>
+          <PlusIcon aria-hidden />
+          {t('create')}
+        </DialogTrigger>
+      )}
 
       <DialogContent>
         <DialogHeader>

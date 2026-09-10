@@ -13,6 +13,9 @@ const playlistSummarySelect = {
   description: true,
   visibility: true,
   _count: { select: { tracks: true } },
+  // Track ids travel with the summary so a catalog row can tell which playlists already hold it,
+  // without a query per row.
+  tracks: { select: { trackId: true } },
 } satisfies Prisma.PlaylistSelect;
 
 const playlistDetailSelect = {

@@ -45,6 +45,14 @@ describe('listPlaylists', () => {
       expect.objectContaining({ orderBy: [{ name: 'asc' }, { id: 'asc' }] }),
     );
   });
+
+  it('reads which tracks sit in each playlist, so the catalog can mark what is already there', async () => {
+    await listPlaylists();
+
+    const [query] = db.findMany.mock.calls[0];
+
+    expect(query.select.tracks).toEqual({ select: { trackId: true } });
+  });
 });
 
 describe('getPlaylist', () => {

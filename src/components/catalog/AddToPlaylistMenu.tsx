@@ -1,18 +1,19 @@
 'use client';
 
-import { ListPlusIcon } from 'lucide-react';
+import { CheckIcon, ListPlusIcon, PlusIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
+import CreatePlaylistDialog from '@/components/playlists/CreatePlaylistDialog';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Link } from '@/i18n/navigation';
 import type { PlaylistSummary } from '@/lib/data/playlists';
 import type { CatalogTrack } from '@/lib/data/tracks';
 import { addTrackAction } from '@/lib/playlists/actions';
@@ -28,93 +29,178 @@ type AddToPlaylistMenuProps = {
   appearance?: 'icon' | 'labelled';
 };
 
+function holdsTrack(playlist: PlaylistSummary, trackId: string) {
+  return playlist.tracks.some(entry => entry.trackId === trackId);
+}
+
+function withTrack(playlist: PlaylistSummary, trackId: string) {
+  if (holdsTrack(playlist, trackId)) {
+    return playlist;
+  }
+
+  return {
+    ...playlist,
+    tracks: [...playlist.tracks, { trackId }],
+    _count: { tracks: playlist._count.tracks + 1 },
+  };
+}
+
 export default function AddToPlaylistMenu({
   track,
-  playlists,
+  playlists: initial,
   appearance = 'icon',
 }: AddToPlaylistMenuProps) {
   const t = useTranslations('catalog');
-  const playlist = useTranslations('playlist');
+  const playlistCopy = useTranslations('playlist');
   const message = useTranslations('playlist.errors');
+  const [baseline, setBaseline] = useState(initial);
+  const [playlists, setPlaylists] = useState(initial);
+  const [creating, setCreating] = useState(false);
+  const [createKey, setCreateKey] = useState(0);
   const [isPending, startTransition] = useTransition();
 
+  if (initial !== baseline) {
+    setBaseline(initial);
+    setPlaylists(initial);
+  }
+
+  const saved = playlists.some(candidate => holdsTrack(candidate, track.id));
   const labelled = appearance === 'labelled';
+
+  let triggerName;
+
+  if (!labelled) {
+    triggerName = saved
+      ? t('trackInPlaylists', { title: track.title })
+      : t('addTrackToPlaylist', { title: track.title });
+  }
 
   const control = {
     variant: labelled ? ('outline' as const) : ('ghost' as const),
     size: labelled ? ('default' as const) : ('icon-sm' as const),
     disabled: isPending,
-    'aria-label': labelled
-      ? undefined
-      : t('addTrackToPlaylist', { title: track.title }),
+    'aria-label': triggerName,
   };
 
-  const content = (
-    <>
-      <ListPlusIcon aria-hidden />
-      {labelled && t('addToPlaylist')}
-    </>
-  );
+  function remember(playlistId: string) {
+    setPlaylists(current =>
+      current.map(candidate =>
+        candidate.id === playlistId
+          ? withTrack(candidate, track.id)
+          : candidate,
+      ),
+    );
+  }
 
-  function add(playlistId: string) {
+  function add(playlistId: string, alreadyThere: boolean) {
+    if (alreadyThere) {
+      toast.info(playlistCopy('duplicate', { title: track.title }));
+      return;
+    }
+
     startTransition(async () => {
       const result = await addTrackAction({ playlistId, trackId: track.id });
 
-      // Sonner speaks through its own live region, so the outcome is heard as well as seen.
       if (result.added) {
+        remember(playlistId);
         toast.success(
-          playlist('trackAdded', {
+          playlistCopy('trackAdded', {
             title: track.title,
             playlist: result.playlistName,
           }),
         );
-      } else if (result.reason === 'duplicate') {
-        toast.info(playlist('duplicate', { title: track.title }));
-      } else {
-        toast.error(message(result.reason));
+        return;
       }
+
+      if (result.reason === 'duplicate') {
+        remember(playlistId);
+        toast.info(playlistCopy('duplicate', { title: track.title }));
+        return;
+      }
+
+      toast.error(message(result.reason));
     });
   }
 
-  /*
-   * One playlist means there is nothing to choose between, so pressing the control adds the track
-   * rather than opening a menu over a single option.
-   */
-  if (playlists.length === 1) {
-    return (
-      <Button {...control} onClick={() => add(playlists[0].id)}>
-        {content}
-      </Button>
-    );
+  function handleCreated(created: { id: string; name: string }) {
+    setPlaylists(current => [
+      ...current,
+      {
+        id: created.id,
+        name: created.name,
+        description: null,
+        visibility: 'PRIVATE',
+        _count: { tracks: 0 },
+        tracks: [],
+      },
+    ]);
+    setCreating(false);
+    add(created.id, false);
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        aria-label={control['aria-label']}
-        disabled={isPending}
-        render={<Button variant={control.variant} size={control.size} />}
-      >
-        {content}
-      </DropdownMenuTrigger>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          aria-label={control['aria-label']}
+          disabled={isPending}
+          render={<Button variant={control.variant} size={control.size} />}
+        >
+          {saved ? <CheckIcon aria-hidden /> : <ListPlusIcon aria-hidden />}
+          {labelled && (saved ? t('inAPlaylist') : t('addToPlaylist'))}
+        </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-auto min-w-56">
-        {playlists.length === 0 ? (
-          // Nowhere to add it yet, so the menu offers the one thing that would change that.
-          <DropdownMenuItem render={<Link href="/playlists" />}>
-            {playlist('create')}
+        <DropdownMenuContent align="end" className="w-auto min-w-56">
+          {playlists.map(candidate => {
+            const alreadyThere = holdsTrack(candidate, track.id);
+
+            return (
+              <DropdownMenuItem
+                key={candidate.id}
+                aria-label={
+                  alreadyThere
+                    ? `${candidate.name}, ${playlistCopy('alreadyContains')}`
+                    : candidate.name
+                }
+                onClick={() => add(candidate.id, alreadyThere)}
+              >
+                {alreadyThere ? (
+                  <CheckIcon aria-hidden className="text-primary" />
+                ) : (
+                  <span aria-hidden className="size-4" />
+                )}
+                <span className="min-w-0 flex-1 truncate">
+                  {candidate.name}
+                </span>
+                {alreadyThere && (
+                  <span className="text-muted-foreground text-xs">
+                    {playlistCopy('alreadyContains')}
+                  </span>
+                )}
+              </DropdownMenuItem>
+            );
+          })}
+
+          {playlists.length > 0 && <DropdownMenuSeparator />}
+
+          <DropdownMenuItem
+            onClick={() => {
+              setCreateKey(key => key + 1);
+              setCreating(true);
+            }}
+          >
+            <PlusIcon aria-hidden />
+            {playlistCopy('create')}
           </DropdownMenuItem>
-        ) : (
-          playlists.map(candidate => (
-            <DropdownMenuItem
-              key={candidate.id}
-              onClick={() => add(candidate.id)}
-            >
-              {candidate.name}
-            </DropdownMenuItem>
-          ))
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <CreatePlaylistDialog
+        key={createKey}
+        open={creating}
+        onOpenChange={setCreating}
+        onCreated={handleCreated}
+      />
+    </>
   );
 }

@@ -80,7 +80,9 @@
       "openInAppleMusic": "Open in Apple Music"
     },
     "addToPlaylist": "Add to playlist",
+    "inAPlaylist": "In a playlist",
     "addTrackToPlaylist": "Add {title} to a playlist",
+    "trackInPlaylists": "{title} is in a playlist. Add to another",
     "backToCatalog": "Back to the catalog",
     "loadMore": "Load more tracks",
     "loadMorePending": "Loading more tracks",
@@ -140,6 +142,7 @@
     "trackAdded": "{title} was added to {playlist}.",
     "trackRemoved": "{title} was removed from {playlist}.",
     "duplicate": "{title} is already in this playlist.",
+    "alreadyContains": "Added",
     "deleteConfirm": {
       "title": "Delete {name}?",
       "description": "This cannot be undone. The tracks stay in the catalog.",

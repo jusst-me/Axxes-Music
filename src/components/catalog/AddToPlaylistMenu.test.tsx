@@ -19,10 +19,12 @@ const toasts = vi.hoisted(() => ({
 vi.mock('@/lib/playlists/actions', () => ({
   addTrackAction: (request: { playlistId: string; trackId: string }) =>
     addTrack(request),
+  createPlaylistAction: vi.fn(),
 }));
 
 vi.mock('@/i18n/navigation', () => ({
   Link: ({ href, ...props }: { href: string }) => <a href={href} {...props} />,
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 vi.mock('sonner', () => ({ toast: toasts }));
@@ -39,13 +41,18 @@ const TRACK = {
   appleMusicUrl: null,
 } satisfies CatalogTrack;
 
-function playlist(id: string, name: string): PlaylistSummary {
+function playlist(
+  id: string,
+  name: string,
+  trackIds: string[] = [],
+): PlaylistSummary {
   return {
     id,
     name,
     description: null,
     visibility: 'PRIVATE',
-    _count: { tracks: 0 },
+    _count: { tracks: trackIds.length },
+    tracks: trackIds.map(trackId => ({ trackId })),
   };
 }
 
@@ -57,10 +64,23 @@ function renderMenu(playlists: PlaylistSummary[]) {
   );
 }
 
-function control() {
+function control(saved = false) {
   return screen.getByRole('button', {
-    name: 'Add Around the World to a playlist',
+    name: saved
+      ? 'Around the World is in a playlist. Add to another'
+      : 'Add Around the World to a playlist',
   });
+}
+
+async function open(playlists: PlaylistSummary[]) {
+  renderMenu(playlists);
+  await userEvent.click(
+    control(
+      playlists.some(item =>
+        item.tracks.some(entry => entry.trackId === TRACK.id),
+      ),
+    ),
+  );
 }
 
 beforeEach(() => {
@@ -75,24 +95,23 @@ describe('AddToPlaylistMenu', () => {
     expect(control()).toBeInTheDocument();
   });
 
-  it('adds straight away when there is only one playlist to add to', async () => {
-    renderMenu([playlist('playlist-1', 'Friday afternoon')]);
+  it('opens a menu even when there is only one playlist, so a new one can still be made', async () => {
+    await open([playlist('playlist-1', 'Friday afternoon')]);
 
-    await userEvent.click(control());
-
-    expect(addTrack).toHaveBeenCalledWith({
-      playlistId: 'playlist-1',
-      trackId: 'track-1',
-    });
+    expect(
+      await screen.findByRole('menuitem', { name: 'Friday afternoon' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('menuitem', { name: 'New playlist' }),
+    ).toBeInTheDocument();
+    expect(addTrack).not.toHaveBeenCalled();
   });
 
-  it('asks which one when there is a choice to make', async () => {
-    renderMenu([
+  it('adds only after a playlist is chosen', async () => {
+    await open([
       playlist('playlist-1', 'Friday afternoon'),
       playlist('playlist-2', 'Deep focus'),
     ]);
-
-    await userEvent.click(control());
 
     await userEvent.click(
       await screen.findByRole('menuitem', { name: 'Deep focus' }),
@@ -104,49 +123,75 @@ describe('AddToPlaylistMenu', () => {
     });
   });
 
-  it('offers the way to make one when there is nowhere to add it yet', async () => {
-    renderMenu([]);
-
-    await userEvent.click(control());
+  it('marks a playlist that already holds the track', async () => {
+    await open([
+      playlist('playlist-1', 'Friday afternoon', ['track-1']),
+      playlist('playlist-2', 'Deep focus'),
+    ]);
 
     expect(
-      await screen.findByRole('menuitem', { name: 'New playlist' }),
-    ).toHaveAttribute('href', '/playlists');
+      await screen.findByRole('menuitem', {
+        name: 'Friday afternoon, Added',
+      }),
+    ).toBeInTheDocument();
   });
 
-  it('says where the track went', async () => {
-    renderMenu([playlist('playlist-1', 'Friday afternoon')]);
+  it('shows on the row that the track is already saved', () => {
+    renderMenu([playlist('playlist-1', 'Friday afternoon', ['track-1'])]);
 
-    await userEvent.click(control());
+    expect(control(true)).toBeInTheDocument();
+  });
+
+  it('does not ask the server again for a playlist that already has the track', async () => {
+    await open([playlist('playlist-1', 'Friday afternoon', ['track-1'])]);
+
+    await userEvent.click(
+      await screen.findByRole('menuitem', {
+        name: 'Friday afternoon, Added',
+      }),
+    );
+
+    expect(addTrack).not.toHaveBeenCalled();
+    expect(toasts.info).toHaveBeenCalledWith(
+      'Around the World is already in this playlist.',
+    );
+  });
+
+  it('offers a way to make a playlist from the menu, including when some already exist', async () => {
+    await open([playlist('playlist-1', 'Friday afternoon')]);
+
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'New playlist' }),
+    );
+
+    expect(
+      await screen.findByRole('dialog', { name: 'New playlist' }),
+    ).toBeInTheDocument();
+  });
+
+  it('says where the track went and then marks the row as saved', async () => {
+    await open([playlist('playlist-1', 'Friday afternoon')]);
+
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'Friday afternoon' }),
+    );
 
     await waitFor(() =>
       expect(toasts.success).toHaveBeenCalledWith(
         'Around the World was added to Friday afternoon.',
       ),
     );
-  });
-
-  it('reports a track that is already there as an answer, not as a failure', async () => {
-    addTrack.mockResolvedValue({ added: false, reason: 'duplicate' });
-
-    renderMenu([playlist('playlist-1', 'Friday afternoon')]);
-
-    await userEvent.click(control());
-
-    await waitFor(() =>
-      expect(toasts.info).toHaveBeenCalledWith(
-        'Around the World is already in this playlist.',
-      ),
-    );
-    expect(toasts.error).not.toHaveBeenCalled();
+    expect(control(true)).toBeInTheDocument();
   });
 
   it('speaks plainly when the playlist has gone', async () => {
     addTrack.mockResolvedValue({ added: false, reason: 'notFound' });
 
-    renderMenu([playlist('playlist-1', 'Friday afternoon')]);
+    await open([playlist('playlist-1', 'Friday afternoon')]);
 
-    await userEvent.click(control());
+    await userEvent.click(
+      await screen.findByRole('menuitem', { name: 'Friday afternoon' }),
+    );
 
     await waitFor(() =>
       expect(toasts.error).toHaveBeenCalledWith(
@@ -157,7 +202,7 @@ describe('AddToPlaylistMenu', () => {
 
   it('has no accessibility violations', async () => {
     const { container } = renderMenu([
-      playlist('playlist-1', 'Friday afternoon'),
+      playlist('playlist-1', 'Friday afternoon', ['track-1']),
       playlist('playlist-2', 'Deep focus'),
     ]);
 

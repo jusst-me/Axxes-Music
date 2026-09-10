@@ -80,7 +80,9 @@
       "openInAppleMusic": "Openen in Apple Music"
     },
     "addToPlaylist": "Toevoegen aan afspeellijst",
+    "inAPlaylist": "In een afspeellijst",
     "addTrackToPlaylist": "{title} aan een afspeellijst toevoegen",
+    "trackInPlaylists": "{title} staat in een afspeellijst. Toevoegen aan een andere",
     "backToCatalog": "Terug naar de catalogus",
     "loadMore": "Meer nummers laden",
     "loadMorePending": "Meer nummers laden",
@@ -140,6 +142,7 @@
     "trackAdded": "{title} is toegevoegd aan {playlist}.",
     "trackRemoved": "{title} is verwijderd uit {playlist}.",
     "duplicate": "{title} staat al in deze afspeellijst.",
+    "alreadyContains": "Toegevoegd",
     "deleteConfirm": {
       "title": "{name} verwijderen?",
       "description": "Dit kan niet ongedaan worden gemaakt. De nummers blijven in de catalogus staan.",

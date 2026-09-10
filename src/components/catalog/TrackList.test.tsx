@@ -21,11 +21,15 @@ vi.mock('@/lib/catalog/actions', () => ({
 // The locale prefixing it adds is covered in src/i18n/routing.test.ts; here only the anchor matters.
 vi.mock('@/i18n/navigation', () => ({
   Link: ({ href, ...props }: { href: string }) => <a href={href} {...props} />,
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 // A 'use server' module drags Prisma and Auth.js in behind it. Adding is covered in
 // src/components/catalog/AddToPlaylistMenu.test.tsx.
-vi.mock('@/lib/playlists/actions', () => ({ addTrackAction: vi.fn() }));
+vi.mock('@/lib/playlists/actions', () => ({
+  addTrackAction: vi.fn(),
+  createPlaylistAction: vi.fn(),
+}));
 
 function track(overrides: Partial<CatalogTrack> = {}): CatalogTrack {
   return {
