@@ -6,9 +6,9 @@ import { getLocale } from 'next-intl/server';
 import { z } from 'zod';
 
 import { Prisma } from '@/generated/prisma/client';
-import { signIn } from '@/lib/auth/auth';
+import { signIn, signOut } from '@/lib/auth/auth';
 import { hashPassword } from '@/lib/auth/password';
-import { LIBRARY_PATH, safeCallbackUrl } from '@/lib/auth/routes';
+import { LIBRARY_PATH, safeCallbackUrl, SIGN_IN_PATH } from '@/lib/auth/routes';
 import {
   type AuthErrorKey,
   signInSchema,
@@ -70,6 +70,12 @@ export async function signInAction(
 
   // Outside the try, because redirect signals through an exception the framework is meant to catch.
   redirect(safeCallbackUrl(formData.get('callbackUrl')?.toString(), locale));
+}
+
+export async function signOutAction() {
+  const locale = await getLocale();
+
+  await signOut({ redirectTo: `/${locale}${SIGN_IN_PATH}` });
 }
 
 export async function signUpAction(
