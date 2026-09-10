@@ -1,0 +1,16 @@
+---
+description: React component conventions and patterns
+globs: '**/*.tsx'
+alwaysApply: false
+---
+
+# React Conventions
+
+## One Component Per File
+
+Each `.tsx` file should contain exactly one React component.
+
+- Export only one component per file (default export)
+- File name must match the component name (e.g., `Button.tsx` exports `Button`)
+- Helper functions and types used only by that component can stay in the same file
+- Types used by multiple files must be placed in `src/types/`

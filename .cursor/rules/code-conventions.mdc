@@ -1,0 +1,36 @@
+---
+description: General code conventions for this project
+alwaysApply: true
+---
+
+# Code Conventions
+
+## Imports
+
+Always use the `@/` alias for imports from the `src` directory.
+
+```typescript
+// Good
+import { cn } from '@/lib/utils';
+import '@/app/globals.css';
+
+// Bad
+import { cn } from '../lib/utils';
+import '../app/globals.css';
+```
+
+## Comments
+
+Only add comments when absolutely necessary. Code should be self-documenting through clear naming and structure.
+
+**When to add comments:**
+
+- Complex algorithms that aren't immediately obvious
+- Workarounds or hacks that need explanation
+- Public API documentation (JSDoc for exported functions)
+
+**When NOT to add comments:**
+
+- Explaining what code does (the code itself should be clear)
+- Commented-out code (delete it, use git for history)
+- Obvious operations

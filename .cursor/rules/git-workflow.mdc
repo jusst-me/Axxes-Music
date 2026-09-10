@@ -1,0 +1,27 @@
+---
+description: Git workflow — Conventional Commits and branch naming
+alwaysApply: true
+---
+
+# Git workflow
+
+## Commits
+
+Follow **[Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/)**:
+
+- Use types such as `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`.
+- Optional scope: `feat(search): …`
+- Breaking changes: footer `BREAKING CHANGE:` or `!` after the type, per the spec.
+
+## Branches
+
+Use one of these prefixes for every branch (no other top-level prefixes):
+
+- **`feature/`** — new work, improvements, refactors tied to normal delivery.
+- **`hotfix/`** — urgent production fixes.
+
+Examples: `feature/playlist-grid`, `hotfix/audio-player-seek`.
+
+## Secrets
+
+Do not commit secrets. Use `.env.dist` as the checklist for required environment variables.

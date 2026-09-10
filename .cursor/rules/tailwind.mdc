@@ -1,0 +1,64 @@
+---
+description: Tailwind CSS v4 conventions for this project
+globs: '**/*.{tsx,jsx,css}'
+alwaysApply: false
+---
+
+# Tailwind CSS v4 Conventions
+
+## Theme Configuration
+
+In Tailwind v4, all configuration is in `src/app/globals.css`:
+
+- `@source` specifies content paths for class scanning
+- `@theme` defines theme values (colors, breakpoints, spacing)
+
+```css
+@import 'tailwindcss';
+@source '../../src';
+
+@theme {
+  --color-beige: #fcf7f3;
+  --breakpoint-md: 767px;
+  --max-width-search: 667px;
+}
+```
+
+There is no tailwind.config.ts file in this project.
+
+## Avoid Arbitrary Values
+
+Prefer using theme values over arbitrary values like `w-[123px]` or `text-[#abc123]`.
+
+**When you encounter a value not in the theme:**
+
+1. Check if a similar Tailwind default exists (e.g., `w-11` instead of `w-[44px]`)
+2. If the value is reusable, ask the user: "Should I add this to `@theme` in globals.css or use an arbitrary value?"
+3. Only use arbitrary values for truly one-off calculations
+
+**Acceptable arbitrary values:**
+
+- CSS calc() expressions
+- One-time positioning values
+- CSS variable references like `h-(--header-height)`
+
+**Should be in @theme:**
+
+- Brand colors (`--color-*`)
+- Breakpoints (`--breakpoint-*`)
+- Max-widths (`--max-width-*`)
+
+## CSS Variables for Dynamic Values
+
+For values used in calc() expressions, define them in `:root` (not `@theme`) and use in arbitrary values:
+
+```css
+:root {
+  --header-height: 72px;
+}
+```
+
+```tsx
+className = 'h-(--header-height)';
+className = 'h-[calc(100vh-(--header-height))]';
+```

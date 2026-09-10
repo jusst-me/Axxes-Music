@@ -1,0 +1,47 @@
+---
+description: shadcn/ui usage and conventions
+alwaysApply: true
+---
+
+# shadcn/ui
+
+This repo is already configured via `components.json` (style: **base-vega**, Base UI, RSC, aliases under `@/components` and `@/lib/utils`).
+
+## Prefer shadcn primitives
+
+When you need a common UI primitive, **use shadcn — do not build a custom equivalent**.
+
+Examples: dropdown/menu, dialog, sheet, popover, select, tabs, accordion, tooltip, checkbox, switch, radio, slider, toast/sonner.
+
+1. Check whether the component already exists in `src/components/ui/`.
+2. If it does not, add it with the CLI (do not hand-roll the primitive):
+
+```bash
+pnpm dlx shadcn@latest add <component>
+```
+
+3. Build domain UI (header, sections, pages) **on top of** those primitives in `src/components/`.
+
+### Do / don't
+
+```tsx
+// DON'T — custom dropdown / focus / dismiss logic
+const [open, setOpen] = useState(false);
+return <button onClick={() => setOpen(true)}>...</button>;
+
+// DO — shadcn primitive
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+```
+
+Only skip shadcn when there is no matching primitive, or an existing domain pattern in the repo already covers the need.
+
+## Conventions
+
+- shadcn primitives belong in `src/components/ui/`.
+- Domain components live in `src/components/` (and feature folders such as `header/`).
+- Prefer extending existing `ui/` components and domain patterns rather than duplicating primitives.

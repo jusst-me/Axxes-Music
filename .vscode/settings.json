@@ -1,0 +1,53 @@
+{
+  // "workbench.colorCustomizations": {
+  //   "titleBar.activeForeground": "#fff",
+  //   "titleBar.inactiveForeground": "#fff",
+  //   "titleBar.activeBackground": "#023A4F",
+  //   "titleBar.inactiveBackground": "#023A4F"
+  // },
+  /* Editor */
+  "editor.tabSize": 2,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.prettier": "never",
+    "source.fixAll.eslint": "explicit"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  /* Stylelint */
+  "stylelint.validate": ["css", "scss", ".module.scss"],
+  "stylelint.enable": true,
+
+  /* Eslint */
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+
+  /* Other */
+  "files.eol": "\n",
+  "breadcrumbs.enabled": true,
+  "js/ts.preferences.importModuleSpecifier": "non-relative"
+}

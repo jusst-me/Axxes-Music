@@ -1,0 +1,236 @@
+---
+description: WCAG 2.2 AA compliance rules for accessibility
+globs:
+alwaysApply: true
+---
+
+# WCAG 2.2 AA Compliance Rules
+
+## 1. Images and Media Accessibility
+
+### Images must have alt text
+
+- All `<img>` elements MUST have meaningful `alt` attributes
+- If decorative, use `alt=""` (empty alt text)
+- For complex images, provide detailed descriptions via `aria-describedby`
+- SVG icons MUST have `aria-label` or `aria-labelledby` when conveying meaning
+- Background images with content MUST have text alternatives
+
+### Media accessibility
+
+- Videos MUST have captions and transcripts
+- Audio content MUST have transcripts
+- Auto-playing media MUST have controls and be pausable
+
+## 2. Color and Contrast
+
+### Color contrast requirements
+
+- Normal text: minimum 4.5:1 contrast ratio
+- Large text (18pt+ or 14pt+ bold): minimum 3:1 contrast ratio
+- UI components and graphics: minimum 3:1 contrast ratio
+- Never rely on color alone to convey information
+
+### Focus indicators
+
+- All interactive elements MUST have visible focus indicators
+- Focus indicators MUST meet 3:1 contrast ratio against adjacent colors
+- Focus indicators MUST be at least 2px thick or have equivalent area
+
+## 3. Keyboard Navigation
+
+### Keyboard accessibility
+
+- All interactive elements MUST be keyboard accessible
+- Tab order MUST be logical and follow visual flow
+- Skip links MUST be provided for main content areas
+- Keyboard traps MUST be avoided (except in modals with proper escape)
+- Custom interactive components MUST support standard keyboard patterns
+
+### Focus management
+
+- Focus MUST be managed when content changes dynamically
+- Modal dialogs MUST trap focus within the modal
+- Focus MUST return to appropriate element when modals close
+- Never remove focus without moving it somewhere else
+
+### Focus visibility (WCAG 2.2)
+
+- Focus MUST not be entirely hidden by author-created content
+- When focus is partially obscured, the focused area MUST be visible
+- Focus indicators MUST not be completely covered by other content
+
+## 4. ARIA and Semantic HTML
+
+### Semantic HTML
+
+- Use proper heading hierarchy (h1 → h2 → h3, no skipping levels)
+- Use semantic elements (`nav`, `main`, `article`, `section`, `aside`)
+- Form elements MUST have associated labels
+- Use `button` elements for actions, `a` elements for navigation
+
+### ARIA attributes
+
+- Use ARIA labels when visible text is insufficient
+- `aria-expanded` for collapsible content
+- `aria-current` for current page/step indicators
+- `aria-live` regions for dynamic content updates
+- `aria-describedby` for additional descriptions
+- Landmark roles when semantic HTML isn't sufficient
+
+### ARIA best practices
+
+- Don't change semantic meaning with ARIA
+- Ensure ARIA attributes have valid values
+- Test with screen readers
+- Prefer semantic HTML over ARIA when possible
+
+## 5. Forms Accessibility
+
+### Form labels and instructions
+
+- All form inputs MUST have associated labels
+- Use `<label>` elements or `aria-labelledby`
+- Required fields MUST be clearly indicated
+- Provide clear instructions before form fields
+- Error messages MUST be associated with fields using `aria-describedby`
+
+### Error handling
+
+- Errors MUST be announced to screen readers
+- Error messages MUST be clear and actionable
+- Focus MUST move to first error field on submission
+- Use `aria-invalid` attribute for fields with errors
+
+### Authentication accessibility (WCAG 2.2)
+
+- Provide alternative authentication methods that don't rely on cognitive function tests
+- Allow password managers and paste functionality
+- Avoid memory-based authentication (unless alternative methods exist)
+- Support biometric authentication where available
+- Don't require users to transcribe characters they cannot distinguish
+
+### Redundant entry prevention (WCAG 2.2)
+
+- Auto-populate previously entered information when safe to do so
+- Provide options to reuse information within a session
+- Don't require users to re-enter identical information unnecessarily
+- Exception: Re-entry may be required for security or data verification
+
+## 6. Interactive Elements
+
+### Links and buttons
+
+- Link text MUST be descriptive (avoid "click here", "read more")
+- External links SHOULD be indicated
+- Buttons MUST have accessible names
+- Icon-only buttons MUST have `aria-label`
+- Ensure adequate touch target size (44x44px minimum)
+
+### Custom components
+
+- Complex widgets MUST follow ARIA authoring practices
+- Provide keyboard support matching native elements
+- Announce state changes to screen readers
+- Implement proper ARIA roles and properties
+
+### Drag and drop interactions (WCAG 2.2)
+
+- All functionality that uses dragging movements MUST have an alternative single-pointer method
+- Provide keyboard alternatives for drag-and-drop operations
+- Consider users with mobility impairments who cannot perform dragging gestures
+
+## 7. Content Structure
+
+### Headings and landmarks
+
+- Page MUST have exactly one h1
+- Heading levels MUST not skip (h1 → h2 → h3)
+- Use headings to create content outline
+- Implement landmark regions (header, nav, main, aside, footer)
+
+### Lists and tables
+
+- Use proper list markup for groups of related items
+- Tables MUST have headers (`<th>`) with appropriate scope
+- Complex tables MUST have captions and summaries
+- Data tables MUST use `scope` attributes
+
+## 8. Dynamic Content
+
+### Live regions
+
+- Use `aria-live` for status messages and updates
+- Set appropriate politeness level (polite/assertive)
+- Ensure dynamic content changes are announced
+- Provide loading states for async content
+
+### Route changes (Next.js specific)
+
+- Announce route changes to screen readers
+- Move focus appropriately on navigation
+- Update page title on route change
+- Consider focus management for single-page app behavior
+
+## 9. Mobile and Responsive Accessibility
+
+### Touch targets (WCAG 2.2 Updated)
+
+- Interactive elements MUST be at least 24x24px (WCAG 2.2 minimum)
+- Target spacing of at least 24px between targets is recommended
+- For better usability, maintain 44x44px targets when possible
+- Ensure adequate spacing between touch targets
+- Support both touch and mouse interactions
+- Exception: Targets in sentences or text blocks may be smaller
+
+### Responsive design
+
+- Ensure content is accessible at all viewport sizes
+- Text MUST be readable without horizontal scrolling
+- All functionality MUST be available on mobile devices
+
+### Fixed reference points (WCAG 2.2)
+
+- When content requires specific spatial positioning, provide fixed reference points
+- Ensure users can orient themselves when content changes or scrolls
+- Provide consistent navigation and landmarks across viewport changes
+
+## 10. Performance and Accessibility
+
+### Loading and timeouts
+
+- Provide progress indicators for loading content
+- Allow users to extend time limits
+- Provide pause/stop controls for auto-updating content
+- Ensure core functionality works without JavaScript
+
+## Implementation Guidelines
+
+### Testing requirements
+
+- Test with keyboard navigation only
+- Test with screen reader (VoiceOver, NVDA, JAWS)
+- Validate HTML markup
+- Run automated accessibility tests (axe-core with WCAG 2.2 rules)
+- Verify color contrast ratios
+- Test focus visibility and management
+- Test drag-and-drop alternatives
+- Verify touch target sizes and spacing
+- Test authentication flows for accessibility
+- Test on mobile devices
+
+### Code review checklist
+
+- [ ] All images have appropriate alt text
+- [ ] Form elements have labels
+- [ ] Heading hierarchy is correct
+- [ ] Interactive elements are keyboard accessible
+- [ ] Focus indicators are visible and not obscured
+- [ ] Color contrast meets requirements
+- [ ] ARIA attributes are used correctly
+- [ ] Error messages are accessible
+- [ ] Dynamic content updates are announced
+- [ ] Touch targets meet minimum 24x24px size
+- [ ] Drag-and-drop has keyboard alternatives
+- [ ] Authentication doesn't rely solely on cognitive tests
+- [ ] Redundant data entry is minimized
