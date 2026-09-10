@@ -9,7 +9,12 @@
     "retry": "Try again",
     "undo": "Undo",
     "loading": "Loading",
-    "error": "Something went wrong. Please try again."
+    "error": "Something went wrong. Please try again.",
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
   },
   "landing": {
     "title": "Playlists worth sharing.",
@@ -115,7 +120,8 @@
     "skipToContent": "Skip to main content",
     "mainNavigation": "Main navigation",
     "languageSwitcher": "Language, currently {language}",
-    "themeToggle": "Switch to {theme} theme",
+    "theme": "Theme",
+    "themeSwitcher": "Theme, currently {theme}",
     "searchResults": "{count, plural, =0 {No tracks} one {# track} other {# tracks}} found",
     "loading": "Loading, please wait"
   }

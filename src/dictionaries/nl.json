@@ -9,7 +9,12 @@
     "retry": "Opnieuw proberen",
     "undo": "Ongedaan maken",
     "loading": "Laden",
-    "error": "Er is iets misgegaan. Probeer het opnieuw."
+    "error": "Er is iets misgegaan. Probeer het opnieuw.",
+    "theme": {
+      "light": "Licht",
+      "dark": "Donker",
+      "system": "Systeem"
+    }
   },
   "landing": {
     "title": "Afspeellijsten die je wilt delen.",
@@ -115,7 +120,8 @@
     "skipToContent": "Naar de hoofdinhoud",
     "mainNavigation": "Hoofdnavigatie",
     "languageSwitcher": "Taal, nu {language}",
-    "themeToggle": "Overschakelen naar {theme} thema",
+    "theme": "Thema",
+    "themeSwitcher": "Thema, nu {theme}",
     "searchResults": "{count, plural, =0 {Geen nummers} one {# nummer} other {# nummers}} gevonden",
     "loading": "Bezig met laden"
   }

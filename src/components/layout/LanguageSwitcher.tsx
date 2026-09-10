@@ -36,7 +36,7 @@ export default function LanguageSwitcher() {
         className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex min-h-11 items-center gap-2 rounded-md px-2 text-sm font-medium transition-colors sm:px-3"
       >
         <GlobeIcon aria-hidden className="size-4" />
-        <span className="sr-only sm:not-sr-only">{LOCALE_NAMES[locale]}</span>
+        <span className="hidden sm:inline">{LOCALE_NAMES[locale]}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-auto min-w-40">
         <DropdownMenuRadioGroup value={locale} onValueChange={selectLocale}>
