@@ -81,6 +81,8 @@
     },
     "addToPlaylist": "Zur Playlist hinzufügen",
     "loadMore": "Weitere Titel laden",
+    "loadMorePending": "Weitere Titel werden geladen",
+    "showing": "{shown} von {total, plural, one {# Titel} other {# Titel}} werden angezeigt",
     "trackCount": "{count, plural, =0 {Keine Titel} one {# Titel} other {# Titel}}"
   },
   "playlist": {

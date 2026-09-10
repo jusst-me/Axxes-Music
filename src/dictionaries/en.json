@@ -81,6 +81,8 @@
     },
     "addToPlaylist": "Add to playlist",
     "loadMore": "Load more tracks",
+    "loadMorePending": "Loading more tracks",
+    "showing": "Showing {shown} of {total, plural, one {# track} other {# tracks}}",
     "trackCount": "{count, plural, =0 {No tracks} one {# track} other {# tracks}}"
   },
   "playlist": {

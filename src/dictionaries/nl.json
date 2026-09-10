@@ -81,6 +81,8 @@
     },
     "addToPlaylist": "Toevoegen aan afspeellijst",
     "loadMore": "Meer nummers laden",
+    "loadMorePending": "Meer nummers laden",
+    "showing": "{shown} van {total, plural, one {# nummer} other {# nummers}} getoond",
     "trackCount": "{count, plural, =0 {Geen nummers} one {# nummer} other {# nummers}}"
   },
   "playlist": {
