@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
 import MainNav from '@/components/layout/MainNav';
 import { Link } from '@/i18n/navigation';
 
@@ -16,6 +17,9 @@ export default function Header() {
           {t('appName')}
         </Link>
         <MainNav />
+        <div className="ml-auto flex items-center gap-1">
+          <LanguageSwitcher />
+        </div>
       </div>
     </header>
   );
