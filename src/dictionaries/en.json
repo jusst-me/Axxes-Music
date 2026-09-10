@@ -57,6 +57,7 @@
   },
   "catalog": {
     "title": "Catalog",
+    "description": "Every track in the library, searchable by title, artist and album.",
     "search": {
       "label": "Search the catalog",
       "placeholder": "Title, artist or album",
@@ -83,6 +84,7 @@
   },
   "playlist": {
     "title": "Playlists",
+    "description": "The playlists you and your colleagues are building together.",
     "create": "New playlist",
     "fields": {
       "name": "Name",

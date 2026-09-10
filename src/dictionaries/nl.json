@@ -57,6 +57,7 @@
   },
   "catalog": {
     "title": "Catalogus",
+    "description": "Alle nummers uit de bibliotheek, doorzoekbaar op titel, artiest en album.",
     "search": {
       "label": "Zoek in de catalogus",
       "placeholder": "Titel, artiest of album",
@@ -83,6 +84,7 @@
   },
   "playlist": {
     "title": "Afspeellijsten",
+    "description": "De afspeellijsten die jij en je collega's samen samenstellen.",
     "create": "Nieuwe afspeellijst",
     "fields": {
       "name": "Naam",

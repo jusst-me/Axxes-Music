@@ -1,4 +1,22 @@
+import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+
+import { resolveLocale } from '@/i18n/locale';
+import { localeAlternates } from '@/lib/metadata';
+
+export async function generateMetadata({
+  params,
+}: PageProps<'/[locale]/catalog'>): Promise<Metadata> {
+  const locale = resolveLocale((await params).locale);
+  const t = await getTranslations({ locale, namespace: 'catalog' });
+
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: localeAlternates(locale, '/catalog'),
+  };
+}
 
 export default function CatalogPage() {
   const t = useTranslations('catalog');

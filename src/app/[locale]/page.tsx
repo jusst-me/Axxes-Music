@@ -1,6 +1,16 @@
+import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
+import { localeAlternates } from '@/lib/metadata';
+
+export async function generateMetadata({
+  params,
+}: PageProps<'/[locale]'>): Promise<Metadata> {
+  const { locale } = await params;
+
+  return { alternates: localeAlternates(locale) };
+}
 
 export default function Home() {
   const t = useTranslations();

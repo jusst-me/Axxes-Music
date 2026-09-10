@@ -4,13 +4,16 @@ import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import SkipLink, { MAIN_CONTENT_ID } from '@/components/layout/SkipLink';
 import ThemeProvider from '@/components/layout/ThemeProvider';
 import { LOCALES } from '@/constants/locales';
+import { resolveLocale } from '@/i18n/locale';
 import { routing } from '@/i18n/routing';
+import { SITE_URL } from '@/lib/metadata';
 import { cn } from '@/lib/utils';
 
 const montserrat = Montserrat({
@@ -20,11 +23,21 @@ const montserrat = Montserrat({
   variable: '--font-sans',
 });
 
-export const metadata: Metadata = {
-  title: 'Axxes Music',
-  description:
-    'Browse a music catalog, build playlists together, and listen to previews.',
-};
+export async function generateMetadata({
+  params,
+}: LayoutProps<'/[locale]'>): Promise<Metadata> {
+  const locale = resolveLocale((await params).locale);
+  const t = await getTranslations({ locale, namespace: 'landing' });
+  const common = await getTranslations({ locale, namespace: 'common' });
+  const appName = common('appName');
+
+  return {
+    metadataBase: SITE_URL,
+    // A page contributes its own name; the landing page falls back to the default.
+    title: { default: appName, template: `%s · ${appName}` },
+    description: t('intro'),
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map(locale => ({ locale }));
