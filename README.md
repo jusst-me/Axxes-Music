@@ -85,6 +85,21 @@ Each page declares its language variants through `localeAlternates` in `src/lib/
 `x-default` pointing at English. Set `NEXT_PUBLIC_SITE_URL` to make those URLs absolute; on Vercel the
 production domain is picked up automatically.
 
+## Authentication
+
+Auth.js with a credentials provider and JWT sessions. Passwords are hashed with Argon2id at the
+parameters OWASP recommends, and the hash never leaves the server. A sign-in attempt against an unknown
+address is verified against a placeholder hash, so a missing account takes as long to reject as a wrong
+password does and addresses cannot be enumerated by timing.
+
+`src/proxy.ts` keeps a visitor without a session off a private page and sends them to the sign-in page
+in their own language, remembering where they were headed. That check is optimistic: it has seen a
+cookie and nothing more. Anything that reads or writes data calls `requireSession` from
+`src/lib/auth/session.ts` for itself.
+
+Paths are private by default. `PUBLIC_PATHS` in `src/lib/auth/routes.ts` is the full list of what is
+reachable without a session, so a route added later is protected until someone opens it deliberately.
+
 ## Testing
 
 Tests run on Vitest with jsdom and Testing Library, and live next to the code they cover as

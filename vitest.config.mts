@@ -3,7 +3,13 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
-  resolve: { tsconfigPaths: true },
+  resolve: {
+    tsconfigPaths: true,
+    alias: {
+      'server-only': new URL('./src/lib/testing/serverOnly.ts', import.meta.url)
+        .pathname,
+    },
+  },
   test: {
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],

@@ -49,6 +49,7 @@
       "nameRequired": "Vul je naam in.",
       "emailInvalid": "Vul een geldig e-mailadres in.",
       "emailTaken": "Er bestaat al een account met dit e-mailadres.",
+      "passwordRequired": "Vul je wachtwoord in.",
       "passwordTooShort": "Gebruik minimaal 12 tekens.",
       "invalidCredentials": "Dit e-mailadres en wachtwoord horen niet bij een account."
     },
