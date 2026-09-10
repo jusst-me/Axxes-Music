@@ -12,6 +12,18 @@ Follow **[Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.
 - Use types such as `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`.
 - Optional scope: `feat(search): …`
 - Breaking changes: footer `BREAKING CHANGE:` or `!` after the type, per the spec.
+- Name the ticket at the end of the description: `feat(i18n): format dates per locale (AXM-093)`.
+  It has to be readable in `git log --oneline`, which is where someone asks what a change was for.
+  It goes at the end because commitlint's `subject-case` rule rejects a subject that opens with an
+  uppercase token, and that rule is worth more than the position of the reference.
+
+One commit per ticket. A pull request may carry several, as long as each one stands on its own.
+
+## Merging
+
+Merge a pull request with a merge commit (`gh pr merge <number> --merge --auto --delete-branch`).
+Squashing loses the ticket boundaries inside the branch, and rebasing loses the link to the pull
+request; a merge commit keeps both.
 
 ## Branches
 
