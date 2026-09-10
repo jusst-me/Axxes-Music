@@ -71,13 +71,15 @@
       "genre": "Genre",
       "releaseDate": "Veröffentlicht",
       "duration": "Dauer",
+      "durationLabel": "{minutes, plural, one {# Minute} other {# Minuten}} und {seconds, plural, one {# Sekunde} other {# Sekunden}}",
       "artwork": "Albumcover von {title} von {artist}",
       "noArtwork": "Kein Cover verfügbar",
       "details": "Titeldetails",
       "openInAppleMusic": "In Apple Music öffnen"
     },
     "addToPlaylist": "Zur Playlist hinzufügen",
-    "loadMore": "Weitere Titel laden"
+    "loadMore": "Weitere Titel laden",
+    "trackCount": "{count, plural, =0 {Keine Titel} one {# Titel} other {# Titel}}"
   },
   "playlist": {
     "title": "Playlists",
@@ -95,6 +97,8 @@
       "title": "Diese Playlist ist leer",
       "description": "Füge Titel aus dem Katalog hinzu, um zu beginnen."
     },
+    "trackCount": "{count, plural, =0 {Keine Titel} one {# Titel} other {# Titel}}",
+    "added": "{when} hinzugefügt",
     "removeTrack": "{title} aus dieser Playlist entfernen",
     "trackAdded": "{title} wurde zu {playlist} hinzugefügt.",
     "trackRemoved": "{title} wurde aus {playlist} entfernt.",

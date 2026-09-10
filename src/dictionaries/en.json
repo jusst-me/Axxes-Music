@@ -71,13 +71,15 @@
       "genre": "Genre",
       "releaseDate": "Released",
       "duration": "Duration",
+      "durationLabel": "{minutes, plural, one {# minute} other {# minutes}} and {seconds, plural, one {# second} other {# seconds}}",
       "artwork": "Album artwork for {title} by {artist}",
       "noArtwork": "No artwork available",
       "details": "Track details",
       "openInAppleMusic": "Open in Apple Music"
     },
     "addToPlaylist": "Add to playlist",
-    "loadMore": "Load more tracks"
+    "loadMore": "Load more tracks",
+    "trackCount": "{count, plural, =0 {No tracks} one {# track} other {# tracks}}"
   },
   "playlist": {
     "title": "Playlists",
@@ -95,6 +97,8 @@
       "title": "This playlist is empty",
       "description": "Add tracks from the catalog to get started."
     },
+    "trackCount": "{count, plural, =0 {No tracks} one {# track} other {# tracks}}",
+    "added": "Added {when}",
     "removeTrack": "Remove {title} from this playlist",
     "trackAdded": "{title} was added to {playlist}.",
     "trackRemoved": "{title} was removed from {playlist}.",
