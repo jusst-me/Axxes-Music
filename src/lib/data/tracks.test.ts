@@ -65,4 +65,35 @@ describe('listTracks', () => {
       }),
     );
   });
+
+  it('reads the whole catalog when nothing was searched for', async () => {
+    await listTracks();
+
+    expect(db.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: {} }),
+    );
+  });
+
+  it('matches a query against title, artist and album, whatever the casing', async () => {
+    await listTracks({ query: 'daft' });
+
+    const contains = { contains: 'daft', mode: 'insensitive' };
+
+    expect(db.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          OR: [{ title: contains }, { artist: contains }, { album: contains }],
+        },
+      }),
+    );
+  });
+
+  it('counts the matches rather than the catalog, so paging stops in the right place', async () => {
+    await listTracks({ query: 'daft' });
+
+    const [read] = db.findMany.mock.calls[0];
+    const [tally] = db.count.mock.calls[0];
+
+    expect(tally.where).toEqual(read.where);
+  });
 });

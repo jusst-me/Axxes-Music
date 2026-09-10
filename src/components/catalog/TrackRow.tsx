@@ -1,6 +1,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 
 import TrackArtwork from '@/components/catalog/TrackArtwork';
+import TrackDetailsDialog from '@/components/catalog/TrackDetailsDialog';
 import type { Locale } from '@/constants/locales';
 import type { CatalogTrack } from '@/lib/data/tracks';
 import { formatDuration, splitDuration } from '@/lib/format/duration';
@@ -14,7 +15,7 @@ export default function TrackRow({ track }: { track: CatalogTrack }) {
       <TrackArtwork src={track.artworkUrl} />
 
       <div className="min-w-0 flex-1">
-        <p className="truncate font-medium">{track.title}</p>
+        <TrackDetailsDialog track={track} />
         <p className="text-muted-foreground truncate text-sm">
           {track.album ? `${track.artist} · ${track.album}` : track.artist}
         </p>

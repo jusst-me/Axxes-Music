@@ -76,10 +76,11 @@
       "durationLabel": "{minutes, plural, one {# minuut} other {# minuten}} en {seconds, plural, one {# seconde} other {# seconden}}",
       "artwork": "Albumhoes van {title} van {artist}",
       "noArtwork": "Geen albumhoes beschikbaar",
-      "details": "Nummerdetails",
+      "detailsFor": "{title}, nummerdetails",
       "openInAppleMusic": "Openen in Apple Music"
     },
     "addToPlaylist": "Toevoegen aan afspeellijst",
+    "backToCatalog": "Terug naar de catalogus",
     "loadMore": "Meer nummers laden",
     "loadMorePending": "Meer nummers laden",
     "showing": "{shown} van {total, plural, one {# nummer} other {# nummers}} getoond",

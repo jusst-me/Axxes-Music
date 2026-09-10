@@ -2,7 +2,18 @@ import { DiscIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
-const SIZE = 56;
+import { cn } from '@/lib/utils';
+
+/** A row wants a thumbnail and the detail view wants the cover; nothing in between is needed. */
+const SIZES = {
+  row: { pixels: 56, box: 'size-14', icon: 'size-6' },
+  detail: { pixels: 224, box: 'size-56', icon: 'size-16' },
+} as const;
+
+type TrackArtworkProps = {
+  src: string | null;
+  size?: keyof typeof SIZES;
+};
 
 /**
  * Cover art, or a stand-in when the catalog has none.
@@ -11,17 +22,21 @@ const SIZE = 56;
  * carries an empty alt. The placeholder is not: a listener should be able to tell that this track has
  * no cover rather than be left wondering whether an image failed to load.
  */
-export default function TrackArtwork({ src }: { src: string | null }) {
+export default function TrackArtwork({ src, size = 'row' }: TrackArtworkProps) {
   const t = useTranslations('catalog.track');
+  const { pixels, box, icon } = SIZES[size];
 
   if (!src) {
     return (
       <div
         role="img"
         aria-label={t('noArtwork')}
-        className="bg-muted text-muted-foreground flex size-14 shrink-0 items-center justify-center rounded-md"
+        className={cn(
+          'bg-muted text-muted-foreground flex shrink-0 items-center justify-center rounded-md',
+          box,
+        )}
       >
-        <DiscIcon aria-hidden className="size-6" />
+        <DiscIcon aria-hidden className={icon} />
       </div>
     );
   }
@@ -30,9 +45,9 @@ export default function TrackArtwork({ src }: { src: string | null }) {
     <Image
       src={src}
       alt=""
-      width={SIZE}
-      height={SIZE}
-      className="bg-muted size-14 shrink-0 rounded-md object-cover"
+      width={pixels}
+      height={pixels}
+      className={cn('bg-muted shrink-0 rounded-md object-cover', box)}
     />
   );
 }
