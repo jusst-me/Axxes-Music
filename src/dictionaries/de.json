@@ -1,0 +1,11 @@
+{
+  "common": {
+    "appName": "Axxes Music"
+  },
+  "home": {
+    "title": "Playlists, die man teilen möchte.",
+    "intro": "Durchsuche den Katalog, stelle gemeinsam Playlists zusammen und höre Vorschauen. Verfügbar auf Englisch, Niederländisch und Deutsch.",
+    "createAccount": "Konto erstellen",
+    "signIn": "Anmelden"
+  }
+}

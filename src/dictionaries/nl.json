@@ -1,0 +1,11 @@
+{
+  "common": {
+    "appName": "Axxes Music"
+  },
+  "home": {
+    "title": "Afspeellijsten die je wilt delen.",
+    "intro": "Blader door de catalogus, stel samen afspeellijsten samen en luister naar previews. Beschikbaar in het Engels, Nederlands en Duits.",
+    "createAccount": "Account aanmaken",
+    "signIn": "Inloggen"
+  }
+}
