@@ -1,11 +1,122 @@
 {
   "common": {
-    "appName": "Axxes Music"
+    "appName": "Axxes Music",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "delete": "Löschen",
+    "save": "Speichern",
+    "retry": "Erneut versuchen",
+    "undo": "Rückgängig",
+    "loading": "Wird geladen",
+    "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
   },
-  "home": {
+  "landing": {
     "title": "Playlists, die man teilen möchte.",
     "intro": "Durchsuche den Katalog, stelle gemeinsam Playlists zusammen und höre Vorschauen. Verfügbar auf Englisch, Niederländisch und Deutsch.",
     "createAccount": "Konto erstellen",
     "signIn": "Anmelden"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Anmelden",
+      "description": "Melde dich an, um gemeinsam mit deinen Kolleginnen und Kollegen Playlists zu erstellen.",
+      "submit": "Anmelden",
+      "pending": "Anmeldung läuft",
+      "noAccount": "Noch kein Konto?",
+      "createAccount": "Jetzt erstellen"
+    },
+    "signUp": {
+      "title": "Konto erstellen",
+      "description": "Wähle einen Namen, den deine Kolleginnen und Kollegen erkennen.",
+      "submit": "Konto erstellen",
+      "pending": "Dein Konto wird erstellt",
+      "hasAccount": "Du hast bereits ein Konto?",
+      "signIn": "Anmelden"
+    },
+    "fields": {
+      "name": "Name",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "passwordHint": "Mindestens 12 Zeichen."
+    },
+    "errors": {
+      "nameRequired": "Gib deinen Namen ein.",
+      "emailInvalid": "Gib eine gültige E-Mail-Adresse ein.",
+      "emailTaken": "Mit dieser E-Mail-Adresse besteht bereits ein Konto.",
+      "passwordTooShort": "Verwende mindestens 12 Zeichen.",
+      "invalidCredentials": "Diese E-Mail-Adresse und dieses Passwort gehören zu keinem Konto."
+    },
+    "signOut": "Abmelden",
+    "userMenu": "Kontomenü"
+  },
+  "catalog": {
+    "title": "Katalog",
+    "search": {
+      "label": "Katalog durchsuchen",
+      "placeholder": "Titel, Interpret oder Album",
+      "clear": "Suche zurücksetzen"
+    },
+    "empty": {
+      "title": "Keine Titel gefunden",
+      "description": "Versuche einen anderen Titel, Interpreten oder ein anderes Album."
+    },
+    "track": {
+      "album": "Album",
+      "genre": "Genre",
+      "releaseDate": "Veröffentlicht",
+      "duration": "Dauer",
+      "artwork": "Albumcover von {title} von {artist}",
+      "noArtwork": "Kein Cover verfügbar",
+      "details": "Titeldetails",
+      "openInAppleMusic": "In Apple Music öffnen"
+    },
+    "addToPlaylist": "Zur Playlist hinzufügen",
+    "loadMore": "Weitere Titel laden"
+  },
+  "playlist": {
+    "title": "Playlists",
+    "create": "Neue Playlist",
+    "fields": {
+      "name": "Name",
+      "description": "Beschreibung",
+      "descriptionOptional": "Optional"
+    },
+    "visibility": {
+      "private": "Privat",
+      "shared": "Mit dem Team geteilt"
+    },
+    "empty": {
+      "title": "Diese Playlist ist leer",
+      "description": "Füge Titel aus dem Katalog hinzu, um zu beginnen."
+    },
+    "removeTrack": "{title} aus dieser Playlist entfernen",
+    "trackAdded": "{title} wurde zu {playlist} hinzugefügt.",
+    "trackRemoved": "{title} wurde aus {playlist} entfernt.",
+    "duplicate": "{title} ist bereits in dieser Playlist.",
+    "deleteConfirm": {
+      "title": "{name} löschen?",
+      "description": "Das lässt sich nicht rückgängig machen. Die Titel bleiben im Katalog.",
+      "confirm": "Playlist löschen"
+    }
+  },
+  "player": {
+    "play": "{title} abspielen",
+    "pause": "{title} pausieren",
+    "nowPlaying": "Aktuelle Wiedergabe",
+    "preview": "30-Sekunden-Vorschau",
+    "volume": "Lautstärke",
+    "mute": "Stummschalten",
+    "unmute": "Stummschaltung aufheben",
+    "seek": "In der Vorschau spulen",
+    "unavailable": "Für diesen Titel ist keine Vorschau verfügbar."
+  },
+  "a11y": {
+    "skipToContent": "Zum Hauptinhalt springen",
+    "mainNavigation": "Hauptnavigation",
+    "languageSwitcher": "Sprache, aktuell {language}",
+    "themeToggle": "Zum {theme} Thema wechseln",
+    "searchResults": "{count, plural, =0 {Keine Titel} one {# Titel} other {# Titel}} gefunden",
+    "loading": "Wird geladen, bitte warten"
   }
 }

@@ -61,6 +61,21 @@ is safe to re-run.
 | `pnpm test:coverage`  | Run tests with a coverage report                      |
 | `pnpm check`          | Everything CI runs: lint, formatting, types and tests |
 
+## Languages
+
+The interface is available in English, Dutch and German. English is the source of truth; the other two
+are translated from it. Every route lives under `src/app/[locale]/`, and the locale prefix is applied by
+`src/proxy.ts`.
+
+Copy belongs in the catalogs under `src/dictionaries/`, never inline in a component. Adding a language
+means declaring it in `src/constants/locales.ts` and adding the matching catalog — routing, the
+`<html lang>` attribute and the language names all derive from that one constant.
+
+Two guards keep the three catalogs honest. Message keys are typed against `en.json`, so an unknown key
+fails `pnpm typecheck` instead of rendering as a raw key. A test then compares the catalogs against
+English and fails on a missing key, a key English does not have, an empty message, or a placeholder
+that was dropped in translation.
+
 ## Testing
 
 Tests run on Vitest with jsdom and Testing Library, and live next to the code they cover as
