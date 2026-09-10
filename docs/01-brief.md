@@ -49,6 +49,10 @@ the difference between "functional" and "well built" becomes visible.
 The following was not requested. It is included because it materially improves the delivered product,
 and it is labeled `[proposed]` in the backlog so it can be dropped without touching the agreed scope.
 
+- **Public landing page** — the brief starts at the sign-in screen, which leaves anyone without an
+  account facing a form and no explanation. A short marketing page states what the product does and
+  invites people to create an account. It is also the one surface where the Axxes identity can be shown
+  at full strength.
 - **Multilingual interface** — English as the default, plus Dutch and German. Axxes operates across the
   Netherlands and Belgium and works with international clients, so a single-language internal tool is a
   short-lived one. Building this in from the start is also considerably cheaper than retrofitting it

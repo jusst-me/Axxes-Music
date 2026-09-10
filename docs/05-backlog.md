@@ -17,10 +17,12 @@ Epic overview:
 | H    | Accessibility and polish  | 6       | `[proposed]` |
 | I    | Delivery                  | 3       | mixed        |
 | J    | Internationalization      | 6       | `[proposed]` |
+| K    | Public landing page       | 3       | `[proposed]` |
 
 Epic letters reflect grouping, not build order. Epic J is foundational and is scheduled in milestone
 M1, because retrofitting locale routing after the routes exist is far more expensive than starting with
-it. See [06-roadmap.md](./06-roadmap.md).
+it. Epic K is split: the routing rules it depends on land in M1, the page itself in M4. See
+[06-roadmap.md](./06-roadmap.md).
 
 ---
 
@@ -496,8 +498,8 @@ Priority: high · Estimate: S · Depends on: AXM-045
 
 ### AXM-082 — Walkthrough script `[proposed]`
 
-- A five-minute route through the application: sign in, search, view details, add, reorder from the
-  keyboard, share, switch theme, switch language, play.
+- A five-minute route through the application: landing page, sign in, search, view details, add,
+  reorder from the keyboard, share, switch theme, switch language, play.
 - Verified against the production environment beforehand.
 
 Priority: medium · Estimate: S · Depends on: AXM-080
@@ -573,3 +575,53 @@ Priority: high · Estimate: M · Depends on: AXM-090, AXM-023
 - The sign-in page is reachable and correct in all three languages.
 
 Priority: medium · Estimate: S · Depends on: AXM-090
+
+---
+
+## Epic K — Public landing page
+
+Goal: someone arriving without an account understands what the product is and how to get started.
+AXM-100 is structural and belongs in M1; the page itself follows in M4.
+
+### AXM-100 — Public routes and entry redirects `[proposed]`
+
+**As a** visitor without an account **I want** to reach the site without being bounced to a form
+**so that** I can find out what this is first.
+
+- The proxy holds an explicit allowlist of public paths: the landing page, sign-in and registration.
+  Everything not on the list requires a session, so new routes are private by default.
+- The locale prefix is preserved on every public path.
+- A signed-in visitor who opens the landing page is redirected to their library.
+- Tests cover both directions: a public path without a session resolves, and a protected path without a
+  session redirects.
+
+Priority: high · Estimate: M · Depends on: AXM-023, AXM-090
+
+### AXM-101 — Landing page `[proposed]`
+
+**As a** visitor **I want** a clear explanation of the product **so that** I can decide whether to
+create an account.
+
+- Hero with the product proposition, a primary call to action to register and a secondary one to sign
+  in.
+- Sections covering the core capabilities: shared playlists, search, ordering by drag or keyboard, and
+  light and dark themes.
+- At least one honest visual of the actual interface rather than a stock image.
+- Full Axxes identity: orange as a surface color, never as body text, per
+  [04-design-system.md](./04-design-system.md).
+- Works from 320 pixels wide upward.
+- One `h1`, a heading order that does not skip levels, and proper landmarks.
+- Correct in both light and dark themes.
+- Motion respects `prefers-reduced-motion`.
+- No serious or critical axe findings, and the page is fully keyboard operable.
+
+Priority: medium · Estimate: L · Depends on: AXM-100, AXM-010
+
+### AXM-102 — Landing page copy and metadata `[proposed]`
+
+- All copy lives in the message catalogs and reads naturally in English, Dutch and German.
+- The layout holds at the longest translation; German is the test case.
+- Localized title and description, plus an Open Graph image.
+- `alternates.languages` covers the three locales with `x-default` on English.
+
+Priority: medium · Estimate: M · Depends on: AXM-101, AXM-091

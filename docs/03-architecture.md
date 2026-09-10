@@ -26,6 +26,9 @@ src/
 ├── app/
 │   ├── [locale]/                # every page route is locale-scoped
 │   │   ├── layout.tsx           # sets <html lang>, wraps NextIntlClientProvider
+│   │   ├── (marketing)/         # public, no session required
+│   │   │   ├── layout.tsx       # marketing header and footer, no player bar
+│   │   │   └── page.tsx         # landing page
 │   │   ├── (auth)/              # sign in and registration, layout without the app shell
 │   │   │   ├── login/
 │   │   │   └── register/
@@ -179,8 +182,13 @@ without a database.
 | Manage collaborators        | yes   | no     | no     | no                       | no        |
 | Delete the playlist         | yes   | no     | no     | no                       | no        |
 
-The entire application sits behind authentication; public playlists still require an account. This
-matches an internal office tool, where "public" means visible to all colleagues.
+Every route that touches data sits behind authentication; public playlists still require an account.
+This matches an internal office tool, where "public" means visible to all colleagues.
+
+The exception is the marketing surface. The landing page, the sign-in page and the registration page
+are reachable without a session, and they read no user data. The proxy holds an explicit allowlist of
+public paths rather than a list of protected ones, so a newly added route is private by default and
+becomes public only through a deliberate change.
 
 ## Localization
 
@@ -204,11 +212,11 @@ and are rendered as stored.
 
 Three layers, with a clear division of responsibility:
 
-1. **`src/proxy.ts`** runs locale routing first, then checks for the presence of a session cookie and
-   redirects to `/{locale}/login` otherwise. Both concerns live here because they both need to run
-   before the request reaches a route. The order matters: the locale must be resolved before the
-   redirect target can be constructed, and the intl response must be passed along rather than replaced,
-   otherwise the headers next-intl sets are lost.
+1. **`src/proxy.ts`** runs locale routing first, then applies the public-path allowlist, and only then
+   checks for a session cookie, redirecting to `/{locale}/login` when it is absent. All three concerns
+   live here because they must run before the request reaches a route. The order matters: the locale
+   must be resolved before the redirect target can be constructed, and the intl response must be passed
+   along rather than replaced, otherwise the headers next-intl sets are lost.
 2. **The data access layer** resolves the session through `auth()` and verifies permissions on every
    call. This is the authoritative check.
 3. **Server Actions** repeat the session check independently, since an action can be invoked without
@@ -218,6 +226,9 @@ The separation between layer one and layer two is a direct response to CVE-2025-
 header could bypass the middleware layer. Relying on the proxy alone leaves the application open.
 
 After signing in, the user returns to the originally requested path including its locale prefix.
+
+Traffic moves in both directions: a signed-in visitor who lands on the marketing page is redirected to
+their library, so the landing page never becomes a dead end for people who already have an account.
 
 ## Mutations
 

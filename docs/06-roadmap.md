@@ -29,7 +29,7 @@ migrated, seeded database exists.
 **Goal:** the application looks like Axxes, speaks three languages, and knows who you are.
 
 AXM-010, AXM-011, AXM-013, AXM-014, AXM-090, AXM-091, AXM-092, AXM-093, AXM-094, AXM-095, AXM-020,
-AXM-021, AXM-022, AXM-023, AXM-024
+AXM-021, AXM-022, AXM-023, AXM-024, AXM-100
 
 **Complete when:** an account can be created, sign-in and sign-out work in all three languages, and
 unauthenticated visitors are routed to the sign-in page with their locale preserved.
@@ -60,10 +60,15 @@ and a working theme toggle.
 
 **Goal:** the additions that raise the product beyond the brief.
 
-AXM-042, AXM-043, AXM-044, AXM-045, AXM-046, AXM-055, AXM-060, AXM-061, AXM-062, AXM-063
+AXM-042, AXM-043, AXM-044, AXM-045, AXM-046, AXM-055, AXM-060, AXM-061, AXM-062, AXM-063, AXM-101,
+AXM-102
 
-**Complete when:** playlists support visibility and collaborators, and the player works with real
-preview clips.
+**Complete when:** playlists support visibility and collaborators, the player works with real preview
+clips, and a visitor without an account lands on a page that explains the product.
+
+The landing page sits here rather than in M1 on purpose. Its routing rules are structural and land
+early as AXM-100, but the page itself markets features that must exist before they can honestly be
+shown.
 
 ### M5 — Hardening and handover
 
