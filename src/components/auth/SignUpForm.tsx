@@ -6,49 +6,42 @@ import { useActionState, useEffect, useRef } from 'react';
 import AuthField from '@/components/auth/AuthField';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { signInAction, type SignInState } from '@/lib/auth/actions';
+import { signUpAction, type SignUpState } from '@/lib/auth/actions';
 
-const NO_ERRORS: SignInState = {};
+const NO_ERRORS: SignUpState = {};
 
-export default function SignInForm({ callbackUrl }: { callbackUrl: string }) {
+export default function SignUpForm() {
   const t = useTranslations('auth');
   const message = useTranslations('auth.errors');
-  const [state, submit, isPending] = useActionState(signInAction, NO_ERRORS);
+  const [state, submit, isPending] = useActionState(signUpAction, NO_ERRORS);
+  const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const summaryRef = useRef<HTMLDivElement>(null);
 
-  const { email, password, form } = state.errors ?? {};
+  const { name, email, password } = state.errors ?? {};
 
   useEffect(() => {
-    // Someone who cannot see the page needs to land on the problem rather than go looking for it.
-    if (email) {
+    if (name) {
+      nameRef.current?.focus();
+    } else if (email) {
       emailRef.current?.focus();
     } else if (password) {
       passwordRef.current?.focus();
-    } else if (form) {
-      summaryRef.current?.focus();
     }
-  }, [email, password, form]);
+  }, [name, email, password]);
 
   return (
-    /*
-     * Validation is ours rather than the browser's: a built-in message arrives in the language of the
-     * browser, which on this site is regularly not the language of the page.
-     */
     <form action={submit} noValidate className="mt-8">
-      <input type="hidden" name="callbackUrl" value={callbackUrl} />
       <FieldGroup>
-        {form && (
-          <div
-            ref={summaryRef}
-            role="alert"
-            tabIndex={-1}
-            className="border-destructive/40 text-destructive rounded-md border px-4 py-3 text-sm"
-          >
-            {message(form)}
-          </div>
-        )}
+        <AuthField
+          ref={nameRef}
+          id="name"
+          name="name"
+          autoComplete="name"
+          required
+          label={t('fields.name')}
+          error={name && message(name)}
+        />
 
         <AuthField
           ref={emailRef}
@@ -66,14 +59,15 @@ export default function SignInForm({ callbackUrl }: { callbackUrl: string }) {
           id="password"
           name="password"
           type="password"
-          autoComplete="current-password"
+          autoComplete="new-password"
           required
           label={t('fields.password')}
+          description={t('fields.passwordHint')}
           error={password && message(password)}
         />
 
         <Button type="submit" size="lg" disabled={isPending}>
-          {isPending ? t('signIn.pending') : t('signIn.submit')}
+          {isPending ? t('signUp.pending') : t('signUp.submit')}
         </Button>
       </FieldGroup>
     </form>

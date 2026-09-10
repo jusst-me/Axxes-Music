@@ -11,6 +11,9 @@ export const PUBLIC_PATHS = ['/', '/login', '/register'];
 
 export const SIGN_IN_PATH = '/login';
 
+/** Where someone with a session belongs when they have not asked for anything in particular. */
+export const LIBRARY_PATH = '/playlists';
+
 /** Carries the page the visitor was after, so signing in continues rather than starts over. */
 export const CALLBACK_PARAM = 'callbackUrl';
 
