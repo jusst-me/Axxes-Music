@@ -7,6 +7,7 @@ import TrackRow from '@/components/catalog/TrackRow';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { loadMoreTracksAction } from '@/lib/catalog/actions';
+import type { PlaylistSummary } from '@/lib/data/playlists';
 import type { CatalogTrack } from '@/lib/data/tracks';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +16,7 @@ type TrackListProps = {
   hasMore: boolean;
   total: number;
   query: string;
+  playlists: PlaylistSummary[];
 };
 
 export default function TrackList({
@@ -22,6 +24,7 @@ export default function TrackList({
   hasMore: initiallyHasMore,
   total,
   query,
+  playlists,
 }: TrackListProps) {
   const t = useTranslations('catalog');
   const [slice, setSlice] = useState({
@@ -78,7 +81,7 @@ export default function TrackList({
       ) : (
         <ul className="divide-border border-border mt-8 divide-y rounded-lg border">
           {slice.tracks.map(track => (
-            <TrackRow key={track.id} track={track} />
+            <TrackRow key={track.id} track={track} playlists={playlists} />
           ))}
         </ul>
       )}

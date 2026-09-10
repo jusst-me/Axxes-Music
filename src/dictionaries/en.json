@@ -80,6 +80,7 @@
       "openInAppleMusic": "Open in Apple Music"
     },
     "addToPlaylist": "Add to playlist",
+    "addTrackToPlaylist": "Add {title} to a playlist",
     "backToCatalog": "Back to the catalog",
     "loadMore": "Load more tracks",
     "loadMorePending": "Loading more tracks",
@@ -90,6 +91,7 @@
     "title": "Playlists",
     "description": "The playlists you and your colleagues are building together.",
     "create": "New playlist",
+    "backToPlaylists": "Back to your playlists",
     "createDialog": {
       "title": "New playlist",
       "description": "Give it a name your colleagues will recognise.",

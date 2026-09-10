@@ -80,6 +80,7 @@
       "openInAppleMusic": "Openen in Apple Music"
     },
     "addToPlaylist": "Toevoegen aan afspeellijst",
+    "addTrackToPlaylist": "{title} aan een afspeellijst toevoegen",
     "backToCatalog": "Terug naar de catalogus",
     "loadMore": "Meer nummers laden",
     "loadMorePending": "Meer nummers laden",
@@ -90,6 +91,7 @@
     "title": "Afspeellijsten",
     "description": "De afspeellijsten die jij en je collega's samen samenstellen.",
     "create": "Nieuwe afspeellijst",
+    "backToPlaylists": "Terug naar je afspeellijsten",
     "createDialog": {
       "title": "Nieuwe afspeellijst",
       "description": "Kies een naam die je collega's herkennen.",
